@@ -13,7 +13,6 @@ import user from "./modules/userInfo"
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 
 Vue.use(VueAwesomeSwiper)
-Vue.prototype.webViewJavascriptBridge = WebViewJavascriptBridge
 Vue.prototype.$bridge = Bridge
 Vue.prototype.$ = $
 Vue.prototype.$ajax = axios
