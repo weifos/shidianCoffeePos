@@ -57,6 +57,10 @@ let webpackConfig = {
         include: [resolve('src'), resolve('test')]
       },
       {
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'scss']
+      },
+      {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {

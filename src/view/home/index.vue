@@ -1,5 +1,5 @@
 <template>
-  <div id="main"></div>
+  <div id="main">aaa</div>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import { mapState } from "vuex"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 
 export default {
-  components: { BannerSwiper, Drawer, SwiperItem, leftDrawer, vfooter, Scroller },
+  components: {  },
   data() {
     return {
       pageTitle: '商城首页',
