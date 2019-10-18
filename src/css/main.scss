@@ -1,12 +1,123 @@
-*{
-    margin: 0;
-    padding: 0;
-}
-body{
-    background-color: #fff;
-    font-size: 15px;
+@import "~@/css/common.scss";
+
+$bg-color-main:#7F9EB6;
+$bg-color-main-dark:#5A7494;
+$bg-color-white:#ffffff;
+$bg-color-gray: #ACACAC;
+$bg-color-light-gray: #EFEFEF;
+$font-color-normal:#000;//正常字色
+$font-color-main: #7F9EB6;//主题字色
+$font-color-gray: #ACACAC;//提示字色
+$font-color-white: #fff;//白色
+$border-color-main: #7F9EB6;
+$border-color-gray:#ACACAC;
+$font-size-n: 15px;//正常字体大小
+$font-size-s: 12px;//小字体
+.font-size-small{font-size: $font-size-s;}
+
+body,html{background-color: #fff;height: 100%;}
+#app{
+    font-size: $font-size-n;
     line-height: 1.2;
+    color:$font-color-normal;
+    height: 100%;
 }
-.fz12{
-    font-size: 12px;
+#main,.f-frame{
+    height: 100%;
+}
+input:focus{
+    outline:none;
+}
+    
+///////////背景////////////////
+.bg-main{
+    background-color: $bg-color-main;
+}
+.bg-white{
+    background-color: $bg-color-white;
+}
+.bg-gray{
+    background-color: $bg-color-gray;
+}
+.bg-light-gray{
+    background-color: $bg-color-light-gray;
+}
+.text-white{
+    color: $font-color-white;
+}
+.text-main{
+    color:$font-color-main;
+}
+.text-gray{
+    color:$font-color-gray;
+}
+.border-gray{
+    border:1px solid $font-color-gray;
+}
+////////////按钮////////////////
+.button{
+    min-width: 59px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 10px;
+}
+button.button{
+    border:none;
+    font-size: $font-size-n;
+    min-width: 67px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+}
+.button-size-small{
+    height: 26px;
+    line-height: 26px;
+
+}
+.round{
+    border-radius: 21px
+}
+.button-border-cur{
+    border-color:$border-color-main;
+    color:$font-color-main;
+}
+.btn-subtract,.btn-plus{
+    border:none;
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.btn-subtract{
+    background: url("./img/subtract.png") no-repeat 0 0/100% auto;
+}
+.btn-plus{
+    background: url("./img/plus.png") no-repeat 0 0/100% auto;
+}
+////////////其它////////////////
+.f-frame{
+    font-size: 0;
+    .frame-left,.frame-right{
+        display: inline-block;vertical-align: top;
+        font-size: $font-size-n;
+        height: 100%;
+    }
+    .frame-left{
+        width: 25%;
+    }
+    .frame-right{
+        width: 75%;
+    }
+}
+
+.list-inlineblock{
+    font-size: 0;
+    .f-item{
+        display: inline-block;
+        vertical-align: top;
+        font-size: $font-size-n;
+    }
 }

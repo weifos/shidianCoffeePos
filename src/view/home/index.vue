@@ -1,14 +1,25 @@
 <template>
-  <div id="main">aaa</div>
+  <div id="main">
+    <Frame>
+      <div class="content-wrap" slot="left"><OrderList></OrderList></div>
+      <div class="content-wrap" slot="right"><ProductList></ProductList></div>
+    </Frame>
+  </div>
 </template>
 
 <script>
 import app_g from '@/modules/appGlobal'
 import { mapState } from "vuex"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
-
+import Frame from '@/components/Frame'
+import ProductList from '@/components/ProductList';
+import OrderList from '@/components/OrderList';
 export default {
-  components: {  },
+  components: { 
+    Frame,
+    ProductList,
+    OrderList
+  },
   data() {
     return {
       pageTitle: '商城首页',
@@ -30,5 +41,9 @@ export default {
 }
 </script> 
 
-<style scoped="scoped">
+<style lang="scss">
+.content-wrap{
+  height: 100%;
+  overflow: auto;
+}
 </style>
