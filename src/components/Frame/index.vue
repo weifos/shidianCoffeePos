@@ -11,7 +11,7 @@
                     </div>
                     <div class="user-txt">
                         <div class="user-name bold">收银员：Lisa</div>
-                        <div class="user-identity mt5">超级管理员</div>
+                        <div class="user-identity mt5"><span class="icon icon-arrow dib vam"></span><span class="dib vam ml10">超级管理员</span></div>
                     </div>
                 </div>
                 <div class="machine-info mt15">
@@ -27,8 +27,8 @@
                 </div>
                 <div class="btns-bar abs">
                     <button class="button bg-white text-main button-size-small round">挂单</button>
-                    <button class="button bg-white text-main button-size-small round ml10">结算</button>
-                    <button class="button bg-white text-main button-size-small round ml10">删除</button>
+                    <button class="button bg-white text-main button-size-small round ml5">结算</button>
+                    <button class="button bg-white text-main button-size-small round ml5">删除</button>
                 </div>
             </div>
         </div>
@@ -64,6 +64,7 @@
             <!-- tool-bar e -->
         </div>
         <!-- frame-right e -->
+        
     </div>
 </template>
 
@@ -72,7 +73,8 @@ import Icon from '@/components/Icon';
 
 export default {
     components:{
-        Icon
+        Icon,
+        
     }
 }
 </script>
@@ -125,7 +127,7 @@ export default {
         top: 0;
         box-sizing: border-box;
         padding-top: 18px;
-        padding-right: 23px;
+        padding-right: 13px;
     }
 }
 
@@ -138,6 +140,10 @@ export default {
         line-height: 58px;
         text-align: center;
         overflow: hidden;
+
+        .text-tips{
+            padding-right: 253px;
+        }
     }
     .tool-bar{
         width:100%;

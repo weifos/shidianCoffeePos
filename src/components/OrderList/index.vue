@@ -9,10 +9,10 @@
         <div class="order-con">
             <ul class="font-size-small list-order">
                 <li class="list-inlineblock tac item-order" v-for="(item,index) in list" :key="index">
-                    <div class="f-item item-name ellipsis">{{item.name}}</div>
-                    <div class="f-item item-price">{{item.price}}</div>
-                    <div class="f-item item-num">{{item.num}}</div>
-                    <div class="f-item item-operate">
+                    <div class="f-item hidden item-name ellipsis">{{item.name}}</div>
+                    <div class="f-item hidden item-price">{{item.price}}</div>
+                    <div class="f-item hidden item-num">{{item.num}}</div>
+                    <div class="f-item hidden item-operate">
                         <button class="btn btn-subtract"></button>
                         <button class="btn btn-plus"></button>
                     </div>
@@ -27,7 +27,7 @@ export default {
         return {
             list:[{
                 name:"摩卡咖啡",
-                price:"1135.00",
+                price:"135.00",
                 num:"11"
             },{
                 name:"摩卡咖啡2",
@@ -65,7 +65,7 @@ export default {
     height: 100%;
 
     .item-name{
-        width: 50%;
+        width: 45%;
         box-sizing: border-box;
     }
     .item-price,.item-num{
@@ -73,7 +73,7 @@ export default {
         box-sizing: border-box;
     }
     .item-operate{
-        width: 20%;
+        width: 25%;
         box-sizing: border-box;
 
         .btn{margin: 0 5px;}

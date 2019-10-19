@@ -1,9 +1,24 @@
 <template>
   <div id="main">
+    <!-- 框架 s -->
     <Frame>
       <div class="content-wrap" slot="left"><OrderList></OrderList></div>
-      <div class="content-wrap" slot="right"><ProductList></ProductList></div>
+      <div class="content-wrap" slot="right">
+        <!-- <ProductList></ProductList> -->
+        <OrderParameter></OrderParameter>
+      </div>
     </Frame>
+    <!-- 框架 e -->
+    <!-- 会员弹层 s -->
+    <PopWrap :show="false">
+        <div class="pop-content" slot="content"><PopMember></PopMember></div>
+    </PopWrap>
+    <!-- 会员弹层 e -->
+    <!-- 上下班弹层 s -->
+    <PopWrap :show="false">
+        <div class="pop-content" slot="content"><PopWork></PopWork></div>
+    </PopWrap>
+    <!-- 上下班弹层 e -->
   </div>
 </template>
 
@@ -14,11 +29,20 @@ import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 import Frame from '@/components/Frame'
 import ProductList from '@/components/ProductList';
 import OrderList from '@/components/OrderList';
+import PopWrap from '@/components/PopWrap';
+import PopMember from '@/components/PopMember';
+import PopWork from '@/components/PopWork';
+import OrderParameter from '@/components/OrderParameter';
+
 export default {
   components: { 
     Frame,
     ProductList,
-    OrderList
+    OrderList,
+    PopWrap,
+    PopMember,
+    PopWork,
+    OrderParameter
   },
   data() {
     return {
