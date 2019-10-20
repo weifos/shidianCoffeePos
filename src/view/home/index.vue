@@ -5,7 +5,9 @@
       <div class="content-wrap" slot="left"><OrderList></OrderList></div>
       <div class="content-wrap" slot="right">
         <!-- <ProductList></ProductList> -->
-        <OrderParameter></OrderParameter>
+        <!-- <OrderParameter></OrderParameter> -->
+        <!-- <NotDoneOrder></NotDoneOrder> -->
+        <NotGetOrder></NotGetOrder>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -33,6 +35,8 @@ import PopWrap from '@/components/PopWrap';
 import PopMember from '@/components/PopMember';
 import PopWork from '@/components/PopWork';
 import OrderParameter from '@/components/OrderParameter';
+import NotDoneOrder from '@/components/NotDoneOrder';
+import NotGetOrder from '@/components/NotGetOrder';
 
 export default {
   components: { 
@@ -42,7 +46,9 @@ export default {
     PopWrap,
     PopMember,
     PopWork,
-    OrderParameter
+    OrderParameter,
+    NotDoneOrder,
+    NotGetOrder
   },
   data() {
     return {

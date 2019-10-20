@@ -1,5 +1,5 @@
 <template>
-    <div class="order-parameter rel">
+    <div class="order-parameter rel section">
         <div class="section-tit abs bg-white list-inlineblock tac text-gray">
             <div class="f-item text-no border-box">NO.123124141</div>
             <div class="f-item text-name">商品名称</div>
@@ -60,26 +60,7 @@
 </template>
 <style lang="scss">
 .order-parameter{
-    overflow: hidden;
-    height: 100%;
-    .section-tit{
-        height: 67px;
-        width: 100%;
-        left: 0;
-        top: 0;
-        line-height: 67px;
-    }
-    .section-con{
-        box-sizing: border-box;
-        height: 100%;
-        padding: 67px 0 0 0;
-    }
-    .con-wrap{
-        height: 100%;
-        overflow: auto;
-        box-sizing: border-box;
-        padding: 45px;
-    }
+    
 
     .section-tit{
         .text-no{
