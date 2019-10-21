@@ -17,12 +17,10 @@ Vue.prototype.$bridge = Bridge
 Vue.prototype.$ = $
 Vue.prototype.$ajax = axios
 Vue.prototype.cookie = cookie
-// Vue.use(sku)
-// Vue.use(imageFile)
-// Vue.use(ConfirmPlugin)//弹出确认框
-// Vue.use(AlertPlugin)  //Alert弹窗 
-// Vue.use(ToastPlugin)  //Toast弹窗 
-// Vue.use(LoadingPlugin)//加载弹窗 
+Vue.use(ConfirmPlugin)//弹出确认框
+Vue.use(AlertPlugin)  //Alert弹窗 
+Vue.use(ToastPlugin)  //Toast弹窗 
+Vue.use(LoadingPlugin)//加载弹窗 
 // Vue.use(DatetimePlugin)//选择日历 
 // Vue.use(PopupPicker)//选择日历 
 /* eslint-disable no-new */

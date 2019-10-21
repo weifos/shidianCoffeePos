@@ -95,9 +95,7 @@ export default {
 
         },//是否登录
         islogin() {
-            if (this.user.token == undefined) {
-                this.$vux.toast.text("当前页面需要登录", "default")
-                router.push({ path: "/passport/login?backUrl=" + router.history.current.path })
+            if (!this.user.token) {
                 return false
             } else {
                 return true

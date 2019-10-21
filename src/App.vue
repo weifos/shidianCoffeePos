@@ -40,7 +40,7 @@ export default {
   methods: {},
   mounted() { },
   created() {
-    localStorage.setItem("pageTitle", "聚搜糖")
+    localStorage.setItem("pageTitle", "十点读书·咖啡POS")
     document.getElementById("pageTitle").innerHTML = localStorage.getItem(
       "pageTitle"
     );

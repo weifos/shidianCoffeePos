@@ -20,8 +20,8 @@ if (process.env.NODE_ENV !== 'production') {
 export default {
     //资源站点
     res: res_domain,
-    //待定接口
-    api_200: domain + "200",
+    //咖啡系统用户登录
+    api_100: domain + "100",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

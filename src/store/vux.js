@@ -2,8 +2,8 @@
 const state = {
     isShowDrawer: false,
     isLoading: false,
+    showDialog: false,
     index: 1,
-    listLayout: 1
 }
 
 // mutations
@@ -17,8 +17,8 @@ const mutations = {
     loadingDrawer(state1, payload) {
         state.isShowDrawer = payload.isShowDrawer
     },
-    setListLayout(state1, payload) {
-        state.listLayout = payload.listLayout
+    setShowDialog(state1, payload) {
+        state.showDialog = payload.showDialog
     }
 }
 

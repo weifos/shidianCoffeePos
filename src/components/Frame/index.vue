@@ -11,16 +11,16 @@
             <!-- <img alt src="../../img/head.png" width="100%" height="100%" /> -->
           </div>
           <div class="user-txt">
-            <div class="user-name bold">收银员：Lisa</div>
+            <div class="user-name bold">收银员：{{userInfo.login_name}}</div>
             <div class="user-identity mt5">
               <span class="icon icon-arrow dib vam"></span>
-              <span class="dib vam ml10">超级管理员</span>
+              <span class="dib vam ml10">{{userInfo.user_name}}</span>
             </div>
           </div>
         </div>
         <div class="machine-info mt15">
-          <div>收银台：0101</div>
-          <div class="mt5">会 员：139812345432【十点会员】</div>
+          <div>收银台：咖啡POS</div>
+          <div class="mt5">会 员：{{member.login_name}}【十点会员】</div>
         </div>
       </div>
       <div class="content-bar">
@@ -80,33 +80,34 @@ export default {
   components: {
     Icon,
   },
+  props: {
+    result: Object
+  },
+  watch: {
+    result: function (newData, oldData) {
+      if (newData.id) {
+        if (newData.head_img == null || newData.head_img.length == 0) {
+          newData.head_img = '../../static/img/head.png'
+        }
+        this.userInfo = newData
+      }
+    }
+  },
   data() {
     return {
       userInfo: {
         head_img: '../../static/img/head.png',
-        user_name: '--',
+        user_name: '未登录',
+        login_name: '--'
+      },
+      member: {
         login_name: '--'
       }
     }
   },
   methods: {
     onClickItem(index) {
-      this.curIndex = index;
-    },
-    //加载商品数据
-    api_200() {
-      this.$store.commit('loadingStatus', {
-        isLoading: true
-      })
-      api.post(api.api_200, api.getSign(), function (vue, res) {
-        if (res.data.Basis.State == app_g.state.state_200) {
-          console.log(res.data.Result)
-          debugger
-        } else {
-          vue.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
-          vue.isDisable = true
-        }
-      })
+      this.curIndex = index
     }
   },
   created() {
