@@ -1,11 +1,10 @@
 <template>
-    <div class="order-list h100">
-        <div class="form-order rel border-box"><div class="form-wrap h100">
+    <div class="order-list-2 h100">
+        <div class="form-order rel border-box">
             <div class="order-tit abs text-white tac list-inlineblock">
                 <div class="f-item item-name bg-gray">品名</div>
                 <div class="f-item item-price bg-gray">单价</div>
                 <div class="f-item item-num bg-gray">数量</div>
-                <div class="f-item item-operate bg-gray">操作</div>
             </div>
             <div class="order-con">
                 <ul class="font-size-small list-order">
@@ -13,25 +12,37 @@
                         <div class="f-item hidden item-name ellipsis">{{item.name}}</div>
                         <div class="f-item hidden item-price">{{item.price}}</div>
                         <div class="f-item hidden item-num">{{item.num}}</div>
-                        <div class="f-item hidden item-operate">
-                            <button class="btn btn-subtract"></button>
-                            <button class="btn btn-plus"></button>
-                        </div>
                     </li>
                 </ul>
             </div>
-        </div></div>
-        <div class="tool-bar abs bg-main text-white">
-            <div class="accounts-info">
-                <div>数量：0</div>
-                <div class="mt5">总计：0</div>
-            </div>
-            <div class="btns-bar abs">
-                <button class="button bg-white text-main button-size-small round">挂单</button>
-                <button class="button bg-white text-main button-size-small round ml5">结算</button>
-                <button class="button bg-white text-main button-size-small round ml5">删除</button>
-            </div>
         </div>
+        <div class="pay-bar border-box tac rel">
+            <div class="list-inlineblock account-bar text-gray abs w100 top0 left0">
+                <div class="f-item">数量： 0</div>
+                <div class="f-item">总计： ¥0</div>
+                <div class="f-item">找零： ¥0</div>
+            </div>
+            <div class="h100 rel">
+            <div class="pay-tit list-inlineblock bg-main text-white abs w100">
+                <div class="f-item w1">序号</div>
+                <div class="f-item w2">支付方式</div>
+                <div class="f-item w1">金额</div>
+            </div>
+            <div class="pay-con h100 border-box"><div class="h100 scroll-y">
+                <ul class="text-gray">
+                    <li class="list-inlineblock">
+                        <div class="f-item w1">1</div>
+                        <div class="f-item w2">支付宝</div>
+                        <div class="f-item w1">20.00</div>
+                    </li>
+                    <li class="list-inlineblock">
+                        <div class="f-item w1">2</div>
+                        <div class="f-item w2">现金</div>
+                        <div class="f-item w1">20.00</div>
+                    </li>
+                </ul>
+            </div></div>
+        </div></div>
     </div>
 </template>
 <script>
@@ -73,28 +84,19 @@ export default {
 </script>
 
 <style lang="scss">
-.order-list{
+.order-list-2{
+    
     .form-order{
-        padding: 32px 0 62px 0;
-        height: 100%;
+        padding: 32px 0 0 0;
+        height: 70%;
 
-        .form-wrap{
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
         .item-name{
-            width: 45%;
+            width: 60%;
             box-sizing: border-box;
         }
         .item-price,.item-num{
-            width: 15%;
+            width: 20%;
             box-sizing: border-box;
-        }
-        .item-operate{
-            width: 25%;
-            box-sizing: border-box;
-
-            .btn{margin: 0 5px;}
         }
         .order-tit{
             .item-name,.item-price,.item-num{border-right: 2px solid #fff;}
@@ -125,6 +127,33 @@ export default {
                     background-color: #f0f0f0;
                 }
             }
+        }
+    }
+    .account-bar{
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+
+        .f-item{width: 33.33%;}
+    }
+    .pay-bar{
+        height: 30%;
+        padding-top: 40px;
+    }
+    .w1{width: 20%;}
+    .w2{width: 60%;}
+
+    .pay-tit{
+        height: 41px;
+        line-height: 41px;
+        top: 0;
+        left: 0;
+    }
+    .pay-con{
+        padding-top: 41px;
+        li{
+            height: 40px;
+            line-height: 40px;
         }
     }
 }

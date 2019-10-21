@@ -1,18 +1,20 @@
 <template>
-    <div class="notget-order rel section-2">
+    <div class="order-entry rel section-2">
         <div class="section-tit text-gray tac">
-            未聚餐订单列表
+            挂单/恢复
         </div>
         <div class="section-con">
             <div class="con-wrap">
                 <div class="form-1 bg-white rel">
                     <div class="form-head list-inlineblock tac abs">
-                        <div class="head-item f-item w3 bg-gray text-white">序号</div>
-                        <div class="head-item f-item w2 bg-gray text-white">订单信息</div>
+                        <div class="head-item f-item w3 bg-gray text-white">行号</div>
+                        <div class="head-item f-item w2 bg-gray text-white">单据</div>
+                        <div class="head-item f-item w3 bg-gray text-white">行号</div>
                         <div class="head-item f-item w9 bg-gray text-white">品名</div>
                         <div class="head-item f-item w1 bg-gray text-white">规格</div>
                         <div class="head-item f-item w1 bg-gray text-white">数量</div>
                         <div class="head-item f-item w1 bg-gray text-white">单价</div>
+                        <div class="head-item f-item w1 bg-gray text-white">小计</div>
                     </div>
                     <div class="form-body tac text-gray"><div class="form-body-wrap list-inlineblock">
                         <div class="left-part f-item">
@@ -29,6 +31,7 @@
                         <div class="right-part f-item rel">
                             <ul>
                                 <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
+                                    <div class="body-item f-item w8"><div class="align">{{item.no}}</div></div>
                                     <div class="body-item f-item w6"><div class="align">{{item.name}}</div></div>
                                     <div class="body-item f-item w7"><div class="align">
                                        <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
@@ -37,11 +40,9 @@
                                         <div class="align">{{item.num}} </div>
                                     </div>
                                     <div class="body-item f-item w7"><div class="align">{{item.price}}</div></div>
+                                    <div class="body-item f-item w7"><div class="align">{{item.total}}</div></div>
                                 </li>
                             </ul>
-                            <div class="status-bar abs bg-main text-white tar">
-                                <button class="button round bg-white text-main button-size-middle2">取餐</button>
-                            </div>
                         </div>
                         
                     </div>
@@ -62,28 +63,36 @@ export default {
                     time:"2019-09-12 12:12:12",
                     list:[
                         {
+                            no:1,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         },
                         {
+                            no:2,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         },
                         {
+                            no:3,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         },
                         {
+                            no:4,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         }
                     ]
                 },
@@ -93,16 +102,20 @@ export default {
                     time:"2019-09-12 12:12:12",
                     list:[
                         {
+                            no:1,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         },
                         {
+                            no:2,
                             name:"柚子奶茶",
                             param:["中杯","去冰"],
                             num:1,
                             price:"20.00",
+                            total:"20.00"
                         }
                     ]
                 }
@@ -112,7 +125,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.notget-order {
+.order-entry {
 .form-1{
     height: 100%;
     
@@ -151,21 +164,20 @@ export default {
         overflow: auto;
     }
     .w1{width: 10%}
-    .w2{width: 30%}
+    .w2{width: 25%}
     .w3{width: 5%}
-    .w9{width: 35%}
+    .w9{width: 25%}
 
-    .w4{width: 100/35*5%}
-    .w5{width: 100/35*30%}
-    .w6{width: 53.84%}
-    .w7{width: 15.38%}
-    .w8{width: 17.14%}
+    .w4{width: 100/30*5%}
+    .w5{width: 100/30*25%}
 
-    
+    .w6{width: 100/70*25%}
+    .w7{width: 100/70*10%}
+    .w8{width: 100/70*5%}
 
     .left-part{
         height: 100%;
-        width: 35%;
+        width: 30%;
         box-sizing: border-box;
         // border-right: 1px solid #ACACAC;
         position: relative;
@@ -209,9 +221,8 @@ export default {
     }
     .right-part{
         height: 100%;
-        width: 65%;
+        width: 70%;
         box-sizing: border-box;
-        padding-bottom: 54px;
 
         ul{
             height: 100%;

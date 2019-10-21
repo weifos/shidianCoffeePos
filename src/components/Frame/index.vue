@@ -20,17 +20,6 @@
                 </div>
             </div>
             <div class="content-bar"><slot name="left"></slot></div>
-            <div class="tool-bar abs bg-main text-white">
-                <div class="accounts-info">
-                    <div>数量：0</div>
-                    <div class="mt5">总计：0</div>
-                </div>
-                <div class="btns-bar abs">
-                    <button class="button bg-white text-main button-size-small round">挂单</button>
-                    <button class="button bg-white text-main button-size-small round ml5">结算</button>
-                    <button class="button bg-white text-main button-size-small round ml5">删除</button>
-                </div>
-            </div>
         </div>
         <!-- frame-left e -->
         <!-- frame-right s -->
@@ -99,7 +88,7 @@ export default {
     .content-bar{
         height: 100%;
         box-sizing: border-box;
-        padding: 197px 0  62px 0;
+        padding: 197px 0  0 0;
     }
     .user-txt{
         padding-top: 5px;
@@ -142,7 +131,7 @@ export default {
         overflow: hidden;
 
         .text-tips{
-            padding-right: 253px;
+            // padding-right: 253px;
         }
     }
     .tool-bar{

@@ -1,7 +1,7 @@
 <template>
-    <div class="notget-order rel section-2">
+    <div class="order-normal rel section-2">
         <div class="section-tit text-gray tac">
-            未聚餐订单列表
+            订单列表
         </div>
         <div class="section-con">
             <div class="con-wrap">
@@ -39,9 +39,6 @@
                                     <div class="body-item f-item w7"><div class="align">{{item.price}}</div></div>
                                 </li>
                             </ul>
-                            <div class="status-bar abs bg-main text-white tar">
-                                <button class="button round bg-white text-main button-size-middle2">取餐</button>
-                            </div>
                         </div>
                         
                     </div>
@@ -112,7 +109,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.notget-order {
+.order-normal {
 .form-1{
     height: 100%;
     
@@ -211,7 +208,6 @@ export default {
         height: 100%;
         width: 65%;
         box-sizing: border-box;
-        padding-bottom: 54px;
 
         ul{
             height: 100%;

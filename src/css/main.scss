@@ -37,6 +37,9 @@ input:focus{
 .bg-main{
     background-color: $bg-color-main;
 }
+.bg-main-dark{
+    background-color: $bg-color-main-dark;
+}
 .bg-white{
     background-color: $bg-color-white;
 }
@@ -132,7 +135,7 @@ button.button{
     border:none;
     width:63px;
     height:49px;
-    line-height:49px;
+    // line-height:49px;
     background:$bg-color-light-gray;
     color: $font-color-gray;
     font-size: 20px;
@@ -185,9 +188,9 @@ button.button{
 
 .list-inlineblock{
     font-size: 0;
-    white-space: nowrap;
+    // white-space: nowrap;
     .f-item{
-        white-space: normal;
+        // white-space: normal;
         display: inline-block;
         vertical-align: top;
         font-size: $font-size-n;
@@ -197,6 +200,7 @@ button.button{
 ::-webkit-input-placeholder{
     color: $font-color-gray;
 }
+
 .input-text-1{
     width:100%;
     height:47px;
@@ -224,6 +228,8 @@ button.button{
         line-height: 67px;
         background-color: #fff;
         position: absolute;
+        text-align: center;
+        color: #ACACAC;
     }
     .section-con{
         box-sizing: border-box;

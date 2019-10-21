@@ -283,6 +283,7 @@ export default {
         ul{
             height: 100%;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .row-item{
@@ -303,6 +304,7 @@ export default {
                 height: 67px;
                 width: 4px;
                 background-color: #fff;
+                z-index: 2;
             }
         }
     }
@@ -315,6 +317,7 @@ export default {
         ul{
             height: 100%;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .body-item{
