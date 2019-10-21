@@ -4,7 +4,7 @@ import app_g from '@/modules/appGlobal'
 
 export default {
     data: {
-        user: { token: cookie.get("token") == undefined ? '' : cookie.get("token") },
+        user: {},
         confirmOrder: {},
         historyKeyWord: [],
         pdtListLayout: 1
@@ -12,15 +12,14 @@ export default {
     methods: {
         //登录设置本地数据
         login(result) {
-            this.user = result
-            cookie.set('token', result.token, { path: '/', expires: 30 })
             try {
                 //解决用app内嵌的webview打开网站时，localStorage就失效了
                 //如果在app里面嵌入 ws.setDomStorageEnabled(true) 设置该属性
+                this.user = result
                 window.localStorage.setItem("user_info", JSON.stringify(result))
             }
             catch (err) {
-                alert(err) // 可执行 
+                alert(err)
             }
         },
         //登录设置本地数据
@@ -28,7 +27,8 @@ export default {
             this.user = { token: '' }
             cookie.remove('token', { path: '/' })
             window.localStorage.removeItem("user_info")
-        },//刷新登录
+        },
+        //刷新登录
         refreshLogin(cb) {
             let $this = this
             this.post(app_g.api.api_300, this.GetSign(),
@@ -41,7 +41,8 @@ export default {
                     }
                 }
             )
-        },//提交购物
+        },
+        //提交购物
         sumitSCart(result) {
             this.sCartOrder = result
             window.localStorage.removeItem('sCartOrder')
@@ -94,10 +95,9 @@ export default {
 
         },//是否登录
         islogin() {
-            if (cookie.get("token") == undefined) {
+            if (this.user.token == undefined) {
                 this.$vux.toast.text("当前页面需要登录", "default")
                 router.push({ path: "/passport/login?backUrl=" + router.history.current.path })
-                //this.$router.push({ path: '/passport/login' })
                 return false
             } else {
                 return true
@@ -105,9 +105,12 @@ export default {
         }
     },
     created() {
+        //用户信息
         let userInfoData = window.localStorage.getItem("user_info")
         if (userInfoData) {
             this.user = JSON.parse(userInfoData)
+        } else {
+            this.user = { token: '' }
         }
 
         //提交购物车

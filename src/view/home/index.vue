@@ -2,21 +2,27 @@
   <div id="main">
     <!-- 框架 s -->
     <Frame>
-      <div class="content-wrap" slot="left"><OrderList></OrderList></div>
+      <div class="content-wrap" slot="left">
+        <OrderList></OrderList>
+      </div>
       <div class="content-wrap" slot="right">
-        <!-- <ProductList></ProductList> -->
-        <OrderParameter></OrderParameter>
+        <ProductList></ProductList>
+        <!-- <OrderParameter></OrderParameter> -->
       </div>
     </Frame>
     <!-- 框架 e -->
     <!-- 会员弹层 s -->
     <PopWrap :show="false">
-        <div class="pop-content" slot="content"><PopMember></PopMember></div>
+      <div class="pop-content" slot="content">
+        <PopMember></PopMember>
+      </div>
     </PopWrap>
     <!-- 会员弹层 e -->
     <!-- 上下班弹层 s -->
-    <PopWrap :show="false">
-        <div class="pop-content" slot="content"><PopWork></PopWork></div>
+    <PopWrap :show="true">
+      <div class="pop-content" slot="content">
+        <PopWork></PopWork>
+      </div>
     </PopWrap>
     <!-- 上下班弹层 e -->
   </div>
@@ -24,6 +30,7 @@
 
 <script>
 import app_g from '@/modules/appGlobal'
+import api from '@/modules/api'
 import { mapState } from "vuex"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 import Frame from '@/components/Frame'
@@ -35,7 +42,7 @@ import PopWork from '@/components/PopWork';
 import OrderParameter from '@/components/OrderParameter';
 
 export default {
-  components: { 
+  components: {
     Frame,
     ProductList,
     OrderList,
@@ -46,7 +53,7 @@ export default {
   },
   data() {
     return {
-      pageTitle: '商城首页',
+      pageTitle: '十点咖啡POS收银',
       result: {}
     }
   },
@@ -59,14 +66,14 @@ export default {
 
   },
   created() {
-    //localStorage.setItem('pageTitle', this.pageTitle)
-    //document.getElementById('pageTitle').innerHTML = localStorage.getItem('pageTitle')
+    localStorage.setItem('pageTitle', this.pageTitle)
+    document.getElementById('pageTitle').innerHTML = localStorage.getItem('pageTitle')
   }
 }
 </script> 
 
 <style lang="scss">
-.content-wrap{
+.content-wrap {
   height: 100%;
   overflow: auto;
 }

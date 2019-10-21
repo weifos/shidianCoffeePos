@@ -1,11 +1,11 @@
-import appG from './appGlobal'
+import axios from 'axios'
+import store from '../store'
+import md5 from 'blueimp-md5'
 import user from './userInfo'
-import router from './router'
-import md5 from './md5'
 
 //接口域名  
-let domain = "http://api.shidian.com/"
-let res_domain = "http://res.shidian.com/"
+let domain = "http://coffeeapi.sdibook.com/"
+let res_domain = "http://res.sdibook.com/"
 //测试环境配置
 if (process.env.NODE_ENV !== 'production') {
     domain = "/api/"
@@ -17,15 +17,14 @@ if (process.env.NODE_ENV !== 'production') {
 /// @author   叶委  
 /// @date     2014-05-23         
 /// </summary>
-module.exports = {
+export default {
     //资源站点
     res: res_domain,
     //待定接口
-    api_100: domain + "100",
+    api_200: domain + "200",
     //获取签名
     getSign(obj = {}) {
-        let { token } = user.methods.getUser()
-
+        let { token } = user.data.user
         function sort(obj) {
             if (obj instanceof Array) {
                 //如果数组里面存放的为对象,通过map更改数组结构，排序
@@ -88,22 +87,23 @@ module.exports = {
                 IMSI: "",
                 IP: "",
                 OS: 3,
-                Sign: md5.md5(JSON.stringify(sort(sign_data)) + ')(4AzEdr5J6a`@#$*%'),
+                Sign: md5(JSON.stringify(sort(sign_data)) + ')(4AzEdr5J6a`@#$*%'),
                 Token: token
             }
         }
     },
     //请求对象
     post(url, data, cb, ch) {
+        let that = this
         //加载框
         store.commit("loadingStatus", { isLoading: true })
-        this.$ajax(url, {
+        axios(url, {
             method: "post",
             data: data
         }).then(res => {
             if (res.data.Basis != undefined && res.data.Basis.State == 205) {
-                this.$vux.toast.text(res.data.Basis.Msg, "default")
-                router.push({ path: "/passport/login" })
+                that.$vux.toast.text(res.data.Basis.Msg, "default")
+                that.$router.push({ path: "/passport/login" })
             } else {
                 cb(this, res)
             }
