@@ -1,21 +1,21 @@
 <template>
-  <div class="product-list rel">
+  <div class="product-list rel" v-if="show">
     <div class="product-cate abs bg-white">
       <ul class="list-cate-1 list-inlineblock">
-        <li class="f-item item-cate" v-for="(item,index) in product" :key="index" @click="onClickItem(index)">
+        <li class="f-item item-cate" v-for="(item,index) in result" :key="index" @click="onClickItem(index)">
           <div :class="`button round border-gray text-gray ${curIndex == index ? 'button-border-cur' : ''}`">{{item.name}}</div>
         </li>
       </ul>
     </div>
     <div class="product-items">
       <ul class="list-product-1">
-        <li class="item-product" v-for="(item,index) in product[curIndex].list" :key="index">
+        <li class="item-product" v-for="(item1,index) in result[curIndex].list" :key="index" @click="loadDetails(item1)">
           <div class="item-img">
-            <img :alt="item.name" :src="item.url" width="100%" height="100%" />
+            <img :alt="item1.name" :src="item1.img_url" width="100%" height="100%" />
           </div>
           <div class="item-info text-gray">
-            <div class="item-no">NO.{{item.id}}</div>
-            <div class="item-name ellipsis2">{{item.name}}</div>
+            <div class="item-no">NO.{{item1.no}}</div>
+            <div class="item-name ellipsis2">{{item1.name}}</div>
           </div>
         </li>
       </ul>
@@ -28,100 +28,85 @@ export default {
   data() {
     return {
       curIndex: 0,
-      product: [
-        {
-          name: "水果软软",
-          list: [{
-            id: "003300",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称商品名称商品名称商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }, {
-            id: "003301",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称",
-            link: ''
-          }]
-        }, {
-          name: "水果软软2",
-          list: [{
-            id: "003300",
-            url: require("../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png"),
-            name: "商品名称商品名称 商品名称商品名称商品名称商品名称",
-            link: ''
-          }]
-        }
-      ]
+      //数据集合
+      result: [{
+        name: '',
+        list: []
+      }]
+    }
+  },
+  props: {
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     onClickItem(index) {
-      this.curIndex = index;
+      this.curIndex = index
+      this.api_201()
     },
-    //加载商品数据
+    //加载商品列表数据
     api_200() {
-      this.$store.commit('loadingStatus', {
-        isLoading: true
-      })
-      api.post(api.api_200, api.getSign(), function (vue, res) {
-        if (res.data.Basis.State == app_g.state.state_200) {
-          console.log(res.data.Result)
-          debugger
+      let that = this
+      api.post(api.api_200, api.getSign({
+        StoreID: that.UserInfo.user.store_id
+      }), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          that.catgList = res.data.Result.catgs
+          //处理数据
+          res.data.Result.catgs.forEach(function (item1, index1) {
+            item1.list = []
+            res.data.Result.productList.forEach(function (item, index) {
+              if (item1.id == item.gcatg_id) {
+                item1.list.push(item)
+              }
+            })
+          })
+
+          that.result = res.data.Result.catgs
         } else {
-          vue.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
-          vue.isDisable = true
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
         }
       })
+    },
+    //根据导购分类ID获取
+    api_201() {
+      let that = this
+      api.post(api.api_201, api.getSign({
+        StoreID: that.UserInfo.user.store_id,
+        CatgID: that.result[that.curIndex].id
+      }), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          that.catgList = res.data.Result.
 
+            //处理数据
+            res.data.Result.catgs.forEach(function (item1, index1) {
+              item1.list = []
+              res.data.Result.productList.forEach(function (item, index) {
+                if (item.id == item1.gcatg_id) {
+                  item.list.push(item1)
+                }
+              })
+            })
+
+          that.result = res.data.Result.catgs
+        } else {
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
+        }
+      })
+    },
+    //获取商品详情
+    loadDetails(item) {
+      this.isShow = false
+      this.$emit('getSKU', item)
     }
   },
   created() {
-    //this.api_200()
+    //只有登录后，才获取商品信息
+    if (this.UserInfo.islogin()) {
+      this.api_200()
+    }
   }
 }
 </script>

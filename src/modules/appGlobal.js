@@ -489,6 +489,40 @@ export default {
                 return new Date(t1.replace(new RegExp(/-/gm), "/")) > new Date(this.getDateTimeNow().replace(new RegExp(/-/gm), "/"))
             }
         },
+        //比对sku字符串
+        compareSku: function (sku1, sku2) {
+            let exist = 0
+            let arr = sku1.split(',')
+            let arr1 = sku2.split(',')
+            //sku集合是否一致
+            if (arr.length != arr1.length) {
+                return false
+            }
+
+            arr.forEach(function (o, i) {
+                arr1.forEach(function (oo, ii) {
+                    if (oo == o) {
+                        exist++
+                    }
+                })
+            })
+            return arr.length == exist
+        },
+        //获取SKU信息
+        getCustomName: function (specCustoms, name_id, val_id, val) {
+            var custom_name = val
+            specCustoms.forEach(function (item, index) {
+                if (
+                    name_id == item.specname_id &&
+                    val_id == item.specvalue_id &&
+                    item.custom_value != ''
+                ) {
+                    custom_name = item.custom_value
+                    return
+                }
+            })
+            return custom_name
+        },
         //本地文件转成base64
         fileToBase64: function () {
             return new Promise((resolve, reject) => {

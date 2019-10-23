@@ -6,11 +6,12 @@
         <OrderList></OrderList>
       </div>
       <div class="content-wrap" slot="right">
-        <ProductList></ProductList>
-        <!-- <OrderParameter></OrderParameter> -->
+        <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
+        <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU"></OrderParameter>
       </div>
     </Frame>
     <!-- 框架 e -->
+
     <!-- 上下班弹层 s -->
     <PopWrap>
       <!-- <div class="pop-content" slot="content">
@@ -26,9 +27,10 @@
 
 <script>
 import store from '@/store'
+import { mapState } from "vuex"
 import api from '@/modules/api'
 import app_g from '@/modules/appGlobal'
-import { mapState } from "vuex"
+import app_m from "@/modules/appMiddleware"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 import Frame from '@/components/Frame'
 import ProductList from '@/components/ProductList'
@@ -52,7 +54,10 @@ export default {
     return {
       pageTitle: '十点咖啡POS收银',
       isLogin: false,
-      user: {}
+      showProductList: true,
+      showProductSku: false,
+      user: {},
+      products: {}
     }
   },
   computed: {
@@ -61,13 +66,42 @@ export default {
     })
   },
   methods: {
-    //处理组件登录成功
+    //子组件通知父组件，处理组件登录成功
     lgSuccess(data) {
       this.user = data
+      this.loadProducts()
+    },
+    //子组件通知父组件，加载商品信息
+    loadProducts() {
+      //同时父组件通知商品列表子组件
+      this.$refs.pList.api_200()
+    },
+    //子组件通知父组件，加载商品SKU信息
+    loadSKU(data) {
+      this.showProductList = false
+      this.showProductSku = true
+      //同时父组件通知商品列表子组件
+      this.$refs.pSKU.api_202(data)
+    },
+    //子组件通知父组件，关闭商品SKU信息
+    closeSKU() {
+      this.showProductSku = false
+      this.showProductList = true
+    },
+    aa(dt) {
+      console.log(dt)
+    },
+    bb(dt) {
+      console.log(dt)
     }
   },
   created() {
+    debugger
+    //app_m.init(this.aa)
+    app_m.print(this.bb)
+
     this.isLogin = this.UserInfo.islogin()
+    //如果未登录，弹出登录对话框
     if (!this.isLogin) {
       store.commit('setShowDialog', { showDialog: true })
     }

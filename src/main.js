@@ -1,5 +1,6 @@
 //import 'babel-polyfill'
 import Vue from 'vue'
+import Print from 'vue-print-nb'
 import { cookie, AlertPlugin, ToastPlugin, LoadingPlugin, ConfirmPlugin, DatetimePlugin, PopupPicker } from 'vux'
 import axios from 'axios'
 import FastClick from 'fastclick'
@@ -12,6 +13,7 @@ import app_g from "./modules/appGlobal"
 import user from "./modules/userInfo"
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 
+Vue.use(Print)
 Vue.use(VueAwesomeSwiper)
 Vue.prototype.$bridge = Bridge
 Vue.prototype.$ = $

@@ -104,7 +104,6 @@ export default {
           that.UserInfo.login(res.data.Result)
           //关闭模态窗口
           store.commit('setShowDialog', { showDialog: false })
-          debugger
           //更新父级组件
           that.$emit('loginSuccess', res.data.Result)
         } else {

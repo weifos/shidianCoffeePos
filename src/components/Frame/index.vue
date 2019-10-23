@@ -74,7 +74,8 @@
 </template>
 
 <script>
-import Icon from '@/components/Icon';
+import Icon from '@/components/Icon'
+
 
 export default {
   components: {
@@ -111,8 +112,6 @@ export default {
     }
   },
   created() {
-    console.log('检测登录')
-    //this.api_200()
   }
 }
 

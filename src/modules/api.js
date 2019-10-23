@@ -22,6 +22,12 @@ export default {
     res: res_domain,
     //咖啡系统用户登录
     api_100: domain + "100",
+    //咖啡POS首页数据
+    api_200: domain + "200",
+    //咖啡POS根据导购分类获取
+    api_201: domain + "201",
+    //咖啡POS加载商品详情
+    api_202: domain + "202",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user
