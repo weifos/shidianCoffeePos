@@ -11,7 +11,7 @@ export default {
     },
     print(user_id, order_no, callback) {
         //获取当前
-        app_middleware.print(user_id, order_no, callback)
+        // app_middleware.print(user_id, order_no, callback)
     }
 }
 

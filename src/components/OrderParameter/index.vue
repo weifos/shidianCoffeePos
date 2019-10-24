@@ -6,6 +6,16 @@
     </div>
     <div class="section-con">
       <div class="con-wrap">
+        <div class="product-info hidden">
+          <div class="img-bar fl">
+            <img src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" alt="">
+          </div>
+          <div class="text-bar  text-gray">
+            <div class="text-name mt10">这里是商品名称</div>
+            <div class="text-no mt10 ">这里是商品编号</div>
+            <div class="text-num">库存：10件</div>
+          </div>
+        </div>
         <ul class="list-para">
           <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
             <div class="para-label text-gray fl">{{item.name}}：</div>
@@ -409,6 +419,23 @@ export default {
     }
     .text-name {
       width: 70%;
+    }
+  }
+  .product-info{
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+    border-bottom:1px solid #acacac;
+    .img-bar{
+      width: 150px;
+      height: 150px;
+      margin:0 40px 0 25px;
+      img{width: 100%;height: 100%;}
+    }
+    .text-name{
+      font-size: 22px;
+    }
+    .text-num{
+      margin-top: 50px;
     }
   }
 }

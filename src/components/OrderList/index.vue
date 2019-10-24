@@ -30,7 +30,7 @@
       </div>
       <div class="btns-bar abs">
         <button class="button bg-white text-main button-size-small round">挂单</button>
-        <button class="button bg-white text-main button-size-small round ml5">结算</button>
+        <button class="button bg-white text-main button-size-small round ml5 btn-account">结算</button>
         <button class="button bg-white text-main button-size-small round ml5">删除</button>
       </div>
     </div>
@@ -52,6 +52,10 @@ export default {
 
 <style lang="scss">
 .order-list {
+  .btn-account{
+        transform: scale(1.3);
+        margin:0 10px 0 15px;
+      }
   .form-order {
     padding: 32px 0 62px 0;
     height: 100%;
@@ -75,6 +79,7 @@ export default {
       .btn {
         margin: 0 5px;
       }
+      
     }
     .order-tit {
       .item-name,

@@ -3,12 +3,12 @@
     <!-- 框架 s -->
     <Frame :result="user">
       <div class="content-wrap h100" slot="left">
-        <!-- <OrderList></OrderList> -->
-        <OrderList2></OrderList2>
+        <OrderList></OrderList>
+        <!-- <OrderList2></OrderList2> -->
       </div>
       <div class="content-wrap h100" slot="right">
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
-        <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU"></OrderParameter>
+        <!-- <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU"></OrderParameter> -->
         <!-- <ProductList></ProductList> -->
         <!-- <OrderParameter></OrderParameter> -->
         <!-- <NotDoneOrder></NotDoneOrder> -->
@@ -16,6 +16,7 @@
         <!-- <OrderPay></OrderPay> -->
         <!-- <OrderNormal></OrderNormal> -->
         <!-- <OrderEntry></OrderEntry> -->
+        <!-- <OrderSure></OrderSure> -->
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -53,6 +54,7 @@ import NotGetOrder from '@/components/NotGetOrder';
 import OrderPay from '@/components/OrderPay';
 import OrderNormal from '@/components/OrderNormal';
 import OrderEntry from '@/components/OrderEntry';
+import OrderSure from '@/components/OrderSure';
 
 export default {
   components: {
@@ -69,6 +71,7 @@ export default {
     OrderPay,
     OrderNormal,
     OrderEntry,
+    OrderSure
   },
   data() {
     return {
