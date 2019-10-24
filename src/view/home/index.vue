@@ -3,13 +3,8 @@
     <!-- 框架 s -->
     <Frame :result="user">
       <div class="content-wrap h100" slot="left">
-<<<<<<< HEAD
-        <OrderList></OrderList>
-        <!-- <OrderList2></OrderList2> -->
-=======
         <!-- <OrderList></OrderList> -->
         <OrderList2></OrderList2>
->>>>>>> 8dc6c02513def10c4eee68473bf4aa6975a639dd
       </div>
       <div class="content-wrap h100" slot="right">
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
@@ -122,7 +117,7 @@ export default {
   },
   created() {
     //app_m.init(this.aa)
-    //app_m.print(this.bb)
+    app_m.print(1, '1001100119102400012', this.bb)
 
     this.isLogin = this.UserInfo.islogin()
     //如果未登录，弹出登录对话框

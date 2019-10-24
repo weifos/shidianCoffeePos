@@ -9,9 +9,9 @@ export default {
         //获取当前
         app_middleware.getDeviceInfo(callback)
     },
-    print(callback) {
+    print(user_id, order_no, callback) {
         //获取当前
-        app_middleware.print("12345678", callback)
+        app_middleware.print(user_id, order_no, callback)
     }
 }
 
