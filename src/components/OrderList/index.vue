@@ -34,20 +34,6 @@
         <button class="button bg-white text-main button-size-small round ml5">删除</button>
       </div>
     </div>
-
-    <div class="order-con">
-      <ul class="font-size-small list-order">
-        <li class="list-inlineblock tac item-order" v-for="(item,index) in list" :key="index">
-          <div class="f-item hidden item-name ellipsis">{{item.name}}</div>
-          <div class="f-item hidden item-price">{{item.price}}</div>
-          <div class="f-item hidden item-num">{{item.num}}</div>
-          <div class="f-item hidden item-operate">
-            <button class="btn btn-subtract"></button>
-            <button class="btn btn-plus"></button>
-          </div>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 <script>
