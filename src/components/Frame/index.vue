@@ -26,26 +26,6 @@
         <slot name="left"></slot>
       </div>
     </div>
-    <div class="machine-info mt15">
-      <div>收银台：咖啡POS</div>
-      <div class="mt5">会 员：{{member.login_name}}【十点会员】</div>
-    </div>
-
-    <div class="content-bar">
-      <slot name="left"></slot>
-    </div>
-    <div class="tool-bar abs bg-main text-white">
-      <div class="accounts-info">
-        <div>数量：0</div>
-        <div class="mt5">总计：0</div>
-      </div>
-      <div class="btns-bar abs">
-        <button class="button bg-white text-main button-size-small round">挂单</button>
-        <button class="button bg-white text-main button-size-small round ml5">结算</button>
-        <button class="button bg-white text-main button-size-small round ml5">删除</button>
-      </div>
-    </div>
-
     <!-- frame-left e -->
     <!-- frame-right s -->
     <div class="frame-right rel">

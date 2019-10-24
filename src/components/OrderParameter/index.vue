@@ -1,59 +1,37 @@
 <template>
-    <div class="order-parameter rel section"  v-if="isShow">
-        <div class="section-tit abs bg-white list-inlineblock tac text-gray">
-            <div class="f-item text-no border-box">NO.123124141</div>
-            <div class="f-item text-name">{{product.name}}</div>
-        </div>
-        <div class="section-con">
-            <div class="con-wrap">
-                <ul class="list-para">
-                    <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
-                        <div class="para-label text-gray fl">{{item.name}}：</div>
-                        <div class="para-value list-inlineblock">
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20 clicked" 
-                              v-for="(citem,index) in pResult.specValues"
+  <div class="order-parameter rel section" v-if="isShow">
+    <div class="section-tit abs bg-white list-inlineblock tac text-gray">
+      <div class="f-item text-no border-box">NO.123124141</div>
+      <div class="f-item text-name">{{product.name}}</div>
+    </div>
+    <div class="section-con">
+      <div class="con-wrap">
+        <ul class="list-para">
+          <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
+            <div class="para-label text-gray fl">{{item.name}}：</div>
+            <div class="para-value list-inlineblock">
+              <button
+                class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20"
+                v-for="(citem,index) in pResult.specValues"
                 v-if="citem.specname_id == item.id"
                 @click="check(citem)"
-                            :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']">{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
-                        </div>
-                    </li>
-                    <li class="list-item">
-                        <div class="dib vam text-gray para-label">单价：</div>
-                        <div class="dib vam ">
-                            <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price">
-                        </div>
-                        <div class="dib vam text-gray para-label">小计：</div>
-                        <div class="dib vam ">
-                            <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1">
-                        </div>
-                        <div class="row mt20">
-                            <div class="dib vam text-gray para-label">库存：</div>
-                            <div class="dib vam ">
-                                <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1">
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="operate-bar tar">
-                    <div class="row">
-                       <button class="btn btn-subtract operate-btn-size-middle mr10"></button>
-                       <input type="text" class=" dib vam font-size-middle round bg-white text-gray tac input-size-middle no-border" value="1">
-                        <button class="btn btn-plus operate-btn-size-middle ml10"></button>
-                    </div>
-                    <div class="row mt30">
-                        <button class="button round bg-main text-white button-size-normal mr20">确认</button>
-                        <button class="button round bg-gray text-white button-size-normal">取消</button>
-                    </div>
-                </div>
+                :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']"
+              >{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
+            </div>
+          </li>
+          <li class="list-item">
+            <div class="dib vam text-gray para-label">单价：</div>
+            <div class="dib vam">
+              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" />
             </div>
             <div class="dib vam text-gray para-label">小计：</div>
             <div class="dib vam">
-              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price * buyCount" />
+              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" />
             </div>
             <div class="row mt20">
               <div class="dib vam text-gray para-label">库存：</div>
               <div class="dib vam">
-                <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.stock" />
+                <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" />
               </div>
             </div>
           </li>
@@ -68,6 +46,16 @@
             <button class="button round bg-main text-white button-size-normal mr20">确认</button>
             <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
           </div>
+        </div>
+      </div>
+      <div class="dib vam text-gray para-label">小计：</div>
+      <div class="dib vam">
+        <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price * buyCount" />
+      </div>
+      <div class="row mt20">
+        <div class="dib vam text-gray para-label">库存：</div>
+        <div class="dib vam">
+          <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.stock" />
         </div>
       </div>
     </div>
@@ -157,7 +145,6 @@ export default {
           }
         }
       })
-      console.log(that.pResult.specValues)
 
       //判断下一行索引是否大于数组总长度 
       if (i + 1 > this.pResult.specNames.length - 1) {

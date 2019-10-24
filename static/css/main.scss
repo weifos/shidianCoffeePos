@@ -37,6 +37,9 @@ input:focus{
 .bg-main{
     background-color: $bg-color-main;
 }
+.bg-main-dark{
+    background-color: $bg-color-main-dark;
+}
 .bg-white{
     background-color: $bg-color-white;
 }
@@ -96,6 +99,11 @@ button.button{
     height:44px;
     line-height: 44px;
 }
+.button-size-middle2{
+    padding: 0 30px;
+    height:34px;
+    line-height: 34px;
+}
 .round{
     border-radius: 21px
 }
@@ -118,16 +126,16 @@ button.button{
     height:35px;
 }
 .btn-subtract{
-      background: url("../static/img/subtract.png") no-repeat 0 0/100% auto;
+    background: url("../static/img/subtract.png") no-repeat 0 0/100% auto;
 }
 .btn-plus{
-     background: url("../static/img/plus.png") no-repeat 0 0/100% auto;
+    background: url("../static/img/plus.png") no-repeat 0 0/100% auto;
 }
 .btn-number{//数字按键
     border:none;
     width:63px;
     height:49px;
-    line-height:49px;
+    // line-height:49px;
     background:$bg-color-light-gray;
     color: $font-color-gray;
     font-size: 20px;
@@ -180,7 +188,9 @@ button.button{
 
 .list-inlineblock{
     font-size: 0;
+    // white-space: nowrap;
     .f-item{
+        // white-space: normal;
         display: inline-block;
         vertical-align: top;
         font-size: $font-size-n;
@@ -190,6 +200,7 @@ button.button{
 ::-webkit-input-placeholder{
     color: $font-color-gray;
 }
+
 .input-text-1{
     width:100%;
     height:47px;
@@ -203,5 +214,44 @@ button.button{
     &:focus{
         border-color: $border-color-main;
         box-shadow: 0 0 5px $border-color-main
+    }
+}
+
+.section,.section-2{
+    overflow: hidden;
+    height: 100%;
+    .section-tit{
+        height: 67px;
+        width: 100%;
+        left: 0;
+        top: 0;
+        line-height: 67px;
+        background-color: #fff;
+        position: absolute;
+        text-align: center;
+        color: #ACACAC;
+    }
+    .section-con{
+        box-sizing: border-box;
+        height: 100%;
+        padding: 67px 0 0 0;
+    }
+    .con-wrap{
+        height: 100%;
+        overflow: auto;
+        box-sizing: border-box;
+        padding: 45px;
+    }
+}
+.section-2{
+    .section-tit{
+        height: 47px;
+        line-height: 47px;
+    }
+    .section-con{
+        padding: 47px 0 0 0;
+    }
+    .con-wrap{
+        padding: 13px;
     }
 }
