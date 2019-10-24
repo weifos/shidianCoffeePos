@@ -1,21 +1,14 @@
 <template>
   <div id="main">
     <!-- 框架 s -->
-<<<<<<< HEAD
     <Frame :result="user">
       <div class="content-wrap" slot="left">
-        <OrderList></OrderList>
+        <!-- <OrderList></OrderList> -->
+        <OrderList2></OrderList2>
       </div>
       <div class="content-wrap" slot="right">
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU"></OrderParameter>
-=======
-    <Frame>
-      <div class="content-wrap h100" slot="left">
-        <!-- <OrderList></OrderList> -->
-        <OrderList2></OrderList2>
-      </div>
-      <div class="content-wrap h100" slot="right">
         <!-- <ProductList></ProductList> -->
         <!-- <OrderParameter></OrderParameter> -->
         <!-- <NotDoneOrder></NotDoneOrder> -->
@@ -23,7 +16,6 @@
         <!-- <OrderPay></OrderPay> -->
         <!-- <OrderNormal></OrderNormal> -->
         <!-- <OrderEntry></OrderEntry> -->
->>>>>>> acdc95659809aa6ac917efc7415478388af9f508
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -49,14 +41,6 @@ import app_g from '@/modules/appGlobal'
 import app_m from "@/modules/appMiddleware"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 import Frame from '@/components/Frame'
-<<<<<<< HEAD
-import ProductList from '@/components/ProductList'
-import OrderList from '@/components/OrderList'
-import PopWrap from '@/components/PopWrap'
-import PopMember from '@/components/PopMember'
-import PopWork from '@/components/PopWork'
-import OrderParameter from '@/components/OrderParameter'
-=======
 import ProductList from '@/components/ProductList';
 import OrderList from '@/components/OrderList';
 import OrderList2 from '@/components/OrderList2';
@@ -69,7 +53,6 @@ import NotGetOrder from '@/components/NotGetOrder';
 import OrderPay from '@/components/OrderPay';
 import OrderNormal from '@/components/OrderNormal';
 import OrderEntry from '@/components/OrderEntry';
->>>>>>> acdc95659809aa6ac917efc7415478388af9f508
 
 export default {
   components: {
@@ -149,15 +132,8 @@ export default {
 </script> 
 
 <style lang="scss">
-<<<<<<< HEAD
-.content-wrap {
-  height: 100%;
-  overflow: auto;
-}
-=======
 // .content-wrap{
 //   height: 100%;
 //   overflow: auto;
 // }
->>>>>>> acdc95659809aa6ac917efc7415478388af9f508
 </style>

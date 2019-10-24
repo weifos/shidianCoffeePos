@@ -1,63 +1,26 @@
 <template>
-<<<<<<< HEAD
-  <div class="order-parameter rel" v-if="isShow">
-    <div class="section-tit abs bg-white list-inlineblock tac text-gray">
-      <div class="f-item text-no border-box">NO.123124141</div>
-      <div class="f-item text-name">{{product.name}}</div>
-    </div>
-    <div class="section-con">
-      <div class="con-wrap">
-        <ul class="list-para">
-          <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
-            <div class="para-label text-gray fl">{{item.name}}：</div>
-            <div class="para-value list-inlineblock">
-              <!-- citem -->
-              <button
-                class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20"
-                v-for="(citem,index) in pResult.specValues"
-                :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']"
-                v-if="citem.specname_id == item.id"
-                @click="check(citem)"
-              >{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
-            </div>
-          </li>
-
-          <li class="list-item">
-            <div class="dib vam text-gray para-label">单价：</div>
-            <div class="dib vam">
-              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" />
-=======
-    <div class="order-parameter rel section">
+    <div class="order-parameter rel section"  v-if="isShow">
         <div class="section-tit abs bg-white list-inlineblock tac text-gray">
             <div class="f-item text-no border-box">NO.123124141</div>
-            <div class="f-item text-name">商品名称</div>
+            <div class="f-item text-name">{{product.name}}</div>
         </div>
         <div class="section-con">
             <div class="con-wrap">
                 <ul class="list-para">
-                    <li class="list-item">
-                        <div class="para-label text-gray fl">容量：</div>
+                    <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
+                        <div class="para-label text-gray fl">{{item.name}}：</div>
                         <div class="para-value list-inlineblock">
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20 clicked">大杯</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">中杯</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">小杯</button>
-                        </div>
-                    </li>
-                    <li class="list-item">
-                        <div class="para-label text-gray fl">温度：</div>
-                        <div class="para-value">
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20 clicked">热</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">冷</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">常温</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">多冰</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">少冰</button>
-                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20">去冰</button>
+                            <button class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20 clicked" 
+                              v-for="(citem,index) in pResult.specValues"
+                v-if="citem.specname_id == item.id"
+                @click="check(citem)"
+                            :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']">{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
                         </div>
                     </li>
                     <li class="list-item">
                         <div class="dib vam text-gray para-label">单价：</div>
                         <div class="dib vam ">
-                            <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1">
+                            <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price">
                         </div>
                         <div class="dib vam text-gray para-label">小计：</div>
                         <div class="dib vam ">
@@ -82,7 +45,6 @@
                         <button class="button round bg-gray text-white button-size-normal">取消</button>
                     </div>
                 </div>
->>>>>>> acdc95659809aa6ac917efc7415478388af9f508
             </div>
             <div class="dib vam text-gray para-label">小计：</div>
             <div class="dib vam">
@@ -111,7 +73,7 @@
     </div>
   </div>
 </template>
-<<<<<<< HEAD
+ 
 <script>
 import api from '@/modules/api'
 import app_g from "@/modules/appGlobal"
@@ -244,11 +206,7 @@ export default {
           } else {
             pass = true
           }
-=======
-<style lang="scss">
-.order-parameter{
-    
->>>>>>> acdc95659809aa6ac917efc7415478388af9f508
+
 
           item.specset.split(',').forEach(function (o, i) {
             if (pass && o.split('_')[0] == spec_name_id && obj.specname_id + "_" + obj.id == o) {
