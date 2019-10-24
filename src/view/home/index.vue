@@ -2,11 +2,11 @@
   <div id="main">
     <!-- 框架 s -->
     <Frame :result="user">
-      <div class="content-wrap" slot="left">
-        <!-- <OrderList></OrderList> -->
-        <OrderList2></OrderList2>
+      <div class="content-wrap h100" slot="left">
+        <OrderList></OrderList>
+        <!-- <OrderList2></OrderList2> -->
       </div>
-      <div class="content-wrap" slot="right">
+      <div class="content-wrap h100" slot="right">
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU"></OrderParameter>
         <!-- <ProductList></ProductList> -->

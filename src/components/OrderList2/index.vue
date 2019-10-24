@@ -23,26 +23,27 @@
                 <div class="f-item">找零： ¥0</div>
             </div>
             <div class="h100 rel">
-            <div class="pay-tit list-inlineblock bg-main text-white abs w100">
-                <div class="f-item w1">序号</div>
-                <div class="f-item w2">支付方式</div>
-                <div class="f-item w1">金额</div>
+                <div class="pay-tit list-inlineblock bg-main text-white abs w100">
+                    <div class="f-item w1">序号</div>
+                    <div class="f-item w2">支付方式</div>
+                    <div class="f-item w1">金额</div>
+                </div>
+                <div class="pay-con h100 border-box"><div class="h100 scroll-y">
+                    <ul class="text-gray">
+                        <li class="list-inlineblock">
+                            <div class="f-item w1">1</div>
+                            <div class="f-item w2">支付宝</div>
+                            <div class="f-item w1">20.00</div>
+                        </li>
+                        <li class="list-inlineblock">
+                            <div class="f-item w1">2</div>
+                            <div class="f-item w2">现金</div>
+                            <div class="f-item w1">20.00</div>
+                        </li>
+                    </ul>
+                </div></div>
             </div>
-            <div class="pay-con h100 border-box"><div class="h100 scroll-y">
-                <ul class="text-gray">
-                    <li class="list-inlineblock">
-                        <div class="f-item w1">1</div>
-                        <div class="f-item w2">支付宝</div>
-                        <div class="f-item w1">20.00</div>
-                    </li>
-                    <li class="list-inlineblock">
-                        <div class="f-item w1">2</div>
-                        <div class="f-item w2">现金</div>
-                        <div class="f-item w1">20.00</div>
-                    </li>
-                </ul>
-            </div></div>
-        </div></div>
+        </div>
     </div>
 </template>
 <script>
