@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="f-frame">
     <!-- frame-left s -->
     <div class="frame-left rel">
@@ -17,6 +18,29 @@
               <span class="dib vam ml10">{{userInfo.user_name}}</span>
             </div>
           </div>
+=======
+    <div class="f-frame">
+        <!-- frame-left s -->
+        <div class="frame-left rel">
+            <div class="info-bar abs">
+                <div class="text-gray font-size-small">2019-09-12 12:23:00</div>
+                <div class="text-gray font-size-small mt5">联网状态：</div>
+                <div class="user-info hidden mt15">
+                    <div class="user-img fl">
+                        <img alt="" src="../../img/head.png" width="100%" height="100%" />
+                    </div>
+                    <div class="user-txt">
+                        <div class="user-name bold">收银员：Lisa</div>
+                        <div class="user-identity mt5"><span class="icon icon-arrow dib vam"></span><span class="dib vam ml10">超级管理员</span></div>
+                    </div>
+                </div>
+                <div class="machine-info mt15">
+                    <div>收银台：0101 </div>
+                    <div class="mt5">会 员：139812345432【十点会员】</div>
+                </div>
+            </div>
+            <div class="content-bar"><slot name="left"></slot></div>
+>>>>>>> acdc95659809aa6ac917efc7415478388af9f508
         </div>
         <div class="machine-info mt15">
           <div>收银台：咖啡POS</div>
@@ -118,6 +142,7 @@ export default {
 </script>
 
 <style lang="scss">
+<<<<<<< HEAD
 .frame-left {
   .info-bar {
     width: 100%;
@@ -168,6 +193,57 @@ export default {
     padding-top: 18px;
     padding-right: 13px;
   }
+=======
+.frame-left{
+    .info-bar{
+        width: 100%;
+        left: 0;
+        top: 0;
+        height: 197px;
+        border-bottom:1px solid #ACACAC; 
+        box-sizing: border-box;
+        padding: 16px;
+    }
+    .tool-bar{
+        height: 62px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+    }
+    .content-bar{
+        height: 100%;
+        box-sizing: border-box;
+        padding: 197px 0  0 0;
+    }
+    .user-txt{
+        padding-top: 5px;
+    }
+    .user-info{
+        .user-name,.user-identity{
+            font-size: 18px;
+        }
+        .user-img{
+            width: 59px;
+            height: 59px;
+            overflow: hidden;
+            border-radius: 100%;
+            margin-right: 17px;
+        }
+    }
+    .accounts-info{
+        padding: 12px 0 0 20px;
+    }
+    .btns-bar{
+        text-align: right;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        box-sizing: border-box;
+        padding-top: 18px;
+        padding-right: 13px;
+    }
+>>>>>>> acdc95659809aa6ac917efc7415478388af9f508
 }
 
 .frame-right {
@@ -180,6 +256,7 @@ export default {
     text-align: center;
     overflow: hidden;
 
+<<<<<<< HEAD
     .text-tips {
       padding-right: 253px;
     }
@@ -201,6 +278,29 @@ export default {
     width: 243px;
     height: 30px;
     transform: translateY(-50%);
+=======
+        .text-tips{
+            // padding-right: 253px;
+        }
+    }
+    .tool-bar{
+        width:100%;
+        height: 92px;
+        left:0;
+        bottom: 0;
+    }
+    .content-bar{
+        height: 100%;
+        box-sizing: border-box;
+        padding: 58px 0  92px 0;
+    }
+    .search-bar{
+        right:10px;
+        top:50%;
+        width: 243px;
+        height: 30px;
+        transform: translateY(-50%);
+>>>>>>> acdc95659809aa6ac917efc7415478388af9f508
 
     &:after {
       content: "";
