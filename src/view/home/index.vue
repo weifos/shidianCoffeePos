@@ -118,7 +118,7 @@ export default {
   created() {
     debugger
     //app_m.init(this.aa)
-    app_m.print(this.bb)
+    //app_m.print(this.bb)
 
     this.isLogin = this.UserInfo.islogin()
     //如果未登录，弹出登录对话框
