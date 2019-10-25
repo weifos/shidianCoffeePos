@@ -30,30 +30,33 @@
             </div>
           </li>
           <li class="list-item">
-            <div class="dib vam text-gray para-label">单价：</div>
-            <div class="dib vam">
-              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" />
-            </div>
-            <div class="dib vam text-gray para-label">小计：</div>
-            <div class="dib vam">
-              <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" />
+            <div class="row">
+              <div class="dib vam text-gray para-label">数量：</div>
+              <div class="dib vam">
+                <button class="btn btn-subtract operate-btn-size-middle mr10" @click="sub"></button>
+                <input type="text" class="dib vam font-size-middle round bg-white text-gray tac input-size-middle no-border" v-model="buyCount" />
+                <button class="btn btn-plus operate-btn-size-middle ml10" @click="add"></button>
+              </div>
             </div>
             <div class="row mt20">
-              <div class="dib vam text-gray para-label">库存：</div>
-              <div class="dib vam">
-                <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" />
+              <div class="dib vam text-gray para-label">单价：</div>
+              <div class="dib vam font-size-middle text-gray">
+                ￥23.00
+                <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" /> -->
+              </div>
+            </div>
+            <div class="row mt10">
+              <div class="dib vam text-gray para-label">小计：</div>
+              <div class="dib vam text-total">
+                ￥23.00
+                <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" /> -->
               </div>
             </div>
           </li>
         </ul>
-        <div class="operate-bar tar">
+        <div class="operate-bar tac">
           <div class="row">
-            <button class="btn btn-subtract operate-btn-size-middle mr10" @click="sub"></button>
-            <input type="text" class="dib vam font-size-middle round bg-white text-gray tac input-size-middle no-border" v-model="buyCount" />
-            <button class="btn btn-plus operate-btn-size-middle ml10" @click="add"></button>
-          </div>
-          <div class="row mt30">
-            <button class="button round bg-main text-white button-size-normal mr20">确认</button>
+            <button class="button round bg-main text-white button-size-normal">确认</button>
             <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
           </div>
         </div>
@@ -409,7 +412,7 @@ export default {
     height: 100%;
     overflow: auto;
     box-sizing: border-box;
-    padding: 45px;
+    padding: 30px 45px;
   }
 
   .section-tit {
@@ -422,8 +425,8 @@ export default {
     }
   }
   .product-info{
-    padding-bottom: 40px;
-    margin-bottom: 40px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
     border-bottom:1px solid #acacac;
     .img-bar{
       width: 150px;
@@ -438,10 +441,19 @@ export default {
       margin-top: 50px;
     }
   }
+  .operate-bar{
+    margin-top: 50px;
+    .button{
+      margin:0 50px; 
+    }
+  }
+  .text-total{
+    font-size: 24px;
+  }
 }
 .list-para {
   .list-item {
-    margin-bottom: 48px;
+    margin-bottom: 15px;
     overflow: hidden;
   }
   .para-label {
