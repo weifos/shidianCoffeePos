@@ -20,14 +20,22 @@ if (process.env.NODE_ENV !== 'production') {
 export default {
     //资源站点
     res: res_domain,
-    //咖啡系统用户登录
+    //咖啡系统初始化
     api_100: domain + "100",
+    //咖啡系统用户登录
+    api_101: domain + "101",
     //咖啡POS首页数据
     api_200: domain + "200",
     //咖啡POS根据导购分类获取
     api_201: domain + "201",
     //咖啡POS加载商品详情
     api_202: domain + "202",
+    //咖啡POS提交订单
+    api_203: domain + "203",
+    //咖啡POS订单详情
+    api_204: domain + "204",
+    //咖啡POS订单支付
+    api_205: domain + "205",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user
@@ -109,7 +117,6 @@ export default {
         }).then(res => {
             if (res.data.Basis != undefined && res.data.Basis.State == 205) {
                 that.$vux.toast.text(res.data.Basis.Msg, "default")
-                that.$router.push({ path: "/passport/login" })
             } else {
                 cb(this, res)
             }

@@ -10,13 +10,13 @@
         </div>
         <div class="order-con">
           <ul class="font-size-small list-order">
-            <li class="list-inlineblock tac item-order" v-for="(item,index) in list" :key="index">
-              <div class="f-item hidden item-name ellipsis">{{item.name}}</div>
-              <div class="f-item hidden item-price">{{item.price}}</div>
-              <div class="f-item hidden item-num">{{item.num}}</div>
+            <li class="list-inlineblock tac item-order" :class="[cindex == index?'selected':'']" v-for="(item,index) in list" :key="index" @click="selected(index)">
+              <div class="f-item hidden item-name ellipsis">{{item.product_name}} {{item.spec_msg}}</div>
+              <div class="f-item hidden item-price">{{item.unit_price|MoneyToF}}</div>
+              <div class="f-item hidden item-num">{{item.count}}</div>
               <div class="f-item hidden item-operate">
-                <button class="btn btn-subtract"></button>
-                <button class="btn btn-plus"></button>
+                <button class="btn btn-subtract" @click="sub(item)"></button>
+                <button class="btn btn-plus" @click="add(item)"></button>
               </div>
             </li>
           </ul>
@@ -25,37 +25,122 @@
     </div>
     <div class="tool-bar abs bg-main text-white">
       <div class="accounts-info">
-        <div>数量：0</div>
-        <div class="mt5">总计：0</div>
+        <div>数量：{{count}}</div>
+        <div class="mt5">总计：{{total|MoneyToF}}</div>
       </div>
       <div class="btns-bar abs">
         <button class="button bg-white text-main button-size-small round">挂单</button>
-        <button class="button bg-white text-main button-size-small round ml5 btn-account">结算</button>
-        <button class="button bg-white text-main button-size-small round ml5">删除</button>
+        <button class="button bg-white text-main button-size-small round ml5 btn-account" @click="api_203">结算</button>
+        <button class="button bg-white text-main button-size-small round ml5" @click="del">删除</button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import router from '@/router'
+import api from '@/modules/api'
+import app_g from '@/modules/appGlobal'
+
 export default {
   data() {
     return {
-      list: [{
-        name: "摩卡咖啡",
-        price: "135.00",
-        num: "11"
-      }]
+      cindex: -1,
+      count: 0,
+      total: 0,
+      list: []
     }
+  },
+  methods: {
+    //获取本地购物车
+    upShoppingCart() {
+      this.list = app_g.getShoppingCart()
+      this.updateStats()
+    },
+    //加
+    add(item) {
+      if (item.count + 1 >= 99) {
+        this.$vux.toast.text('最大数量不能超过99', 'default', 3000)
+        return
+      }
+      let tmp = {
+        specset: item.specset,
+        count: 1
+      }
+      app_g.setShoppingCart(tmp)
+      this.upShoppingCart()
+
+    },
+    //减
+    sub(item) {
+      if (item.count - 1 < 1) return
+      let tmp = {
+        specset: item.specset,
+        count: -1
+      }
+      app_g.setShoppingCart(tmp)
+      this.upShoppingCart()
+    },
+    //选中
+    selected(index) {
+      this.cindex = index
+    },
+    //删除
+    del() {
+      if (this.cindex != -1) {
+        app_g.delShoppingCart(this.cindex)
+        this.list = app_g.getShoppingCart()
+      }
+    },
+    //更新统计
+    updateStats() {
+      this.count = 0
+      this.total = 0
+      let tmps = app_g.getShoppingCart()
+      tmps.forEach((ele, index) => {
+        this.count += ele.count
+        this.total += ele.unit_price * ele.count
+      })
+    },
+    //结算
+    api_203() {
+      let that = this
+      let tmps = app_g.getShoppingCart()
+      if (tmps.length > 0) {
+        let data = {
+          store_id: app_g.getPos().store_id,
+          pos_no: app_g.getPos().no,
+          //收银员
+          created_user_id: that.UserInfo.user.id,
+          details: tmps
+        }
+        api.post(api.api_203, api.getSign({
+          Order: data,
+        }), function (vue, res) {
+          if (res.data.Basis.State == api.state.state_200) {
+            //更新父级组件
+            that.$emit('submitOrder', res.data.Result)
+          } else {
+            that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+          }
+        })
+      }
+    }
+  },
+  created() {
+    this.upShoppingCart()
   }
 }
 </script>
 
 <style lang="scss">
 .order-list {
-  .btn-account{
-        transform: scale(1.3);
-        margin:0 10px 0 15px;
-      }
+  .btn-account {
+    transform: scale(1.3);
+    margin: 0 10px 0 15px;
+  }
+  .selected {
+    background-color: rgb(164, 202, 231) !important;
+  }
   .form-order {
     padding: 32px 0 62px 0;
     height: 100%;
@@ -79,7 +164,6 @@ export default {
       .btn {
         margin: 0 5px;
       }
-      
     }
     .order-tit {
       .item-name,

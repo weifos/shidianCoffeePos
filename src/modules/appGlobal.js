@@ -489,6 +489,32 @@ export default {
                 return new Date(t1.replace(new RegExp(/-/gm), "/")) > new Date(this.getDateTimeNow().replace(new RegExp(/-/gm), "/"))
             }
         },
+        //生成流水号
+        getSerialNum: function (prefix) {
+            let now = new Date()
+            let year = now.getFullYear().toString().substr(2, 2)
+            let month = now.getMonth() + 1
+            let day = now.getDate()
+            let hour = now.getHours()
+            let minutes = now.getMinutes()
+            let seconds = now.getSeconds()
+            String(month).length < 2 ? (month = Number("0" + month)) : month
+            String(day).length < 2 ? (day = Number("0" + day)) : day
+            String(hour).length < 2 ? (hour = Number("0" + hour)) : hour
+            String(minutes).length < 2 ? (minutes = Number("0" + minutes)) : minutes
+            String(seconds).length < 2 ? (seconds = Number("0" + seconds)) : seconds
+            let str = `${year}${month}${day}${hour}${minutes}${seconds}` + this.getRandom(0, 10000)
+            if (prefix != undefined && prefix != null) {
+                return prefix + str
+            }
+            return str
+        },
+        //获取最小值到最大值之前的整数随机数
+        getRandom: function (Min, Max) {
+            var Range = Max - Min;
+            var Rand = Math.random();
+            return (Min + Math.round(Rand * Range));
+        },
         //比对sku字符串
         compareSku: function (sku1, sku2) {
             let exist = 0
@@ -689,5 +715,75 @@ export default {
             let agent = navigator.userAgent.toLowerCase();
             return /iphone|ipad|ipod/.test(agent);
         }
+    },
+    //设置POS信息
+    setPos: function (result) {
+        window.localStorage.setItem("pos", JSON.stringify(result))
+    },
+    //获取POS信息
+    getPos: function () {
+        let posInfo = window.localStorage.getItem("pos")
+        if (posInfo) {
+            return JSON.parse(posInfo)
+        }
+        return null
+    },
+    //设置本地购物车
+    setShoppingCart: function (result) {
+        let that = this
+        let exist = false
+        let shopping_cart = that.getShoppingCart()
+
+        shopping_cart.forEach((ele, index) => {
+            //是否存在对应的商品
+            if (that.util.compareSku(result.specset, ele.specset)) {
+                if (result.count > 0) {
+                    ele.count = ele.count + result.count
+                } else {
+                    ele.count = ele.count - 1
+                }
+                exist = true
+                return
+            }
+        })
+
+        if (!exist) {
+            let tmp = {
+                specset: result.specset,
+                spec_msg: result.sku_name,
+                //product_id: result.product_id,
+                sto_product_id: result.product_id,
+                product_no: result.product_no,
+                product_name: result.product_name,
+                count: result.count,
+                unit_price: result.sale_price
+            }
+            shopping_cart.push(tmp)
+        }
+
+        window.localStorage.setItem("shopping_cart", JSON.stringify(shopping_cart))
+    },
+    //获本地购物车
+    getShoppingCart: function () {
+        let result = window.localStorage.getItem("shopping_cart")
+        if (result) {
+            return JSON.parse(result)
+        }
+        return []
+    },
+    //删除本地购物车
+    delShoppingCart: function (index) {
+        // let index = 0
+        // let shopping_cart = that.getShoppingCart()
+        // shopping_cart.forEach((ele, i) => {
+        //     //是否存在对应的商品
+        //     if (that.util.compareSku(item.specset, ele.specset)) {
+        //         index = i
+        //         return
+        //     }
+        // })
+        let shopping_cart = this.getShoppingCart()
+        shopping_cart.splice(index, 1)
+        window.localStorage.setItem("shopping_cart", JSON.stringify(shopping_cart))
     }
 }

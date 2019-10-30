@@ -2,7 +2,6 @@
 import Vue from 'vue'
 import Print from 'vue-print-nb'
 import { cookie, AlertPlugin, ToastPlugin, LoadingPlugin, ConfirmPlugin, DatetimePlugin, PopupPicker } from 'vux'
-import axios from 'axios'
 import FastClick from 'fastclick'
 import router from './router'
 import App from './App'
@@ -17,7 +16,6 @@ Vue.use(Print)
 Vue.use(VueAwesomeSwiper)
 Vue.prototype.$bridge = Bridge
 Vue.prototype.$ = $
-Vue.prototype.$ajax = axios
 Vue.prototype.cookie = cookie
 Vue.use(ConfirmPlugin)//弹出确认框
 Vue.use(AlertPlugin)  //Alert弹窗 
@@ -56,25 +54,6 @@ Vue.filter('cutSubString', function (str, len) {
 //隐藏手机
 Vue.filter('getHideMobile', function (t) {
     return app_g.util.getHideMobile(t)
-})
-
-//获取订单状态
-Vue.filter('getOrderStatus', function (status) {
-    switch (parseInt(status)) {
-        case 1:
-            return "待付款";
-        case 3:
-            return "已付款";
-        case 10:
-            //卖家已发货
-            return "待收货";
-        case 18:
-            return "已完成";
-        case 11:
-            return "退货申请中";
-        default:
-            return "";
-    }
 })
 
 FastClick.attach(document.body)

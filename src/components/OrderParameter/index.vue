@@ -8,12 +8,12 @@
       <div class="con-wrap">
         <div class="product-info hidden">
           <div class="img-bar fl">
-            <img src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" alt="">
+            <img :src="product.img_url" alt />
           </div>
-          <div class="text-bar  text-gray">
-            <div class="text-name mt10">这里是商品名称</div>
-            <div class="text-no mt10 ">这里是商品编号</div>
-            <div class="text-num">库存：10件</div>
+          <div class="text-bar text-gray">
+            <div class="text-name mt10">{{product.name}}</div>
+            <div class="text-no mt10">这里是商品编号</div>
+            <div class="text-num">库存：{{selectSku.stock}}件</div>
           </div>
         </div>
         <ul class="list-para">
@@ -41,14 +41,14 @@
             <div class="row mt20">
               <div class="dib vam text-gray para-label">单价：</div>
               <div class="dib vam font-size-middle text-gray">
-                ￥23.00
+                ￥{{unitPrice|MoneyToF}}
                 <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" /> -->
               </div>
             </div>
             <div class="row mt10">
               <div class="dib vam text-gray para-label">小计：</div>
               <div class="dib vam text-total">
-                ￥23.00
+                ￥{{totalPrice|MoneyToF}}
                 <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" /> -->
               </div>
             </div>
@@ -56,7 +56,7 @@
         </ul>
         <div class="operate-bar tac">
           <div class="row">
-            <button class="button round bg-main text-white button-size-normal">确认</button>
+            <button class="button round bg-main text-white button-size-normal" @click="submit">确认</button>
             <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
           </div>
         </div>
@@ -91,8 +91,6 @@ export default {
       isJoinSCart: false,
       //显示sku模态框
       showDialog: false,
-      //库存
-      stock: 0,
       //购买数量
       buyCount: 1,
       //选择的sku
@@ -102,7 +100,10 @@ export default {
         sale_price: 0,
         product_id: 0
       },
-      //specSet: [],
+      //单价
+      unitPrice: 0,
+      //总计
+      totalPrice: 0,
       pResult: {}
     }
   },
@@ -207,7 +208,6 @@ export default {
             pass = true
           }
 
-
           item.specset.split(',').forEach(function (o, i) {
             if (pass && o.split('_')[0] == spec_name_id && obj.specname_id + "_" + obj.id == o) {
               obj.is_enable = true
@@ -242,15 +242,21 @@ export default {
       })
 
       this.selectSku = data
+      this.checkUpdate()
       return data
     },
     //提交
-    submit(is_hide_dialog) {
-      is_hide_dialog = undefined != is_hide_dialog.xx
-      //获取选中数据
-      this.selectSku = this.getSelectSkuVal()
-      //加入购物车
-      this.api_306(is_hide_dialog)
+    submit() {
+      //选中的商品SKU
+      let tmp = this.getSelectSkuVal()
+      if (tmp != null) {
+        //加入购物车的数量
+        tmp.count = this.buyCount
+        //加入本地购物车
+        app_g.setShoppingCart(tmp)
+      }
+      //加入本地购物车
+      this.$emit('setShoppingCart')
     },
     //关闭当前页
     close() {
@@ -263,32 +269,27 @@ export default {
     add() {
       if (this.buyCount >= 99) return
       this.buyCount = this.buyCount + 1
+      this.checkUpdate()
     },
     //减
     sub() {
       if (this.buyCount <= 1) return
       this.buyCount = this.buyCount - 1
+      this.checkUpdate()
     },
     //勾选改变更新小计
     checkUpdate() {
-      let total = 0
-      this.result.forEach((item, index) => {
-        if (item.selected) {
-          total += item.product_price * item.count
-        }
-        //当前小计
-        this.$set(item, "subtotal", item.product_price * item.count)
-      })
+      this.unitPrice = this.selectSku.sale_price
       //设置总计
-      this.$set(this, "totalPrice", total)
-      //是否全选
-      this.isCheckAll = this.result.length === this.result.filter(r => r.selected).length && this.result.length != 0
+      this.totalPrice = this.selectSku.sale_price * this.buyCount
     },
+
     //处理输入方式
     handleInput() {
       let value = this.validateNumber(e.detail.value)
       val.replace(/\D/g, '')
     },
+
     //获取商品详情
     api_202(item) {
       let that = this
@@ -312,6 +313,7 @@ export default {
         store.commit("loadingStatus", { isLoading: false })
       })
     },
+
     /**
      * 加载商品详情
      */
@@ -362,6 +364,7 @@ export default {
         )
       }
     },
+
     /**
      * 提交订单
      */
@@ -424,30 +427,33 @@ export default {
       width: 70%;
     }
   }
-  .product-info{
+  .product-info {
     padding-bottom: 20px;
     margin-bottom: 20px;
-    border-bottom:1px solid #acacac;
-    .img-bar{
+    border-bottom: 1px solid #acacac;
+    .img-bar {
       width: 150px;
       height: 150px;
-      margin:0 40px 0 25px;
-      img{width: 100%;height: 100%;}
+      margin: 0 40px 0 25px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
-    .text-name{
+    .text-name {
       font-size: 22px;
     }
-    .text-num{
+    .text-num {
       margin-top: 50px;
     }
   }
-  .operate-bar{
+  .operate-bar {
     margin-top: 50px;
-    .button{
-      margin:0 50px; 
+    .button {
+      margin: 0 50px;
     }
   }
-  .text-total{
+  .text-total {
     font-size: 24px;
   }
 }

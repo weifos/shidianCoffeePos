@@ -3,15 +3,30 @@
 /// @author   叶委  
 /// @date     2019-10-23         
 /// </summary>
+import app_g from '@/modules/appGlobal'
+
 export default {
-    //初始化回调
+    devInfo: '{ "Basis": { "State": 200, "Sign": "", "Msg": "操作成功" }, "Result": { "network_card": "00:1C:42:6F:BF:86","product":"browser","store_id":1 } }',
+    //POS设备初始化
     init(callback) {
-        //获取当前
-        app_middleware.getDeviceInfo(callback)
+        try {
+            if (app_middleware != undefined) {
+                app_middleware.getDeviceInfo(callback)
+            }
+        } catch (ex) {
+            callback(this.devInfo)
+        }
     },
-    print(user_id, order_no, callback) {
-        //获取当前
-        // app_middleware.print(user_id, order_no, callback)
+    //调用打印
+    print(store_id, user_id, order_no, callback) {
+        try {
+            debugger
+            if (app_middleware != undefined) {
+                app_middleware.print(store_id, user_id, order_no, callback)
+            }
+        } catch (ex) {
+            callback(this.devInfo)
+        }
     }
 }
 

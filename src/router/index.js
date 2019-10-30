@@ -3,6 +3,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const index = () => import(/*webpackChunkName: "home" */ "@/view/home/index")
+const auth = () => import(/*webpackChunkName: "home" */ "@/view/home/auth")
 
 
 //实例化路由
@@ -15,7 +16,8 @@ const vueRouter = new Router({
     routes: [
         { path: '*', redirect: '/home/index', component: index },
         { path: '/', redirect: '/home/index', component: index },
-        { path: '/home/index', name: 'index', component: index }
+        { path: '/home/index', name: 'index', component: index },
+        { path: '/home/auth', name: 'auth', component: auth }
     ]
 })
 

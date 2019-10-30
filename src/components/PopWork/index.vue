@@ -23,7 +23,7 @@
         <button class="btn-number f-item" @click="getNum(0)">0</button>
       </div>
       <div class="mt5 nowrap">
-        <button class="button round bg-main text-white button-size-normal f-item btn-submit" @click="api_100">提交</button>
+        <button class="button round bg-main text-white button-size-normal f-item btn-submit" @click="api_101">提交</button>
         <button class="button round bg-gray text-white button-size-normal f-item">取消</button>
       </div>
     </div>
@@ -94,9 +94,9 @@ export default {
       }
     },
     //立即登录
-    api_100() {
+    api_101() {
       let that = this
-      api.post(api.api_100, api.getSign({
+      api.post(api.api_101, api.getSign({
         LoginName: this.login_name,
         Psw: this.pass_word
       }), function (vue, res) {

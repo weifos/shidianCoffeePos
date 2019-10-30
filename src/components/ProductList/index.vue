@@ -24,6 +24,8 @@
 </template>
 <script>
 import api from '@/modules/api'
+import app_g from '@/modules/appGlobal'
+
 export default {
   data() {
     return {
@@ -44,22 +46,27 @@ export default {
   methods: {
     onClickItem(index) {
       this.curIndex = index
-      this.api_201()
+      let item = this.result[this.curIndex]
+      if (!item.isLoad) {
+        this.api_201()
+      }
     },
     //加载商品列表数据
     api_200() {
       let that = this
       api.post(api.api_200, api.getSign({
-        StoreID: that.UserInfo.user.store_id
+        StoreID: app_g.getPos().store_id,
       }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
           that.catgList = res.data.Result.catgs
           //处理数据
-          res.data.Result.catgs.forEach(function (item1, index1) {
-            item1.list = []
-            res.data.Result.productList.forEach(function (item, index) {
-              if (item1.id == item.gcatg_id) {
-                item1.list.push(item)
+          res.data.Result.catgs.forEach(function (item, index) {
+            item.list = []
+            item.isLoad = false
+            res.data.Result.productList.forEach(function (item1, index1) {
+              if (item.id == item1.gcatg_id) {
+                item.isLoad = true
+                item.list.push(item1)
               }
             })
           })
@@ -74,23 +81,15 @@ export default {
     api_201() {
       let that = this
       api.post(api.api_201, api.getSign({
-        StoreID: that.UserInfo.user.store_id,
+        StoreID: app_g.getPos().store_id,
         CatgID: that.result[that.curIndex].id
       }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
-          that.catgList = res.data.Result.
-
-            //处理数据
-            res.data.Result.catgs.forEach(function (item1, index1) {
-              item1.list = []
-              res.data.Result.productList.forEach(function (item, index) {
-                if (item.id == item1.gcatg_id) {
-                  item.list.push(item1)
-                }
-              })
-            })
-
-          that.result = res.data.Result.catgs
+          that.result[that.curIndex].isLoad = true
+          //处理数据
+          res.data.Result.forEach(function (item, index) {
+            that.result[that.curIndex].list.push(item)
+          })
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
         }

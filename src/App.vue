@@ -8,9 +8,12 @@
 </template>
 <script>
 
-import { Loading, cookie, querystring } from "vux";
-import { mapState } from "vuex";
-import app_g from "./modules/appGlobal";
+import store from '@/store'
+import { Loading, cookie, querystring } from "vux"
+import { mapState } from "vuex"
+import api from '@/modules/api'
+import app_g from "./modules/appGlobal"
+import app_m from "@/modules/appMiddleware"
 
 export default {
   name: "app",
@@ -40,6 +43,7 @@ export default {
   methods: {},
   mounted() { },
   created() {
+    //app_m.print(1, '1001100119102400012', this.bb)
     localStorage.setItem("pageTitle", "十点读书·咖啡POS")
     document.getElementById("pageTitle").innerHTML = localStorage.getItem(
       "pageTitle"
