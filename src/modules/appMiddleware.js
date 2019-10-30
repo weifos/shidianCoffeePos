@@ -20,7 +20,6 @@ export default {
     //调用打印
     print(store_id, user_id, order_no, callback) {
         try {
-            debugger
             if (app_middleware != undefined) {
                 app_middleware.print(store_id, user_id, order_no, callback)
             }

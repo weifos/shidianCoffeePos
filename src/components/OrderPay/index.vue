@@ -17,9 +17,8 @@
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
                         <p>【请扫描微信或支付宝二维码支付】</p>
-                        <p>【支付中。。。】</p>
                         <p>
-                          <input type="text" v-model="payCodeText" v-focus="payCodeFocus" style="border:0px;height:0;width:0;" />
+                          <input type="text" ref="pCode" v-model="payCodeText" v-focus="payCodeFocus" @blur="payCodeBlur" />
                         </p>
                         <!-- <p>【支付成功！】</p>
                         <p>【支付失败！】</p>-->
@@ -33,6 +32,9 @@
                       <div class="text-wrap tac">
                         <p>【请扫描电子钱包二维码支付】</p>
                         <p>【支付中。。。】</p>
+                        <p>
+                          <input type="text" ref="eWallet" v-model="eWalletText" v-focus="eWalletFocus" @blur="eWalletBlur" />
+                        </p>
                         <!-- <p>【支付成功！】</p>
                         <p>【支付失败！】</p>-->
                       </div>
@@ -186,16 +188,18 @@ export default {
   data() {
     return {
       curIndex: 0,
+      //订单详情
+      order: { id: 0 },
       //付款码
       payCode: '',
       //付款码文本
       payCodeText: '',
+      //电子钱包文本
+      eWalletText: '',
+      //电子钱包输入框焦点
+      eWalletFocus: false,
       //付款码得到焦点
       payCodeFocus: true,
-      //订单详情
-      order: {
-        id: 0
-      },
       //现金支付输入的金额
       inputAmount: 0,
       //显示的输入金额
@@ -282,36 +286,56 @@ export default {
     }
   },
   watch: {
+    //扫码支付
     payCodeText(newData, oldData) {
       //微信支付
       if (newData.length == 18 && /^[1]+[0,1,2,3,4,5]+\d{16}/.test(newData)) {
-        this.curFlow.pay_method = 11
         this.payCodeFocus = true
         this.payCode = newData
         this.payCodeText = ''
         console.log('微信支付:' + this.payCode)
+        //如果未付款的金额大于零
+        if (this.unpaidAmount <= 0) return
+        //金额
+        this.curFlow.amount = this.unpaidAmount
+        //设置支付方式
+        this.curFlow.pay_method = 11
+        //加入支付流水
+        this.payFlows.push(this.curFlow)
+        //立即支付
+        this.api_205()
       }//支付宝支付二维码
       else if (newData.length == 18 && /^[28]+\d{16}/.test(newData)) {
-        this.curFlow.pay_method = 21
         this.payCodeFocus = true
         this.payCode = newData
         this.payCodeText = ''
         console.log('支付宝支付:' + this.payCode)
+        //如果未付款的金额大于零
+        if (this.unpaidAmount <= 0) return
+        //金额
+        this.curFlow.amount = this.unpaidAmount
+        //支付方式
+        this.curFlow.pay_method = 21
+        //加入支付流水
+        this.payFlows.push(this.curFlow)
+        //立即支付
+        this.api_205()
       }
-    },
-    order(newData, oldData) {
+    }
+  },
+  methods: {
+    init(data) {
+      this.order = data
+      //this.order.details = []
       //获取流水号
       this.curFlow.store_id = app_g.getPos().store_id
       this.curFlow.serial_no = app_g.util.getSerialNum('F')
       this.curFlow.order_id = this.order.id
       this.curFlow.order_no = this.order.serial_no
       this.curFlow.pos_no = app_g.getPos().no
-      console.log(this.curFlow)
-    }
-  },
-  methods: {
-    init(data) {
-      this.order = data
+      //未支付的金额
+      this.unpaidAmount = this.order.actual_amount
+      this.payCodeFocus = true
     },
     //删除
     del(n) {
@@ -349,14 +373,32 @@ export default {
         }
       }
     },
+    //移动支付失去焦点事件
+    payCodeBlur() {
+      if (this.curIndex == 0 && this.$refs.pCode != undefined) {
+        this.$refs.pCode.focus()
+      }
+    },
+    //电子钱包失去焦点事件
+    eWalletBlur() {
+      if (this.curIndex == 1 && this.$refs.eWallet != undefined) {
+        this.$refs.eWallet.focus()
+      }
+    },
     //选择支付方式
     selectPay(index) {
       this.curIndex = index
       let item = this.payList[index]
       this.curFlow.pay_method = item.payMethod
+
       //移动支付
       if (item.payMethod == 0) {
+        this.eWalletFocus = false
         this.payCodeFocus = true
+        //电子钱包
+      } else if (item.payMethod == 31) {
+        this.payCodeFocus = false
+        this.eWalletFocus = true
       }
     },
     //提交现金支付
@@ -436,8 +478,11 @@ export default {
 
       api.post(api.api_205, api.getSign(params), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
-          //打印
+          //调起打印
           app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, that.order.serial_no, that.print)
+          //支付成功
+          that.$emit('paySuccess')
+          //打印
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
         }
@@ -446,9 +491,11 @@ export default {
     },
     print() { }
   },
-  created() {
-
-    //初始化设备user_id, order_no, callback
+  onLoad() {
+    console.log('onLoad')
+  },
+  onShow() {
+    console.log('onShow')
   }
 }
 </script>

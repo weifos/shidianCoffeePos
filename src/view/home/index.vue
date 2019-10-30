@@ -8,10 +8,18 @@
       </div>
       <div class="content-wrap h100" slot="right">
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
+
+        <!-- 选择商品 -->
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></OrderParameter>
+
+        <!-- 确认订单 -->
         <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:goPay="goPay"></OrderSure>
-        <OrderPay ref="payOrder" :show="showOrderPay"></OrderPay>
-        <!-- <NotDoneOrder></NotDoneOrder> -->
+
+        <!-- 订单付款 -->
+        <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess"></OrderPay>
+
+        <!-- 未制作订单 -->
+        <NotDoneOrder :show="showNotDoneOrder"></NotDoneOrder>
         <!-- <NotGetOrder></NotGetOrder> -->
         <!-- <OrderNormal></OrderNormal> -->
         <!-- <OrderEntry></OrderEntry> -->
@@ -82,6 +90,8 @@ export default {
       showOrderPay: false,
       //是否绑定门店
       isBindStore: false,
+      //未制作完成
+      showNotDoneOrder: false,
       user: {},
       products: {}
     }
@@ -104,7 +114,7 @@ export default {
     },
     //子组件通知父组件，加载商品SKU信息
     loadSKU(data) {
-      this.showProductList = false
+      this.clearScreen()
       this.showProductSku = true
       //同时父组件通知商品列表子组件
       this.$refs.pSKU.api_202(data)
@@ -115,18 +125,20 @@ export default {
     },
     //确认订单
     confirmOrder(data) {
-      this.showProductList = false
-      this.showProductSku = false
+      this.clearScreen()
       this.showConfirmOrder = true
       this.$refs.orderSure.api_204(data)
     },
     //订单付款
     goPay(data) {
-      this.showProductList = false
-      this.showProductSku = false
-      this.showConfirmOrder = false
+      this.clearScreen()
       this.showOrderPay = true
       this.$refs.payOrder.init(data)
+    },
+    //支付成功
+    paySuccess() {
+      this.clearScreen()
+      this.showNotDoneOrder = true
     },
     //取消订单
     cancelOrder() {
@@ -134,8 +146,16 @@ export default {
     },
     //子组件通知父组件，关闭商品SKU信息
     closeSKU() {
-      this.showProductSku = false
+      this.clearScreen()
       this.showProductList = true
+    },
+    //清屏
+    clearScreen() {
+      this.showProductList = false
+      this.showProductSku = false
+      this.showConfirmOrder = false
+      this.showOrderPay = false
+      this.showNotDoneOrder = false
     },
     //检查设备
     api_100(pos) {
