@@ -72,7 +72,12 @@
                     <div class="input-bar w100 abs">
                       <input type="text" class="input-text-1 input-normal" style="font-size:20px;" v-model="inputAmountText" placeholder="请输入金额" />
                     </div>
-                    <div class="btns-bar border-box h100">
+                    <div class="btns-bar border-box h100 rel">
+                      <div class="f-item btn-sure">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number font-size-normal" @click="getNum('.')">确认</button>
+                        </div>
+                      </div>
                       <div class="list-inlineblock h100">
                         <div class="f-item">
                           <div class="item-wrap w100 h100 rel">
@@ -91,7 +96,7 @@
                         </div>
                         <div class="f-item">
                           <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="confirmCash">删除</button>
+                            <button class="btn-number font-size-normal" @click="confirmCash">退格</button>
                           </div>
                         </div>
                         <div class="f-item">
@@ -104,14 +109,9 @@
                             <button class="btn-number" @click="getNum(5)">5</button>
                           </div>
                         </div>
-                        <div class="f-item">
+                        <div class="f-item item-right">
                           <div class="item-wrap w100 h100 rel">
                             <button class="btn-number" @click="getNum(6)">6</button>
-                          </div>
-                        </div>
-                        <div class="f-item">
-                          <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="getNum('.')">.</button>
                           </div>
                         </div>
                         <div class="f-item">
@@ -124,7 +124,7 @@
                             <button class="btn-number" @click="getNum(2)">2</button>
                           </div>
                         </div>
-                        <div class="f-item">
+                        <div class="f-item item-right">
                           <div class="item-wrap w100 h100 rel">
                             <button class="btn-number" @click="getNum(3)">3</button>
                           </div>
@@ -134,9 +134,20 @@
                             <button class="btn-number" @click="getNum(0)">0</button>
                           </div>
                         </div>
+                        <div class="f-item">
+                          <div class="item-wrap w100 h100 rel">
+                            <button class="btn-number" @click="getNum('.')">.</button>
+                          </div>
+                        </div>
+                        <div class="f-item item-right">
+                          <div class="item-wrap w100 h100 rel">
+                            <button class="btn-number font-size-normal" @click="getNum(4)">清空</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
+
 
                   <!-- 支付列表-->
                   <div class="result-bar height2 bg-white hidden">
@@ -540,7 +551,7 @@ export default {
   width: 577px;
   top: 50%;
   left: 50%;
-  height: 498px+57px;
+  height: 662px;
   // height:100%;
   transform: translate(-50%, -50%);
   padding: 13px;
@@ -603,12 +614,23 @@ export default {
         margin-right: -10px;
       }
 
+
       .f-item {
-        height: 33.33%;
+        height: 25%;
         width: 25%;
         position: relative;
         box-sizing: border-box;
         padding: 0 10px 10px 0;
+
+        &.btn-sure{
+          position: absolute;
+          right:-10px;
+          bottom:0;
+          height: 50%;
+        }
+      }
+      .item-right{
+        margin-right: 25%;
       }
       .btn-number {
         border: none;
@@ -686,4 +708,3 @@ export default {
   }
 }
 </style>
-

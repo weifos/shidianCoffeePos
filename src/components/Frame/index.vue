@@ -177,14 +177,14 @@ export default {
   }
   .tool-bar {
     width: 100%;
-    height: 92px;
+    height: 62px;
     left: 0;
     bottom: 0;
   }
   .content-bar {
     height: 100%;
     box-sizing: border-box;
-    padding: 58px 0 92px 0;
+    padding: 58px 0 62px 0;
   }
   .search-bar {
     right: 10px;
@@ -218,7 +218,7 @@ export default {
   }
   .right-side,
   .left-side {
-    padding-top: 20px;
+    padding-top: 6px;
   }
   .left-side {
     padding-left: 10px;

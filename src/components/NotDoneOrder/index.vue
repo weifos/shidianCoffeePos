@@ -474,8 +474,9 @@ export default {
 
       ul {
         height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
+        // overflow-y: auto;
+        // overflow-x: hidden;
+        overflow: hidden;
       }
 
       .row-item {

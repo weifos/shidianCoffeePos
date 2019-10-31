@@ -14,7 +14,7 @@
             <img :alt="item1.name" :src="item1.img_url" width="100%" height="100%" />
           </div>
           <div class="item-info text-gray">
-            <div class="item-no">NO.{{item1.no}}</div>
+            <div class="item-no ellipsis">NO.{{item1.no}}</div>
             <div class="item-name ellipsis2">{{item1.name}}</div>
           </div>
         </li>
