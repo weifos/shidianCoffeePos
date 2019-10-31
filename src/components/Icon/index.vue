@@ -28,7 +28,7 @@
       <div class="icon-img">
         <img src="./img/i1.png" />
       </div>
-      <div class="icon-text">数据下载</div>
+      <div class="icon-text">挂单/恢复</div>
     </template>
     <template v-if="type == 'memberInfo'">
       <div class="icon-img">
@@ -81,7 +81,7 @@ export default {
 .icon-img {
   height: 27px;
   margin-bottom: 8px;
-  vertical-align: middle;
+  vertical-align: bottom;
 }
 .icon-num {
   position: absolute;
