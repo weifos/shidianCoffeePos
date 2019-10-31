@@ -15,8 +15,8 @@
           </div>
           <div class="form-body tac text-gray">
             <div class="form-body-wrap list-inlineblock">
-              <div class="left-part f-item" @scroll="scroll">
-                <ul>
+              <div class="left-part f-item">
+                <ul dir="ltr" class="cont" style="-webkit-overflow-scrolling: touch;overflow-x: hidden;overflow-y: auto;width: 100%;height: 100%;" @scroll="scroll">
                   <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" @click="selectCur(index)" v-for="(item,index) in orderList" :key="index">
                     <div class="body-item f-item w4">
                       <div class="align">{{item.id}}</div>
@@ -477,6 +477,17 @@ export default {
         // overflow-y: auto;
         // overflow-x: hidden;
         overflow: hidden;
+      }
+
+      .cont {
+        width: 200px;
+        height: 200px;
+        border: 0px;
+        overflow-x: hidden;
+      }
+
+      .cont::-webkit-scrollbar {
+        display: none;
       }
 
       .row-item {
