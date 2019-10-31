@@ -100,6 +100,8 @@ export default {
     }
   },
   created() {
+    //如果未登录，弹出登录对话框
+    if (this.UserInfo.islogin()) this.userInfo = this.UserInfo.user
   }
 }
 
