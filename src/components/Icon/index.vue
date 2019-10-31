@@ -80,8 +80,8 @@ export default {
 }
 .icon-img {
   height: 27px;
-  margin-bottom: 8px;
-  vertical-align: bottom;
+  margin-bottom: 6px;
+  vertical-align: middle;
 }
 .icon-num {
   position: absolute;
