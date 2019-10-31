@@ -32,7 +32,7 @@
                       <div class="text-wrap tac">
                         <p>【请扫描电子钱包二维码支付】</p>
                         <p>
-                          <input type="text" ref="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
+                          <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
                         </p>
                         <!-- <p>【支付成功！】</p>
                         <p>【支付失败！】</p>-->
@@ -75,7 +75,7 @@
                     <div class="btns-bar border-box h100 rel">
                       <div class="f-item btn-sure">
                         <div class="item-wrap w100 h100 rel">
-                          <button class="btn-number font-size-normal" @click="getNum('.')">确认</button>
+                          <button class="btn-number font-size-normal" @click="confirmCash">确认</button>
                         </div>
                       </div>
                       <div class="list-inlineblock h100">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="f-item">
                           <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="confirmCash">退格</button>
+                            <button class="btn-number font-size-normal" @click="del">退格</button>
                           </div>
                         </div>
                         <div class="f-item">
@@ -141,13 +141,12 @@
                         </div>
                         <div class="f-item item-right">
                           <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="getNum(4)">清空</button>
+                            <button class="btn-number font-size-normal" @click="clearAmountText">清空</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
 
                   <!-- 支付列表-->
                   <div class="result-bar height2 bg-white hidden">
@@ -319,6 +318,7 @@ export default {
       this.curFlow.order_no = this.order.serial_no
       this.curFlow.pos_no = app_g.getPos().no
       //未支付的金额
+      this.changeAmount = 0
       this.unpaidAmount = this.order.actual_amount
       this.payCodeFocus = true
     },
@@ -332,6 +332,14 @@ export default {
           this.inputAmountText = this.inputAmountText.substring(0, len - 1)
         }
       }
+    },
+    //显示的金额
+    clearAmountText() {
+      this.inputAmount = 0
+      this.inputAmountText = ''
+      this.changeAmount = 0
+      //删除
+      this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
     },
     //获取号码
     getNum(n) {
@@ -360,6 +368,7 @@ export default {
     },
     //移动支付失去焦点事件
     payCodeBlur() {
+      //setTimeout(()=>{},500)
       if (this.curIndex == 0 && this.$refs.pCode != undefined) {
         this.$refs.pCode.focus()
       }
@@ -367,7 +376,6 @@ export default {
     //电子钱包失去焦点事件
     eWalletBlur() {
       if (this.curIndex == 1 && this.$refs.eWallet != undefined) {
-        this.$refs.eWallet.focus()
         this.$refs.eWallet.focus()
         this.eWalletFocus = true
       }
@@ -377,7 +385,6 @@ export default {
       this.curIndex = index
       let item = this.payList[index]
       this.curFlow.pay_method = item.payMethod
-
       //移动支付
       if (item.payMethod == 0) {
         this.eWalletFocus = false
@@ -390,6 +397,7 @@ export default {
     },
     //提交现金支付
     confirmCash() {
+      if (this.inputAmount == 0) return
       if (this.inputAmount > this.order.actual_amount) {
         this.curFlow.amount = this.order.actual_amount
       } else {
@@ -411,6 +419,7 @@ export default {
 
       //计算未付金额
       this.unpaidAmount = this.order.actual_amount - tmpAmount
+      this.inputAmountText = ''
     },
     //根据移动支付提交
     submitPayCode() {
@@ -448,7 +457,7 @@ export default {
         this.api_205()
       }
     },
-    //提交现金支付
+    //提交电子钱包支付
     submitEWalle() {
       //微信支付
       if (this.eWalletText.indexOf("#") != -1 && this.eWalletText.length > 15) {
@@ -614,7 +623,6 @@ export default {
         margin-right: -10px;
       }
 
-
       .f-item {
         height: 25%;
         width: 25%;
@@ -622,17 +630,19 @@ export default {
         box-sizing: border-box;
         padding: 0 10px 10px 0;
 
-        &.btn-sure{
+        &.btn-sure {
           position: absolute;
-          right:-10px;
-          bottom:0;
+          right: -10px;
+          bottom: 0;
           height: 50%;
         }
       }
-      .item-right{
+      .item-right {
         margin-right: 25%;
       }
       .btn-number {
+        color: #000;
+        font-size: 24px;
         border: none;
         position: absolute;
         left: 50%;
