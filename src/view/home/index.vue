@@ -19,7 +19,7 @@
         <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess"></OrderPay>
 
         <!-- 未制作订单 -->
-        <NotDoneOrder :show="showNotDoneOrder"></NotDoneOrder>
+        <NotDoneOrder ref="notDoneOrder" :show="showNotDoneOrder"></NotDoneOrder>
         <!-- <NotGetOrder></NotGetOrder> -->
         <!-- <OrderNormal></OrderNormal> -->
         <!-- <OrderEntry></OrderEntry> -->
@@ -155,13 +155,17 @@ export default {
       this.showOrderPay = false
       this.showNotDoneOrder = false
     },
-    //
+    //底部菜单导航
     nav(type) {
-      debugger
       this.clearScreen()
       //未制作完成
       if (type == 'notDoneOrder') {
+        //未制作订单初始化
+        this.$refs.notDoneOrder.init()
         this.showNotDoneOrder = true
+        //商品列表
+      } else if (type == 'menu') {
+        this.showProductList = true
       }
     },
     //检查设备

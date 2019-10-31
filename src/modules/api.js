@@ -36,6 +36,8 @@ export default {
     api_204: domain + "204",
     //咖啡POS订单支付
     api_205: domain + "205",
+    //咖啡POS订单支付
+    api_206: domain + "206",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

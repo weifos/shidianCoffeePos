@@ -47,10 +47,10 @@
           <Icon type="loginOut"></Icon>
         </div>
         <div class="left-side">
+          <Icon type="statementInfo" v-on:nav="nav"></Icon>
           <Icon type="notDoneOrder" v-on:nav="nav" :num="3"></Icon>
           <Icon type="notGetOrder" v-on:nav="nav"></Icon>
           <Icon type="orderList" v-on:nav="nav"></Icon>
-          <Icon type="statementInfo" v-on:nav="nav"></Icon>
           <Icon type="dataDownLoad" v-on:nav="nav"></Icon>
           <Icon type="memberInfo" v-on:nav="nav"></Icon>
         </div>
@@ -98,7 +98,6 @@ export default {
     },
     //检查设备
     nav(type) {
-      debugger
       this.$emit('nav', type)
     }
   },

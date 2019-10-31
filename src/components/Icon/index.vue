@@ -1,5 +1,11 @@
 <template>
   <div class="icon">
+    <template v-if="type == 'statementInfo'">
+      <div class="icon-img" @click="nav('menu')">
+        <img src="./img/i7.png" />
+      </div>
+      <div class="icon-text">咖啡点单</div>
+    </template>
     <template v-if="type == 'notDoneOrder'">
       <div class="icon-img" @click="nav('notDoneOrder')">
         <img src="./img/i2.png" />
@@ -17,12 +23,6 @@
         <img src="./img/i8.png" />
       </div>
       <div class="icon-text">订单列表</div>
-    </template>
-    <template v-if="type == 'statementInfo'">
-      <div class="icon-img">
-        <img src="./img/i7.png" />
-      </div>
-      <div class="icon-text">报表信息</div>
     </template>
     <template v-if="type == 'dataDownLoad'">
       <div class="icon-img">
@@ -66,7 +66,6 @@ export default {
   methods: {
     //检查设备
     nav(type) {
-      debugger
       this.$emit('nav', type)
     }
   }

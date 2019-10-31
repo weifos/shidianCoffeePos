@@ -15,9 +15,9 @@
           </div>
           <div class="form-body tac text-gray">
             <div class="form-body-wrap list-inlineblock">
-              <div class="left-part f-item">
+              <div class="left-part f-item" @scroll="scroll">
                 <ul>
-                  <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
+                  <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" @click="selectCur(index)" v-for="(item,index) in orderList" :key="index">
                     <div class="body-item f-item w4">
                       <div class="align">{{item.id}}</div>
                     </div>
@@ -81,25 +81,13 @@ export default {
           time: "2019-09-12 12:12:12",
           list: [
             {
-              name: "柚子奶茶",
+              name: "柚子奶茶1",
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
             },
             {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
+              name: "柚子奶茶1",
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
@@ -135,7 +123,14 @@ export default {
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
-            },
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
             {
               name: "柚子奶茶",
               param: ["中杯", "去冰"],
@@ -154,7 +149,14 @@ export default {
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
-            },
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
             {
               name: "柚子奶茶",
               param: ["中杯", "去冰"],
@@ -173,7 +175,14 @@ export default {
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
-            },
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
             {
               name: "柚子奶茶",
               param: ["中杯", "去冰"],
@@ -192,7 +201,14 @@ export default {
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
-            },
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
             {
               name: "柚子奶茶",
               param: ["中杯", "去冰"],
@@ -211,7 +227,118 @@ export default {
               param: ["中杯", "去冰"],
               num: 1,
               price: "20.00",
-            },
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
+            {
+              name: "柚子奶茶",
+              param: ["中杯", "去冰"],
+              num: 1,
+              price: "20.00",
+            }
+          ]
+        },
+        {
+          id: 2,
+          no: "00012345",
+          time: "2019-09-12 12:12:12",
+          list: [
             {
               name: "柚子奶茶",
               param: ["中杯", "去冰"],
@@ -227,6 +354,28 @@ export default {
     show: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    //选择支付方式
+    selectCur(index) {
+      this.curIndex = index
+      console.log(this.curIndex)
+    },
+    init() {
+      console.log('')
+    },
+    //页面滚动加载数据
+    scroll() {
+      console.log('scroll')
+      //   var bar_top = $('#loading').offset().top - $(window).height()
+      //   //判断是否滚动到底部
+      //   if (bar_top < -40 && !this.loadding) {
+      //     this.loading = true
+      //     this.loadding = true
+      //     this.pager.index++
+      //     this.api_201()
+      //   }
     }
   }
 }
