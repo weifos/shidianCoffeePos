@@ -47,12 +47,12 @@
           <Icon type="loginOut"></Icon>
         </div>
         <div class="left-side">
-          <Icon type="notDoneOrder" :num="3"></Icon>
-          <Icon type="notGetOrder"></Icon>
-          <Icon type="orderList"></Icon>
-          <Icon type="statementInfo"></Icon>
-          <Icon type="dataDownLoad"></Icon>
-          <Icon type="memberInfo"></Icon>
+          <Icon type="notDoneOrder" v-on:nav="nav" :num="3"></Icon>
+          <Icon type="notGetOrder" v-on:nav="nav"></Icon>
+          <Icon type="orderList" v-on:nav="nav"></Icon>
+          <Icon type="statementInfo" v-on:nav="nav"></Icon>
+          <Icon type="dataDownLoad" v-on:nav="nav"></Icon>
+          <Icon type="memberInfo" v-on:nav="nav"></Icon>
         </div>
       </div>
       <!-- tool-bar e -->
@@ -63,8 +63,6 @@
 
 <script>
 import Icon from '@/components/Icon'
-
-
 export default {
   components: {
     Icon,
@@ -97,6 +95,11 @@ export default {
   methods: {
     onClickItem(index) {
       this.curIndex = index
+    },
+    //检查设备
+    nav(type) {
+      debugger
+      this.$emit('nav', type)
     }
   },
   created() {

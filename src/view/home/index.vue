@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <!-- 框架 s -->
-    <Frame :result="user">
+    <Frame :result="user" v-on:nav="nav">
       <div class="content-wrap h100" slot="left">
         <OrderList ref="orderList" v-on:submitOrder="confirmOrder"></OrderList>
         <!-- <OrderList2></OrderList2> -->
@@ -141,9 +141,7 @@ export default {
       this.showNotDoneOrder = true
     },
     //取消订单
-    cancelOrder() {
-
-    },
+    cancelOrder() { },
     //子组件通知父组件，关闭商品SKU信息
     closeSKU() {
       this.clearScreen()
@@ -156,6 +154,15 @@ export default {
       this.showConfirmOrder = false
       this.showOrderPay = false
       this.showNotDoneOrder = false
+    },
+    //
+    nav(type) {
+      debugger
+      this.clearScreen()
+      //未制作完成
+      if (type == 'notDoneOrder') {
+        this.showNotDoneOrder = true
+      }
     },
     //检查设备
     api_100(pos) {
