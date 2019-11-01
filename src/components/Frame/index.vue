@@ -3,6 +3,7 @@
     <!-- frame-left s -->
     <div class="frame-left rel">
       <div class="info-bar abs">
+        <div class="fr text-gray font-size-small">收银台：0101</div>
         <div class="text-gray font-size-small">2019-09-12 12:23:00</div>
         <div class="text-gray font-size-small mt5">联网状态：</div>
         <div class="user-info hidden mt15">
@@ -18,7 +19,6 @@
           </div>
         </div>
         <div class="machine-info mt15">
-          <div>收银台：0101</div>
           <div class="mt5">会 员：139812345432【十点会员】</div>
         </div>
       </div>
@@ -115,7 +115,7 @@ export default {
     width: 100%;
     left: 0;
     top: 0;
-    height: 197px;
+    height: 167px;
     border-bottom: 1px solid #acacac;
     box-sizing: border-box;
     padding: 16px;
@@ -129,7 +129,7 @@ export default {
   .content-bar {
     height: 100%;
     box-sizing: border-box;
-    padding: 197px 0 0 0;
+    padding: 167px 0 0 0;
   }
   .user-txt {
     padding-top: 5px;

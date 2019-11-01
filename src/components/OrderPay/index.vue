@@ -16,12 +16,12 @@
                   <div class="type-mobile type-bar height3 pb10 border-box" v-if="curIndex == 0">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
-                        <p>【请扫描微信或支付宝二维码支付】</p>
+                        <p class="font-size-middle">【请扫描微信或支付宝二维码支付】</p>
                         <p>
                           <input type="text" ref="pCode" v-model="payCodeText" @keyup.enter="submitPayCode" @blur="payCodeBlur" v-payCodeFocus="payCodeFocus" />
                         </p>
-                        <!-- <p>【支付成功！】</p>
-                        <p>【支付失败！】</p>-->
+                        <!-- <p class="mt20">【支付成功！】</p>
+                        <p class="mt20">【支付失败！】</p>-->
                       </div>
                     </div>
                   </div>
@@ -30,12 +30,16 @@
                   <div class="type-e-wallet type-bar height3 pb10 border-box" v-if="curIndex == 1">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
-                        <p>【请扫描电子钱包二维码支付】</p>
+                        <p class="font-size-middle">【请扫描电子钱包二维码支付】</p>
                         <p>
                           <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
                         </p>
-                        <!-- <p>【支付成功！】</p>
-                        <p>【支付失败！】</p>-->
+                        <p class="mt20">卡号：1234567890</p>
+                        <p>余额：300.00</p>
+                        <p class="mt20">【支付成功】</p>
+                        <!-- <p class="mt20">【储值卡余额不足，支付失败】</p>
+                        <p class="mt20">【支付中。。。】</p> -->
+                        <!-- <p class="mt20">【支付失败！】</p> -->
                       </div>
                     </div>
                   </div>
@@ -44,11 +48,13 @@
                   <div class="type-card type-bar height3 pb10 border-box" v-if="curIndex == 2">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
-                        <p>【请刷储值卡进行支付】</p>
-                        <p>【支付中。。。】</p>
-
-                        <!-- <p>【支付成功！】</p>
-                        <p>【支付失败！】</p>-->
+                        <p class="font-size-middle">【请刷储值卡进行支付】</p>
+                        <p class="mt20">卡号：1234567890</p>
+                        <p>余额：300.00</p>
+                        <p class="mt20">【支付成功】</p>
+                        <!-- <p class="mt20">【储值卡余额不足，支付失败】</p>
+                        <p class="mt20">【支付中。。。】</p> -->
+                        <!-- <p class="mt20">【支付失败！】</p> -->
                       </div>
                     </div>
                   </div>
