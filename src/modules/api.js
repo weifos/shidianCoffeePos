@@ -3,7 +3,7 @@ import store from '../store'
 import md5 from 'blueimp-md5'
 import user from './userInfo'
 
-//接口域名  
+//接口域名
 let domain = "http://coffeeapi.sdibook.com/"
 let res_domain = "http://res.sdibook.com/"
 //测试环境配置
@@ -14,8 +14,8 @@ if (process.env.NODE_ENV !== 'production') {
 
 /// <summary>
 /// 全局配置类
-/// @author   叶委  
-/// @date     2014-05-23         
+/// @author   叶委
+/// @date     2014-05-23
 /// </summary>
 export default {
     //资源站点
@@ -134,9 +134,9 @@ export default {
     state: {
         // 系统错误
         state_500: 500,
-        // 响应成功 
+        // 响应成功
         state_200: 200,
-        // 验证通过 
+        // 验证通过
         state_0: 0,
         // 验证未通过
         state_1: 1,
