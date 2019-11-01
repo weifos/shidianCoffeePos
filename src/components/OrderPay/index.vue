@@ -32,7 +32,7 @@
                       <div class="text-wrap tac">
                         <p>【请扫描电子钱包二维码支付】</p>
                         <p>
-                          <input type="text" ref="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
+                          <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
                         </p>
                         <!-- <p>【支付成功！】</p>
                         <p>【支付失败！】</p>-->
@@ -75,7 +75,7 @@
                     <div class="btns-bar border-box h100 rel">
                       <div class="f-item btn-sure">
                         <div class="item-wrap w100 h100 rel">
-                          <button class="btn-number font-size-normal" @click="getNum('.')">确认</button>
+                          <button class="btn-number font-size-normal" @click="confirmCash">确认</button>
                         </div>
                       </div>
                       <div class="list-inlineblock h100">
@@ -96,7 +96,7 @@
                         </div>
                         <div class="f-item">
                           <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="confirmCash">退格</button>
+                            <button class="btn-number font-size-normal" @click="del">退格</button>
                           </div>
                         </div>
                         <div class="f-item">
@@ -141,13 +141,12 @@
                         </div>
                         <div class="f-item item-right">
                           <div class="item-wrap w100 h100 rel">
-                            <button class="btn-number font-size-normal" @click="getNum(4)">清空</button>
+                            <button class="btn-number font-size-normal" @click="clearAmountText">清空</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
 
                   <!-- 支付列表-->
                   <div class="result-bar height2 bg-white hidden">
@@ -200,6 +199,19 @@ export default {
       curIndex: 0,
       //订单详情
       order: { id: 0 },
+      //支付方式
+      payMethod: {
+        //微信支付
+        weChatCode: 11,
+        //支付宝支付
+        aliPayCode: 21,
+        //微信支付
+        eWallet: 31,
+        //储值卡支付
+        sVCard: 41,
+        //现金支付
+        cash: 51
+      },
       //付款码
       payCode: '',
       //付款码文本
@@ -223,27 +235,18 @@ export default {
       //支付类型
       payList: [
         {
-          payMethod: 0,
-          text: "移动支付",
-          val: ''
+          text: "移动支付"
         },
         {
-          payMethod: 31,
-          text: "电子钱包",
-          val: ''
+          text: "电子钱包"
         },
         {
-          payMethod: 41,
-          text: "储值卡",
-          val: ''
+          text: "储值卡"
         },
         {
-          payMethod: 51,
-          text: "现金",
+          text: "现金"
         }
       ],
-      //当前支付流水
-      curFlow: {},
       //支付流水
       payFlows: []
     }
@@ -289,14 +292,20 @@ export default {
   methods: {
     init(data) {
       this.order = data
-      //this.order.details = []
       //清空付款流水
       this.payFlows = []
-      this.curFlow = {
+      //未支付的金额
+      this.changeAmount = 0
+      this.unpaidAmount = this.order.actual_amount
+      this.payCodeFocus = true
+    },
+    //获取支付流水
+    getFlow() {
+      return {
         store_id: app_g.getPos().store_id,
-        serial_no: "",
-        order_id: 0,
-        order_no: '',
+        serial_no: app_g.util.getSerialNum('F'),
+        order_id: this.order.id,
+        order_no: this.order.serial_no,
         user_id: 0,
         pos_no: app_g.getPos().no,
         amount: 0,
@@ -311,16 +320,6 @@ export default {
         created_date: app_g.util.date.getDateTimeNow(),
         created_user_id: this.UserInfo.user.id
       }
-
-      //获取流水号
-      this.curFlow.store_id = app_g.getPos().store_id
-      this.curFlow.serial_no = app_g.util.getSerialNum('F')
-      this.curFlow.order_id = this.order.id
-      this.curFlow.order_no = this.order.serial_no
-      this.curFlow.pos_no = app_g.getPos().no
-      //未支付的金额
-      this.unpaidAmount = this.order.actual_amount
-      this.payCodeFocus = true
     },
     //删除
     del(n) {
@@ -332,6 +331,14 @@ export default {
           this.inputAmountText = this.inputAmountText.substring(0, len - 1)
         }
       }
+    },
+    //显示的金额
+    clearAmountText() {
+      this.inputAmount = 0
+      this.inputAmountText = ''
+      this.changeAmount = 0
+      //删除
+      this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
     },
     //获取号码
     getNum(n) {
@@ -360,6 +367,7 @@ export default {
     },
     //移动支付失去焦点事件
     payCodeBlur() {
+      //setTimeout(()=>{},500)
       if (this.curIndex == 0 && this.$refs.pCode != undefined) {
         this.$refs.pCode.focus()
       }
@@ -368,7 +376,6 @@ export default {
     eWalletBlur() {
       if (this.curIndex == 1 && this.$refs.eWallet != undefined) {
         this.$refs.eWallet.focus()
-        this.$refs.eWallet.focus()
         this.eWalletFocus = true
       }
     },
@@ -376,8 +383,6 @@ export default {
     selectPay(index) {
       this.curIndex = index
       let item = this.payList[index]
-      this.curFlow.pay_method = item.payMethod
-
       //移动支付
       if (item.payMethod == 0) {
         this.eWalletFocus = false
@@ -390,10 +395,14 @@ export default {
     },
     //提交现金支付
     confirmCash() {
+      //输入金额不能为0
+      if (this.inputAmount == 0) return
+      //获取支付流水
+      let curFlow = this.getFlow()
       if (this.inputAmount > this.order.actual_amount) {
-        this.curFlow.amount = this.order.actual_amount
+        curFlow.amount = this.order.actual_amount
       } else {
-        this.curFlow.amount = this.inputAmount
+        curFlow.amount = this.inputAmount
       }
 
       //如果存在一条流水，且为现金支付
@@ -401,8 +410,9 @@ export default {
         this.payFlows = []
       }
 
+      curFlow.pay_method = this.payMethod.cash
       //加入支付流水
-      this.payFlows.push(this.curFlow)
+      this.payFlows.push(curFlow)
 
       let tmpAmount = 0
       this.payFlows.forEach((ele) => {
@@ -411,6 +421,7 @@ export default {
 
       //计算未付金额
       this.unpaidAmount = this.order.actual_amount - tmpAmount
+      this.inputAmountText = ''
     },
     //根据移动支付提交
     submitPayCode() {
@@ -420,14 +431,15 @@ export default {
         this.payCode = this.payCodeText
         this.payCodeText = ''
         console.log('微信支付:' + this.payCode)
+        let curFlow = this.getFlow()
         //如果未付款的金额大于零
         if (this.unpaidAmount <= 0) return
         //金额
-        this.curFlow.amount = this.unpaidAmount
+        curFlow.amount = this.unpaidAmount
         //设置支付方式
-        this.curFlow.pay_method = 11
+        curFlow.pay_method = this.payMethod.weChatCode
         //加入支付流水
-        this.payFlows.push(this.curFlow)
+        this.payFlows.push(curFlow)
         //立即支付
         this.api_205()
       }//支付宝支付二维码
@@ -436,19 +448,20 @@ export default {
         this.payCode = this.payCodeText
         this.payCodeText = ''
         console.log('支付宝支付:' + this.payCode)
+        let curFlow = this.getFlow()
         //如果未付款的金额大于零
         if (this.unpaidAmount <= 0) return
         //金额
-        this.curFlow.amount = this.unpaidAmount
+        curFlow.amount = this.unpaidAmount
         //支付方式
-        this.curFlow.pay_method = 21
+        curFlow.pay_method = this.payMethod.aliPayCode
         //加入支付流水
-        this.payFlows.push(this.curFlow)
+        this.payFlows.push(curFlow)
         //立即支付
         this.api_205()
       }
     },
-    //提交现金支付
+    //提交电子钱包支付
     submitEWalle() {
       //微信支付
       if (this.eWalletText.indexOf("#") != -1 && this.eWalletText.length > 15) {
@@ -458,21 +471,22 @@ export default {
         let user_id = this.eWalletText.split('#')[0]
         if (user_id == undefined || user_id == 0) return
 
+        let curFlow = this.getFlow()
+        curFlow.pay_method = this.payMethod.eWallet
+
         //清空文本
         this.eWalletText = ''
         //如果未付款的金额大于零
         if (this.unpaidAmount <= 0) return
 
-        this.curFlow.user_id = user_id
+        curFlow.user_id = user_id
         this.order.user_id = user_id
         //金额
-        this.curFlow.amount = this.unpaidAmount
+        curFlow.amount = this.unpaidAmount
         //支付方式
-        this.curFlow.pay_method = 31
+        curFlow.pay_method = 31
         //加入支付流水
-        this.payFlows.push(this.curFlow)
-
-        console.log(this.curFlow)
+        this.payFlows.push(curFlow)
         //立即支付
         this.api_205()
       }
@@ -528,6 +542,7 @@ export default {
         Order: that.order
       }
 
+      //console.log(params)
       api.post(api.api_205, api.getSign(params), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
           //调起打印
@@ -614,7 +629,6 @@ export default {
         margin-right: -10px;
       }
 
-
       .f-item {
         height: 25%;
         width: 25%;
@@ -622,17 +636,19 @@ export default {
         box-sizing: border-box;
         padding: 0 10px 10px 0;
 
-        &.btn-sure{
+        &.btn-sure {
           position: absolute;
-          right:-10px;
-          bottom:0;
+          right: -10px;
+          bottom: 0;
           height: 50%;
         }
       }
-      .item-right{
+      .item-right {
         margin-right: 25%;
       }
       .btn-number {
+        color: #000;
+        font-size: 24px;
         border: none;
         position: absolute;
         left: 50%;

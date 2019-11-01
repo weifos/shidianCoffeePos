@@ -96,6 +96,7 @@ export default {
             }
         }
 
+        //console.log(JSON.stringify(sort(sign_data)))
         return {
             Data: obj,
             Global: {
