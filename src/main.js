@@ -29,7 +29,14 @@ var vm = new Vue({ el: "#appBox", router, store, render: h => h(App) })
 //用户数据
 Vue.prototype.UserInfo = new Vue(user);
 
-//全局注册过滤器
+//全局注册过滤器 获取小票流水号
+Vue.filter('GetSerialNum', function (value) {
+    if (value == undefined || value.toString().length == 0) return
+    //获取字符
+    return '00000'.substr(0, 5 - value.toString().length) + value
+})
+
+//全局注册过滤器 金额格式化
 Vue.filter('MoneyToF', function (value) {
     return parseFloat(value).toFixed(2)
 })

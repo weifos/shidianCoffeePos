@@ -19,12 +19,12 @@
                 <ul dir="ltr" class="cont" style="-webkit-overflow-scrolling: touch;overflow-x: hidden;overflow-y: auto;width: 100%;height: 100%;" @scroll="scroll">
                   <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" @click="selectCur(index)" v-for="(item,index) in orderList" :key="index">
                     <div class="body-item f-item w4">
-                      <div class="align">{{item.id}}</div>
+                      <div class="align">{{index + 1}}</div>
                     </div>
                     <div class="body-item f-item w5">
                       <div class="align">
-                        <p>{{item.no}}</p>
-                        <p>{{item.time}}</p>
+                        <p>{{item.serial_num | GetSerialNum}}</p>
+                        <p>{{item.created_date}}</p>
                       </div>
                     </div>
                   </li>
@@ -32,22 +32,22 @@
               </div>
               <div class="right-part f-item rel">
                 <ul>
-                  <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
+                  <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].details" :key="item.no">
                     <div class="body-item f-item w6">
-                      <div class="align">{{item.name}}</div>
+                      <div class="align">{{item.product_name}}</div>
                     </div>
                     <div class="body-item f-item w7">
                       <div class="align">
-                        <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
+                        <span class="db">{{item.spec_msg}}</span>
                       </div>
                     </div>
                     <div class="body-item f-item w8 body-item__num">
                       <button class="btn btn-subtract"></button>
                       <button class="btn btn-plus"></button>
-                      <div class="align">{{item.num}}</div>
+                      <div class="align">{{item.count}}</div>
                     </div>
                     <div class="body-item f-item w7">
-                      <div class="align">{{item.price}}</div>
+                      <div class="align">{{item.avg_unit_amount | MoneyToF}}</div>
                     </div>
                     <div class="body-item f-item w8">
                       <div class="align">
@@ -70,284 +70,18 @@
   </div>
 </template>
 <script>
+import api from '@/modules/api'
+import app_g from '@/modules/appGlobal'
+
 export default {
   data() {
     return {
       curIndex: 0,
-      orderList: [
-        {
-          id: 1,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶1",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶1",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 2,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        }
-      ]
+      loading: false,
+      pageSize: 5,
+      pageIndex: 0,
+      totalPage: 0,
+      orderList: []
     }
   },
   props: {
@@ -360,10 +94,37 @@ export default {
     //选择支付方式
     selectCur(index) {
       this.curIndex = index
-      console.log(this.curIndex)
     },
-    init() {
-      console.log('')
+    //加载未制作订单
+    api_206() {
+      let that = this
+      //是否加载中，是否加载完成
+      if (!that.loading && !that.loadComplete) {
+        that.loading = false
+        api.post(api.api_206, api.getSign({
+          //已付款
+          Status: 3,
+          //门店
+          StoreID: app_g.getPos().store_id,
+          //每页大小
+          Size: that.pageSize,
+          //当前页
+          Index: that.pageIndex,
+          //POS机编号
+          PosNo: app_g.getPos().no
+        }), function (vue, res) {
+          that.pageIndex = that.pageIndex + 1
+          //总行数
+          let totalRow = res.data.Result.totalRow
+          //总页数
+          that.totalPage = parseInt(totalRow / that.pageSize) + (totalRow % that.pageSize == 0 ? 0 : 1)
+          //订单信息
+          res.data.Result.orders.forEach((ele, index) => {
+            that.orderList.push(ele)
+          })
+
+        })
+      }
     },
     //页面滚动加载数据
     scroll() {

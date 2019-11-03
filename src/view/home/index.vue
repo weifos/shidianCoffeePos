@@ -3,13 +3,16 @@
     <!-- 框架 s -->
     <Frame :result="user" v-on:nav="nav">
       <div class="content-wrap h100" slot="left">
-        <OrderList ref="orderList" v-on:submitOrder="confirmOrder"></OrderList>
-        <!-- <OrderList2></OrderList2> -->
+        <!-- 本地购物车——收银员 -->
+        <ShoppingCart ref="confirmOrder" v-on:submitOrder="confirmOrder"></ShoppingCart>
+        <!-- 本地购物车——客显 -->
+        <!-- <CustomerOrder></CustomerOrder> -->
       </div>
       <div class="content-wrap h100" slot="right">
+        <!-- 选择商品列表 -->
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
 
-        <!-- 选择商品 -->
+        <!-- 选择商品SKU-->
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></OrderParameter>
 
         <!-- 确认订单 -->
@@ -20,9 +23,15 @@
 
         <!-- 未制作订单 -->
         <NotDoneOrder ref="notDoneOrder" :show="showNotDoneOrder"></NotDoneOrder>
-        <!-- <NotGetOrder></NotGetOrder> -->
+
+        <!-- 未取订单 -->
+        <NotGetOrder ref="notGetOrder" :show="showNotGetOrder"></NotGetOrder>
+
+        <!-- 订单列表 -->
         <!-- <OrderNormal></OrderNormal> -->
-        <!-- <OrderEntry></OrderEntry> -->
+
+        <!-- 挂单/恢复 -->
+        <OrderEntry :show="showOrderEntry"></OrderEntry>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -50,8 +59,8 @@ import app_m from "@/modules/appMiddleware"
 import { Swiper as BannerSwiper, SwiperItem, Drawer } from 'vux'
 import Frame from '@/components/Frame'
 import ProductList from '@/components/ProductList'
-import OrderList from '@/components/OrderList'
-import OrderList2 from '@/components/OrderList2'
+import ShoppingCart from '@/components/ShoppingCart'
+import CustomerOrder from '@/components/CustomerOrder'
 import PopWrap from '@/components/PopWrap'
 import PopMember from '@/components/PopMember'
 import PopWork from '@/components/PopWork'
@@ -67,8 +76,8 @@ export default {
   components: {
     Frame,
     ProductList,
-    OrderList,
-    OrderList2,
+    ShoppingCart,
+    CustomerOrder,
     PopWrap,
     PopMember,
     PopWork,
@@ -92,6 +101,10 @@ export default {
       isBindStore: false,
       //未制作完成
       showNotDoneOrder: false,
+      //未取订单
+      showNotGetOrder: false,
+      //挂单/恢复
+      showOrderEntry: false,
       user: {},
       products: {}
     }
@@ -121,7 +134,7 @@ export default {
     },
     //更新购物车信息
     updateShoppingCart() {
-      this.$refs.orderList.upShoppingCart()
+      this.$refs.confirmOrder.upShoppingCart()
     },
     //确认订单
     confirmOrder(data) {
@@ -154,18 +167,30 @@ export default {
       this.showConfirmOrder = false
       this.showOrderPay = false
       this.showNotDoneOrder = false
+      this.showNotGetOrder = false
     },
     //底部菜单导航
     nav(type) {
+      //清屏
       this.clearScreen()
+
       //未制作完成
       if (type == 'notDoneOrder') {
-        //未制作订单初始化
-        this.$refs.notDoneOrder.init()
+        this.$refs.notDoneOrder.api_206()
         this.showNotDoneOrder = true
+
         //商品列表
       } else if (type == 'menu') {
         this.showProductList = true
+
+        //未取订单
+      } else if (type == 'notGetOrder') {
+        this.showNotGetOrder = true
+
+        //订单列表
+      } else if (type == 'orderList') {
+        this.showNotGetOrder = true
+
       }
     },
     //检查设备
