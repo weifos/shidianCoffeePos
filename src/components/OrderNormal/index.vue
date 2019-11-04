@@ -40,7 +40,7 @@
                                 </li>
                             </ul>
                         </div>
-                        
+
                     </div>
                 </div></div>
             </div>
@@ -112,7 +112,7 @@ export default {
 .order-normal {
 .form-1{
     height: 100%;
-    
+
     .form-head{
         width: 100%;
         left: 0;
@@ -158,7 +158,7 @@ export default {
     .w7{width: 15.38%}
     .w8{width: 17.14%}
 
-    
+
 
     .left-part{
         height: 100%;
@@ -184,9 +184,12 @@ export default {
 
         .row-item{
             border-bottom: 1px solid #ACACAC;
-            
+
             &:last-child{
-                border-bottom:0; 
+                border-bottom:0;
+            }
+            &:first-child {
+                border-bottom: 1px solid #acacac;
             }
         }
         .row-item.cur{
