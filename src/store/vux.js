@@ -2,7 +2,8 @@
 const state = {
     isShowDrawer: false,
     isLoading: false,
-    showDialog: false
+    showDialog: false,
+    title: '菜单列表'
 }
 
 // mutations
@@ -15,6 +16,9 @@ const mutations = {
     },
     setShowDialog(state1, payload) {
         state.showDialog = payload.showDialog
+    },
+    setTitle(state1, payload) {
+        state.title = payload.title
     }
 }
 

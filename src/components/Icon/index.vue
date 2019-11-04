@@ -25,7 +25,7 @@
       <div class="icon-text">订单列表</div>
     </template>
     <template v-if="type == 'dataDownLoad'">
-      <div class="icon-img">
+      <div class="icon-img" @click="nav('orderEntry')">
         <img src="./img/i1.png" />
       </div>
       <div class="icon-text">挂单/恢复</div>

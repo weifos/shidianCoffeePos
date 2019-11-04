@@ -31,8 +31,8 @@
     <div class="frame-right rel">
       <!-- top-bar s -->
       <div class="top-bar bg-main text-white abs">
-        <div class="text-tips">提示信息详情显示</div>
-        <div class="search-bar abs">
+        <div class="text-tips">{{title}}</div>
+        <div class="search-bar abs" style="display:none;">
           <input class="input-search" />
         </div>
       </div>
@@ -63,6 +63,8 @@
 
 <script>
 import Icon from '@/components/Icon'
+import { mapState } from 'vuex'
+
 export default {
   components: {
     Icon,
@@ -80,6 +82,8 @@ export default {
       }
     }
   },
+
+  //title: state => state.vux.title
   data() {
     return {
       userInfo: {
@@ -91,6 +95,11 @@ export default {
         login_name: '--'
       }
     }
+  },
+  computed: {
+    ...mapState({
+      title: state => state.vux.title
+    })
   },
   methods: {
     onClickItem(index) {

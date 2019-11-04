@@ -10,7 +10,7 @@
       </div>
       <div class="content-wrap h100" slot="right">
         <!-- 选择商品列表 -->
-        <!-- <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList> -->
+        <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
 
         <!-- 选择商品SKU-->
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></OrderParameter>
@@ -28,13 +28,13 @@
         <NotGetOrder ref="notGetOrder" :show="showNotGetOrder"></NotGetOrder>
 
         <!-- 订单列表 -->
-        <!-- <OrderNormal :show="true"></OrderNormal> -->
+        <OrderList ref="orderList" :show="showOrderList"></OrderList>
 
         <!-- 挂单/恢复 -->
-        <OrderEntry :show="showOrderEntry"></OrderEntry>
+        <OrderEntry ref="orderEntry" :show="showOrderEntry"></OrderEntry>
 
-        <!-- 查看订单 -->
-        <OrderDetails :show="true"></OrderDetails>
+        <!-- 订单详情 -->
+        <OrderDetails ref="orderDetails" :show="showOrderDetails"></OrderDetails>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -52,7 +52,6 @@
       <PopTuiKuan></PopTuiKuan>
     </PopWrap>
     <!-- 上下班弹层 e -->
-
   </div>
 </template>
 
@@ -75,7 +74,7 @@ import OrderParameter from '@/components/OrderParameter'
 import NotDoneOrder from '@/components/NotDoneOrder'
 import NotGetOrder from '@/components/NotGetOrder'
 import OrderPay from '@/components/OrderPay'
-import OrderNormal from '@/components/OrderNormal'
+import OrderList from '@/components/OrderList'
 import OrderEntry from '@/components/OrderEntry'
 import OrderSure from '@/components/OrderSure'
 import OrderDetails from '@/components/OrderDetails'
@@ -94,7 +93,7 @@ export default {
     NotDoneOrder,
     NotGetOrder,
     OrderPay,
-    OrderNormal,
+    OrderList,
     OrderEntry,
     OrderSure,
     OrderDetails,
@@ -102,7 +101,7 @@ export default {
   },
   data() {
     return {
-      pageTitle: '十点咖啡POS收银',
+      pageTitle: '十点读书·咖啡POS',
       isLogin: false,
       showProductList: true,
       showProductSku: false,
@@ -116,6 +115,10 @@ export default {
       showNotGetOrder: false,
       //挂单/恢复
       showOrderEntry: false,
+      //订单详情
+      showOrderDetails: false,
+      //订单列表
+      showOrderList: false,
       user: {},
       products: {}
     }
@@ -163,6 +166,7 @@ export default {
     paySuccess() {
       this.clearScreen()
       this.showNotDoneOrder = true
+      this.$refs.notDoneOrder.init()
     },
     //取消订单
     cancelOrder() { },
@@ -173,34 +177,49 @@ export default {
     },
     //清屏
     clearScreen() {
+      this.showOrderEntry = false
       this.showProductList = false
       this.showProductSku = false
       this.showConfirmOrder = false
       this.showOrderPay = false
       this.showNotDoneOrder = false
       this.showNotGetOrder = false
+      this.showOrderDetails = false
+      this.showOrderList = false
     },
     //底部菜单导航
     nav(type) {
       //清屏
       this.clearScreen()
 
-      //未制作完成
-      if (type == 'notDoneOrder') {
-        this.$refs.notDoneOrder.api_206()
-        this.showNotDoneOrder = true
-
-        //商品列表
-      } else if (type == 'menu') {
+      //点单
+      if (type == 'menu') {
+        this.$store.commit('setTitle', { title: '选择商品' })
         this.showProductList = true
+
+        //挂单
+      } else if (type == 'orderEntry') {
+        this.$store.commit('setTitle', { title: '挂单/恢复' })
+        this.showOrderEntry = true
+        //this.$refs.notDoneOrder.init()
+
+        //未作订单
+      } else if (type == 'notDoneOrder') {
+        this.$store.commit('setTitle', { title: '未作订单' })
+        this.showNotDoneOrder = true
+        this.$refs.notDoneOrder.init()
 
         //未取订单
       } else if (type == 'notGetOrder') {
+        this.$store.commit('setTitle', { title: '未取订单' })
         this.showNotGetOrder = true
+        this.$refs.notGetOrder.init()
 
         //订单列表
       } else if (type == 'orderList') {
-        this.showNotGetOrder = true
+        this.$store.commit('setTitle', { title: '订单列表' })
+        this.showOrderList = true
+        //this.$refs.notGetOrder.init()
 
       }
     },
@@ -220,6 +239,8 @@ export default {
     }
   },
   created() {
+    this.$store.commit('setTitle', { title: '选择商品' })
+
     let that = this
     //当前POS设备是否绑定
     let pos = app_g.getPos()

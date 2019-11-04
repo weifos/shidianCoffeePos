@@ -1,62 +1,59 @@
 <template>
   <div class="order-entry rel section-2" v-if="show">
-    <div class="section-tit text-gray tac">挂单/恢复</div>
-    <div class="section-con">
-      <div class="con-wrap">
-        <div class="form-1 bg-white rel">
-          <div class="form-head list-inlineblock tac abs">
-            <div class="head-item f-item w3 bg-gray text-white">行号</div>
-            <div class="head-item f-item w2 bg-gray text-white">单据</div>
-            <div class="head-item f-item w3 bg-gray text-white">行号</div>
-            <div class="head-item f-item w9 bg-gray text-white">品名</div>
-            <div class="head-item f-item w1 bg-gray text-white">规格</div>
-            <div class="head-item f-item w1 bg-gray text-white">数量</div>
-            <div class="head-item f-item w1 bg-gray text-white">单价</div>
-            <div class="head-item f-item w1 bg-gray text-white">小计</div>
-          </div>
-          <div class="form-body tac text-gray">
-            <div class="form-body-wrap list-inlineblock">
-              <div class="left-part f-item">
-                <ul>
-                  <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
-                    <div class="body-item f-item w4">
-                      <div class="align">{{item.id}}</div>
+    <div class="con-wrap">
+      <div class="form-1 bg-white rel">
+        <div class="form-head list-inlineblock tac abs">
+          <div class="head-item f-item w3 bg-gray text-white">行号</div>
+          <div class="head-item f-item w2 bg-gray text-white">单据</div>
+          <div class="head-item f-item w3 bg-gray text-white">行号</div>
+          <div class="head-item f-item w9 bg-gray text-white">品名</div>
+          <div class="head-item f-item w1 bg-gray text-white">规格</div>
+          <div class="head-item f-item w1 bg-gray text-white">数量</div>
+          <div class="head-item f-item w1 bg-gray text-white">单价</div>
+          <div class="head-item f-item w1 bg-gray text-white">小计</div>
+        </div>
+        <div class="form-body tac text-gray">
+          <div class="form-body-wrap list-inlineblock">
+            <div class="left-part f-item">
+              <ul>
+                <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
+                  <div class="body-item f-item w4">
+                    <div class="align">{{item.id}}</div>
+                  </div>
+                  <div class="body-item f-item w5">
+                    <div class="align">
+                      <p>{{item.no}}</p>
+                      <p>{{item.time}}</p>
                     </div>
-                    <div class="body-item f-item w5">
-                      <div class="align">
-                        <p>{{item.no}}</p>
-                        <p>{{item.time}}</p>
-                      </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="right-part f-item rel">
+              <ul>
+                <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
+                  <div class="body-item f-item w8">
+                    <div class="align">{{item.no}}</div>
+                  </div>
+                  <div class="body-item f-item w6">
+                    <div class="align">{{item.name}}</div>
+                  </div>
+                  <div class="body-item f-item w7">
+                    <div class="align">
+                      <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
                     </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="right-part f-item rel">
-                <ul>
-                  <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
-                    <div class="body-item f-item w8">
-                      <div class="align">{{item.no}}</div>
-                    </div>
-                    <div class="body-item f-item w6">
-                      <div class="align">{{item.name}}</div>
-                    </div>
-                    <div class="body-item f-item w7">
-                      <div class="align">
-                        <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
-                      </div>
-                    </div>
-                    <div class="body-item f-item w7 body-item__num">
-                      <div class="align">{{item.num}}</div>
-                    </div>
-                    <div class="body-item f-item w7">
-                      <div class="align">{{item.price}}</div>
-                    </div>
-                    <div class="body-item f-item w7">
-                      <div class="align">{{item.total}}</div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
+                  </div>
+                  <div class="body-item f-item w7 body-item__num">
+                    <div class="align">{{item.num}}</div>
+                  </div>
+                  <div class="body-item f-item w7">
+                    <div class="align">{{item.price}}</div>
+                  </div>
+                  <div class="body-item f-item w7">
+                    <div class="align">{{item.total}}</div>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

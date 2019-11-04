@@ -1,56 +1,53 @@
 <template>
   <div class="notget-order rel section-2" v-if="show">
-    <div class="section-tit text-gray tac">未聚餐订单列表</div>
-    <div class="section-con">
-      <div class="con-wrap">
-        <div class="form-1 bg-white rel">
-          <div class="form-head list-inlineblock tac abs">
-            <div class="head-item f-item w3 bg-gray text-white">序号</div>
-            <div class="head-item f-item w2 bg-gray text-white">订单信息</div>
-            <div class="head-item f-item w9 bg-gray text-white">品名</div>
-            <div class="head-item f-item w1 bg-gray text-white">规格</div>
-            <div class="head-item f-item w1 bg-gray text-white">数量</div>
-            <div class="head-item f-item w1 bg-gray text-white">单价</div>
-          </div>
-          <div class="form-body tac text-gray">
-            <div class="form-body-wrap list-inlineblock">
-              <div class="left-part f-item">
-                <ul>
-                  <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
-                    <div class="body-item f-item w4">
-                      <div class="align">{{item.id}}</div>
+    <div class="con-wrap">
+      <div class="form-1 bg-white rel">
+        <div class="form-head list-inlineblock tac abs">
+          <div class="head-item f-item w3 bg-gray text-white">序号</div>
+          <div class="head-item f-item w2 bg-gray text-white">订单信息</div>
+          <div class="head-item f-item w9 bg-gray text-white">品名</div>
+          <div class="head-item f-item w1 bg-gray text-white">规格</div>
+          <div class="head-item f-item w1 bg-gray text-white">数量</div>
+          <div class="head-item f-item w1 bg-gray text-white">单价</div>
+        </div>
+        <div class="form-body tac text-gray">
+          <div class="form-body-wrap list-inlineblock">
+            <div class="left-part f-item">
+              <ul>
+                <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
+                  <div class="body-item f-item w4">
+                    <div class="align">{{index + 1}}</div>
+                  </div>
+                  <div class="body-item f-item w5">
+                    <div class="align">
+                      <p>{{item.serial_num | GetSerialNum}}</p>
+                      <p>{{item.created_date}}</p>
                     </div>
-                    <div class="body-item f-item w5">
-                      <div class="align">
-                        <p>{{item.no}}</p>
-                        <p>{{item.time}}</p>
-                      </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="right-part f-item rel">
+              <ul v-if="orderList.length > 0">
+                <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].details" :key="item.no">
+                  <div class="body-item f-item w6">
+                    <div class="align">{{item.product_name}}</div>
+                  </div>
+                  <div class="body-item f-item w7">
+                    <div class="align">
+                      <span class="db">{{item.spec_msg}}</span>
                     </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="right-part f-item rel">
-                <ul>
-                  <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
-                    <div class="body-item f-item w6">
-                      <div class="align">{{item.name}}</div>
-                    </div>
-                    <div class="body-item f-item w7">
-                      <div class="align">
-                        <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
-                      </div>
-                    </div>
-                    <div class="body-item f-item w7 body-item__num">
-                      <div class="align">{{item.num}}</div>
-                    </div>
-                    <div class="body-item f-item w7">
-                      <div class="align">{{item.price}}</div>
-                    </div>
-                  </li>
-                </ul>
-                <div class="status-bar abs bg-main text-white tar">
-                  <button class="button round bg-white text-main button-size-middle2">取餐</button>
-                </div>
+                  </div>
+                  <div class="body-item f-item w7 body-item__num">
+                    <div class="align">{{item.count}}</div>
+                  </div>
+                  <div class="body-item f-item w7">
+                    <div class="align">{{item.avg_unit_amount | MoneyToF}}</div>
+                  </div>
+                </li>
+              </ul>
+              <div class="status-bar abs bg-main text-white tar">
+                <button class="button round bg-white text-main button-size-middle2" @click="getOrder">取餐</button>
               </div>
             </div>
           </div>
@@ -60,31 +57,123 @@
   </div>
 </template>
 <script>
+import api from '@/modules/api'
+import app_g from '@/modules/appGlobal'
+
 export default {
   data() {
     return {
+      //旧数据，初始为0
+      oldTop: 0,
       curIndex: 0,
-      orderList: [
-        {
-          id: 1,
-          no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        }
-      ]
+      firstLoad: true,
+      loading: false,
+      pageSize: 12,
+      pageIndex: 0,
+      totalPage: 0,
+      orderList: []
     }
   },
   props: {
     show: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    init() {
+      this.pageIndex = 0
+      this.totalPage = 0
+      this.firstLoad = true
+      this.orderList = []
+      this.api_206()
+    },
+    //选择支付方式
+    selectCur(index) {
+      this.curIndex = index
+    },
+    //取单
+    getOrder() {
+      //订单信息
+      let order = this.orderList[this.curIndex]
+      if (order == null) {
+        this.$vux.toast.text('请选择订单', 'default', 3000)
+        return
+      }
+
+      //18：制作完成，对应取单
+      this.api_207(order.serial_no, 18)
+    },
+    //加载未取作订单
+    api_206() {
+      let that = this
+      //是否加载中，是否加载完成
+      if (!that.loading && that.pageIndex < that.totalPage || that.firstLoad) {
+        that.loading = true
+        //如果是第一次加载
+        if (that.firstLoad) that.firstLoad = false
+        //加载数据
+        api.post(api.api_206, api.getSign({
+          //已制作完成
+          Status: 10,
+          //门店
+          StoreID: app_g.getPos().store_id,
+          //每页大小
+          Size: that.pageSize,
+          //当前页
+          Index: that.pageIndex,
+          //POS机编号
+          PosNo: app_g.getPos().no
+        }), function (vue, res) {
+          //当前页
+          that.pageIndex = that.pageIndex + 1
+          //总行数
+          let totalRow = res.data.Result.totalRow
+          //总页数
+          that.totalPage = parseInt(totalRow / that.pageSize) + (totalRow % that.pageSize == 0 ? 0 : 1)
+          //订单信息
+          res.data.Result.orders.forEach((ele, index) => {
+            that.orderList.push(ele)
+          })
+          //设置加载状态
+          that.loading = false
+        })
+      }
+    },
+    //完成
+    api_207(orderNo, status) {
+      let that = this
+      api.post(api.api_207, api.getSign({
+        OrderNo: orderNo,
+        Status: status,
+        StoreID: app_g.getPos().store_id
+      }), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          //删除页面数据
+          that.orderList.splice(that.curIndex, 1)
+          that.$vux.toast.text('操作成功', 'default', 3000)
+          // that.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
+        } else {
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+        }
+      })
+    },
+    //页面滚动加载数据
+    scroll(e) {
+      //隐藏的滚动条高度
+      let top = e.currentTarget.scrollTop
+      //整个区域的高度（包含隐藏区域）
+      let heigth = e.currentTarget.scrollHeight
+      //可视区域的高度
+      let clientHeight = e.currentTarget.clientHeight
+      //旧数据大于当前位置，表示滚动条top向上滚动
+      if (this.oldTop < top) {
+        //判断是否滚动到底部
+        if (heigth - clientHeight - top == 0 && !this.loadding) {
+          this.api_206()
+        }
+      }
+      this.oldTop = top
     }
   }
 }
@@ -183,12 +272,25 @@ export default {
         overflow-y: auto;
         overflow-x: hidden;
       }
+      .cont {
+        width: 200px;
+        height: 200px;
+        border: 0px;
+        overflow-x: hidden;
+      }
+
+      .cont::-webkit-scrollbar {
+        display: none;
+      }
 
       .row-item {
         border-bottom: 1px solid #acacac;
 
         &:last-child {
           border-bottom: 0;
+        }
+        &:first-child {
+          border-bottom: 1px solid #acacac;
         }
       }
       .row-item.cur {

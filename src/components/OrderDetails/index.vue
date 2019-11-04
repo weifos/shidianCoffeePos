@@ -1,249 +1,339 @@
 <template>
-    <div class="order-details rel section-2">
-        <!-- <div class="section-tit text-gray tac">
+  <div class="order-details rel section-2" v-if="show">
+    <!-- <div class="section-tit text-gray tac">
             查看订单
-        </div> -->
-        <div class="section-con">
-            <div class="con-wrap rel">
-                <div class="form-1 bg-white rel">
-                    <div class="form-title font-size-middle pd10 bold bg-main text-white"> 基本信息</div>
-                    <div class="form-head list-inlineblock tac">
-                        <div class="head-item f-item w2 bg-gray text-white">订单编号</div>
-                        <div class="head-item f-item w2 bg-gray text-white">下单时间</div>
-                        <div class="head-item f-item w1 bg-gray text-white">订单金额</div>
-                        <div class="head-item f-item w1 bg-gray text-white">商品数</div>
-                        <div class="head-item f-item w2 bg-gray text-white">支付方式</div>
-                        <div class="head-item f-item w2 bg-gray text-white">优惠券</div>
+    </div>-->
+    <div class="section-con">
+      <div class="con-wrap rel">
+        <div class="form-1 bg-white rel">
+          <div class="form-title font-size-middle pd10 bold bg-main text-white">基本信息</div>
+          <div class="form-head list-inlineblock tac">
+            <div class="head-item f-item w2 bg-gray text-white">订单编号</div>
+            <div class="head-item f-item w2 bg-gray text-white">下单时间</div>
+            <div class="head-item f-item w1 bg-gray text-white">订单金额</div>
+            <div class="head-item f-item w1 bg-gray text-white">商品数</div>
+            <div class="head-item f-item w2 bg-gray text-white">支付方式</div>
+            <div class="head-item f-item w2 bg-gray text-white">优惠券</div>
+          </div>
+          <div class="form-body tac text-gray">
+            <div class="form-body-wrap list-inlineblock">
+              <ul>
+                <li :class="`row-item list-inlineblock`">
+                  <div class="body-item f-item w2">
+                    <div class="align">00012345</div>
+                  </div>
+                  <div class="body-item f-item w2">
+                    <div class="align">2019-09-12 12:12:12</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">200.00</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">2</div>
+                  </div>
+                  <div class="body-item f-item w2">
+                    <div class="align">
+                      <p>现金支付:10元</p>
+                      <p>微信支付：30元</p>
                     </div>
-                    <div class="form-body tac text-gray">
-                                <div class="form-body-wrap list-inlineblock">
-                                    <ul>
-                                        <li :class="`row-item list-inlineblock`">
-                                            <div class="body-item f-item w2">
-                                                <div class="align">00012345</div>
-                                            </div>
-                                            <div class="body-item f-item w2">
-                                                <div class="align">2019-09-12 12:12:12</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">200.00</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">2</div>
-                                            </div>
-                                            <div class="body-item f-item w2">
-                                                <div class="align">
-                                                    <p>现金支付:10元</p>
-                                                    <p>微信支付：30元</p>
-                                                </div>
-                                            </div>
-                                            <div class="body-item f-item w2">
-                                                <div class="align">
-                                               -0.0
-                                               </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                            </div>
-                        </div>
-                </div>
-            <!-- form-1 s -->
-             <div class="form-1 bg-white rel mt20">
-                    <div class="form-title font-size-middle pd10 bold bg-main text-white"> 商品信息</div>
-                    <div class="form-head list-inlineblock tac">
-                        <div class="head-item f-item w3 bg-gray text-white">序号</div>
-                        <div class="head-item f-item w1 bg-gray text-white">商品图片</div>
-                        <div class="head-item f-item w1 bg-gray text-white">商品编号</div>
-                        <div class="head-item f-item w2 bg-gray text-white">商品名称</div>
-                        <div class="head-item f-item w1 bg-gray text-white">规格</div>
-                        <div class="head-item f-item w1 bg-gray text-white">价格</div>
-                        <div class="head-item f-item w1 bg-gray text-white">数量</div>
-                        <div class="head-item f-item w1 bg-gray text-white">小计</div>
-                        <div class="head-item f-item w4 bg-gray text-white">操作</div>
-                    </div>
-                    <div class="form-body tac text-gray form-body2">
-                                <div class="form-body-wrap list-inlineblock">
-                                    <ul>
-                                        <li :class="`row-item list-inlineblock`">
-                                            <div class="body-item f-item w3">
-                                                <div class="align">1</div>
-                                            </div>
-                                            <div class="body-item f-item w1 item-img">
-                                                <div class="align">
-                                                    <img alt="" src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" />
-                                                </div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">00012345</div>
-                                            </div>
-                                            <div class="body-item f-item w2">
-                                                <div class="align">摩卡咖啡</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">
-                                                大杯<br>
-
-热
-                                                </div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">200.00</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">2</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">已完成</div>
-                                            </div>
-                                            <div class="body-item f-item w4">
-                                                <div class="align">
-                                                    <span class="item-link">退款</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li :class="`row-item list-inlineblock`">
-                                            <div class="body-item f-item w3">
-                                                <div class="align">1</div>
-                                            </div>
-                                            <div class="body-item f-item w1 item-img">
-                                                <div class="align">
-                                                    <img alt="" src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" />
-                                                </div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">00012345</div>
-                                            </div>
-                                            <div class="body-item f-item w2">
-                                                <div class="align">摩卡咖啡</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">
-                                                大杯<br>
-
-热
-                                                </div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">200.00</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">2</div>
-                                            </div>
-                                            <div class="body-item f-item w1">
-                                                <div class="align">已完成</div>
-                                            </div>
-                                            <div class="body-item f-item w4">
-                                                <div class="align">
-                                                    <span class="item-link">退款</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                            </div>
-                        </div>
-                </div>
+                  </div>
+                  <div class="body-item f-item w2">
+                    <div class="align">-0.0</div>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <!-- form-1 e -->
+          </div>
         </div>
-
+        <!-- form-1 s -->
+        <div class="form-1 bg-white rel mt20">
+          <div class="form-title font-size-middle pd10 bold bg-main text-white">商品信息</div>
+          <div class="form-head list-inlineblock tac">
+            <div class="head-item f-item w3 bg-gray text-white">序号</div>
+            <div class="head-item f-item w1 bg-gray text-white">商品图片</div>
+            <div class="head-item f-item w1 bg-gray text-white">商品编号</div>
+            <div class="head-item f-item w2 bg-gray text-white">商品名称</div>
+            <div class="head-item f-item w1 bg-gray text-white">规格</div>
+            <div class="head-item f-item w1 bg-gray text-white">价格</div>
+            <div class="head-item f-item w1 bg-gray text-white">数量</div>
+            <div class="head-item f-item w1 bg-gray text-white">小计</div>
+            <div class="head-item f-item w4 bg-gray text-white">操作</div>
+          </div>
+          <div class="form-body tac text-gray form-body2">
+            <div class="form-body-wrap list-inlineblock">
+              <ul>
+                <li :class="`row-item list-inlineblock`">
+                  <div class="body-item f-item w3">
+                    <div class="align">1</div>
+                  </div>
+                  <div class="body-item f-item w1 item-img">
+                    <div class="align">
+                      <img alt src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" />
+                    </div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">00012345</div>
+                  </div>
+                  <div class="body-item f-item w2">
+                    <div class="align">摩卡咖啡</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">
+                      大杯
+                      <br />热
+                    </div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">200.00</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">2</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">已完成</div>
+                  </div>
+                  <div class="body-item f-item w4">
+                    <div class="align">
+                      <span class="item-link">退款</span>
+                    </div>
+                  </div>
+                </li>
+                <li :class="`row-item list-inlineblock`">
+                  <div class="body-item f-item w3">
+                    <div class="align">1</div>
+                  </div>
+                  <div class="body-item f-item w1 item-img">
+                    <div class="align">
+                      <img alt src="../../../static/img/e33e1ccae803d50545e38c8fb2d8b4ae347332402738fa-oIjIDx_fw658.png" />
+                    </div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">00012345</div>
+                  </div>
+                  <div class="body-item f-item w2">
+                    <div class="align">摩卡咖啡</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">
+                      大杯
+                      <br />热
+                    </div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">200.00</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">2</div>
+                  </div>
+                  <div class="body-item f-item w1">
+                    <div class="align">已完成</div>
+                  </div>
+                  <div class="body-item f-item w4">
+                    <div class="align">
+                      <span class="item-link">退款</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- form-1 e -->
     </div>
+  </div>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            curIndex:0,
-        }
+  data() {
+    return {
+      curIndex: 0,
+    }
+  },
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    init(data) {
+      this.order = data
+      //清空付款流水
+      this.payFlows = []
+      //未支付的金额
+      this.changeAmount = 0
+      this.unpaidAmount = this.order.actual_amount
+      this.payCodeFocus = true
     },
+    //立即支付
+    api_205() {
+      let that = this
+      if (that.payFlows.length == 0) {
+        that.$vux.toast.text('当前订单未支付，不能提交', 'default', 3000)
+        return
+      }
+
+      //支付总金额
+      let tAmount = 0
+      that.payFlows.forEach((ele) => {
+        tAmount += ele.amount
+      })
+      //支付金额是否达到支付条件
+      if (tAmount < that.order.actual_amount) {
+        that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
+        return
+      }
+
+      //单一支付
+      if (that.payFlows.length == 1) {
+        that.order.pay_method = that.payFlows[0].pay_method
+      } else {
+        //混合支付
+        if (that.payFlows[0].pay_method != that.payFlows[1].pay_method) {
+          that.order.pay_method = 100
+          //储值卡支付
+        } else {
+          let is_sv_card = true
+          that.payFlows.forEach((ele) => {
+            if (ele.pay_method != 41) {
+              is_sv_card = false
+              return
+            }
+          })
+          //储值卡支付
+          if (is_sv_card) that.order.pay_method = 41
+          else {
+            that.$vux.toast.text('支付信息异常', 'default', 3000)
+            return
+          }
+        }
+      }
+
+      //付款流水
+      that.order.flow = that.payFlows
+      let params = {
+        PayCode: that.payCode,
+        Order: that.order
+      }
+
+      //console.log(params)
+      api.post(api.api_205, api.getSign(params), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          //调起打印
+          app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, that.order.serial_no, that.print)
+          //支付成功
+          that.$emit('paySuccess')
+          //打印
+        } else {
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
+        }
+      })
+
+    }
+  }
 }
 </script>
 <style lang="scss">
 .order-details {
-    .section-con{
-        padding-top: 0;
+  .section-con {
+    padding-top: 0;
+  }
+
+  .item-img {
+    padding-top: 5px;
+    img {
+      width: 60px;
+      height: 60px;
     }
+  }
 
-.item-img{
-    padding-top:5px;
-    img{
-        width: 60px;
-        height: 60px;
-    }
-}
+  .form-1 {
+    .form-head {
+      width: 100%;
+      left: 0;
+      top: 0;
 
-.form-1{
-
-    .form-head{
-        width: 100%;
-        left: 0;
-        top: 0;
-
-        .head-item{
-            box-sizing: border-box;
-            height: 35px;
-            line-height: 35px;
-            border-right:1px solid #fff;
-
-            &:last-child{border:none;}
-        }
-    }
-
-    .form-body{
+      .head-item {
         box-sizing: border-box;
+        height: 35px;
+        line-height: 35px;
+        border-right: 1px solid #fff;
 
-        .body-item{
-            position: relative;
-            height: 50px;
-            line-height: 1.3;
-            border-bottom: 1px solid #ACACAC;
-            border-right: 1px solid #ACACAC;
-            box-sizing: border-box;
-            &:last-child{border-right:none;}
+        &:last-child {
+          border: none;
         }
+      }
+    }
 
-        .align{
-           position: absolute;
-           width: 100%;
-           top:50%;
-           left: 50%;
-           transform:translate(-50%,-50%)
-        }
-    }
-    .form-body2{
-        .body-item{
-            height: 70px;
-            line-height: 1.3;
-            .align{
-                position: absolute;
-                width: 100%;
-                top:50%;
-                left: 50%;
-                transform:translate(-50%,-50%)
-            }
-        }
-    }
-    .form-body-wrap{
-        height: 100%;
+    .form-body {
+      box-sizing: border-box;
+
+      .body-item {
+        position: relative;
+        height: 50px;
+        line-height: 1.3;
+        border-bottom: 1px solid #acacac;
+        border-right: 1px solid #acacac;
         box-sizing: border-box;
-        overflow: auto;
-    }
-    .w1{width: 10%}
-    .w2{width: 20%}
-    .w3{width: 5%}
-    .w4{width: 15%}
-    .w5{width: 30%}
-
-    .status-bar{
-        width: 100%;
-        height: 54px;
-        left: 0;
-        bottom: 0;
-
-        .button{
-            margin-top: 10px;
-            margin-right: 20px;
+        &:last-child {
+          border-right: none;
         }
+      }
+
+      .align {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
-}
+    .form-body2 {
+      .body-item {
+        height: 70px;
+        line-height: 1.3;
+        .align {
+          position: absolute;
+          width: 100%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+    .form-body-wrap {
+      height: 100%;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+    .w1 {
+      width: 10%;
+    }
+    .w2 {
+      width: 20%;
+    }
+    .w3 {
+      width: 5%;
+    }
+    .w4 {
+      width: 15%;
+    }
+    .w5 {
+      width: 30%;
+    }
+
+    .status-bar {
+      width: 100%;
+      height: 54px;
+      left: 0;
+      bottom: 0;
+
+      .button {
+        margin-top: 10px;
+        margin-right: 20px;
+      }
+    }
+  }
 }
 </style>

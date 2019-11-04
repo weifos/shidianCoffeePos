@@ -38,6 +38,8 @@ export default {
     api_205: domain + "205",
     //咖啡POS订单支付
     api_206: domain + "206",
+    //咖啡POS订单完成
+    api_207: domain + "207",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

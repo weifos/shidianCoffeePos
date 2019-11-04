@@ -135,7 +135,7 @@ export default {
   box-sizing: border-box;
   overflow: auto;
   height: 100%;
-  padding: 37px 0 0 32px;
+  padding: 18px 0 0 16px;
 }
 .list-product-1 {
   font-size: 0;
@@ -145,9 +145,9 @@ export default {
     overflow: hidden;
     font-size: 15px;
     width: 161px;
-    height: 232px;
+    height: 210px;
     background-color: #fff;
-    margin: 0 32px 37px 0;
+    margin: 0 22px 20px 0;
   }
   .item-img {
     height: 132px;
