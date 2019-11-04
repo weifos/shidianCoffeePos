@@ -39,7 +39,7 @@
                           <div class="total-num w1 f-item">{{result.totalCount}}</div>
                           <div class="total-price w1 f-item">{{result.total_amount | MoneyToF}}</div>
                         </div>
-                        <div class="row list-inlineblock text-red mt10">
+                        <div class="row list-inlineblock text-red mt10" v-if="result.mkt_dis_amount > 0">
                           <div class="total-name w4 f-item tal border-box pl20">活动优惠</div>
                           <div class="total-price w1 f-item">-{{result.mkt_dis_amount | MoneyToF}}</div>
                         </div>
