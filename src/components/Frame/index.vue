@@ -18,9 +18,9 @@
             </div>
           </div>
         </div>
-        <div class="machine-info mt15">
+        <!-- <div class="machine-info mt15">
           <div class="mt5">会 员：139812345432【十点会员】</div>
-        </div>
+        </div>-->
       </div>
       <div class="content-bar">
         <slot name="left"></slot>
@@ -73,8 +73,8 @@ export default {
   watch: {
     result: function (newData, oldData) {
       if (newData.id) {
-        if (newData.head_img == null || newData.head_img.length == 0) {
-          newData.head_img = '../../static/img/head.png'
+        if (newData.head_img == undefined || newData.head_img == null || newData.head_img.length == 0) {
+          newData.head_img = '../../static/img/user.png'
         }
         this.userInfo = newData
       }
@@ -83,7 +83,7 @@ export default {
   data() {
     return {
       userInfo: {
-        head_img: '../../static/img/head.png',
+        head_img: '../../static/img/user.png',
         user_name: '未登录',
         login_name: '--'
       },
@@ -102,8 +102,13 @@ export default {
     }
   },
   created() {
-    //如果未登录，弹出登录对话框
-    if (this.UserInfo.islogin()) this.userInfo = this.UserInfo.user
+    //如果已登录，刷新用户信息
+    if (this.UserInfo.islogin()) {
+      this.userInfo = this.UserInfo.user
+      if (this.userInfo.head_img == undefined || this.userInfo.head_img == null || this.userInfo.head_img.length == 0) {
+        this.userInfo.head_img = '../../static/img/user.png'
+      }
+    }
   }
 }
 
@@ -118,7 +123,7 @@ export default {
     height: 167px;
     border-bottom: 1px solid #acacac;
     box-sizing: border-box;
-    padding: 16px;
+    padding: 10px 10px 0px 10px;
   }
   .tool-bar {
     height: 62px;
@@ -129,7 +134,7 @@ export default {
   .content-bar {
     height: 100%;
     box-sizing: border-box;
-    padding: 167px 0 0 0;
+    margin-top: 130px;
   }
   .user-txt {
     padding-top: 5px;
