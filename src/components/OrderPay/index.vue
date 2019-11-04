@@ -15,9 +15,9 @@
                   <!-- type-mobile 移动支付 -->
                   <div class="type-mobile type-bar height3 pb10 border-box" v-show="curIndex == 0">
                     <div class="bg-white w100 h100 rel">
-                      <div class="text-wrap tac">
-                        <p class="font-size-middle">【请扫描微信或支付宝二维码支付】</p>
-                        <p>
+                      <p class="font-size-middle tac text-tit">【请扫描微信或支付宝二维码支付】</p>
+                      <div class="text-wrap">
+                        <p class="mt20">
                           付款码：
                           <input type="text" class="text-code" ref="pCode" id="pCode" v-model="payCodeText" @keyup.enter="submitPayCode" @blur="payCodeBlur" />
                         </p>
@@ -30,9 +30,9 @@
                   <!-- type-e-wallet 电子钱包支付-->
                   <div class="type-e-wallet type-bar height3 pb10 border-box" v-show="curIndex == 1">
                     <div class="bg-white w100 h100 rel">
-                      <div class="text-wrap tac">
-                        <p class="font-size-middle">【请扫描电子钱包二维码支付】</p>
-                        <p>
+                      <p class="font-size-middle tac text-tit">【请扫描电子钱包二维码支付】</p>
+                      <div class="text-wrap">
+                        <p class="mt20">
                           <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" />
                         </p>
                         <p class="mt20">卡号：1234567890</p>
@@ -48,8 +48,8 @@
                   <!-- type-card 储值卡 -->
                   <div class="type-card type-bar height3 pb10 border-box" v-show="curIndex == 2">
                     <div class="bg-white w100 h100 rel">
-                      <div class="text-wrap tac">
-                        <p class="font-size-middle">【请刷储值卡进行支付】</p>
+                      <p class="font-size-middle tac text-tit">【请刷储值卡进行支付】</p>
+                      <div class="text-wrap">
                         <p class="mt20">卡号：1234567890</p>
                         <p>余额：300.00</p>
                         <p class="mt20">【支付成功】</p>
@@ -568,7 +568,7 @@ export default {
 
 <style lang="scss">
 .form-pay {
-  width: 577px;
+  width: 607px;
   top: 50%;
   left: 50%;
   height: 662px;
@@ -690,12 +690,17 @@ export default {
       height: 36px;
       line-height: 36px;
     }
+    .text-tit{
+      padding-top: 40px;
+    }
     .text-wrap {
-      position: absolute;
+      padding: 10px 20px 40px 20px;
+
+      // position: absolute;
       left: 0;
-      top: 20%;
+      // top: 50%;
       width: 100%;
-      transform: translateY(-50%);
+      // transform: translateY(-50%);
       line-height: 1.5;
     }
     .text-code {
