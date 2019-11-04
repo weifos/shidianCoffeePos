@@ -13,12 +13,13 @@
               <div class="left-part f-item h100 border-box pd10">
                 <div class="part-wrap h100 rel">
                   <!-- type-mobile 移动支付 -->
-                  <div class="type-mobile type-bar height3 pb10 border-box" v-if="curIndex == 0">
+                  <div class="type-mobile type-bar height3 pb10 border-box" v-show="curIndex == 0">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
                         <p class="font-size-middle">【请扫描微信或支付宝二维码支付】</p>
                         <p>
-                          <input type="text" ref="pCode" v-model="payCodeText" @keyup.enter="submitPayCode" @blur="payCodeBlur" v-payCodeFocus="payCodeFocus" />
+                          付款码：
+                          <input type="text" class="text-code" ref="pCode" id="pCode" v-model="payCodeText" @keyup.enter="submitPayCode" @blur="payCodeBlur" />
                         </p>
                         <!-- <p class="mt20">【支付成功！】</p>
                         <p class="mt20">【支付失败！】</p>-->
@@ -27,25 +28,25 @@
                   </div>
 
                   <!-- type-e-wallet 电子钱包支付-->
-                  <div class="type-e-wallet type-bar height3 pb10 border-box" v-if="curIndex == 1">
+                  <div class="type-e-wallet type-bar height3 pb10 border-box" v-show="curIndex == 1">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
                         <p class="font-size-middle">【请扫描电子钱包二维码支付】</p>
                         <p>
-                          <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" v-eWalletFocus="eWalletFocus" />
+                          <input type="text" ref="eWallet" id="eWallet" v-model="eWalletText" @keyup.enter="submitEWalle" @blur="eWalletBlur" />
                         </p>
                         <p class="mt20">卡号：1234567890</p>
                         <p>余额：300.00</p>
                         <p class="mt20">【支付成功】</p>
                         <!-- <p class="mt20">【储值卡余额不足，支付失败】</p>
-                        <p class="mt20">【支付中。。。】</p> -->
+                        <p class="mt20">【支付中。。。】</p>-->
                         <!-- <p class="mt20">【支付失败！】</p> -->
                       </div>
                     </div>
                   </div>
 
                   <!-- type-card 储值卡 -->
-                  <div class="type-card type-bar height3 pb10 border-box" v-if="curIndex == 2">
+                  <div class="type-card type-bar height3 pb10 border-box" v-show="curIndex == 2">
                     <div class="bg-white w100 h100 rel">
                       <div class="text-wrap tac">
                         <p class="font-size-middle">【请刷储值卡进行支付】</p>
@@ -53,14 +54,14 @@
                         <p>余额：300.00</p>
                         <p class="mt20">【支付成功】</p>
                         <!-- <p class="mt20">【储值卡余额不足，支付失败】</p>
-                        <p class="mt20">【支付中。。。】</p> -->
+                        <p class="mt20">【支付中。。。】</p>-->
                         <!-- <p class="mt20">【支付失败！】</p> -->
                       </div>
                     </div>
                   </div>
 
                   <!-- type-cash 现金支付 -->
-                  <div class="type-cash type-bar height3" v-if="curIndex == 3">
+                  <div class="type-cash type-bar height3" v-show="curIndex == 3">
                     <div class="value-bar font-size-normal w100 abs">
                       <div class="pd10 border-box bg-white">
                         <ul>
@@ -297,6 +298,8 @@ export default {
   },
   methods: {
     init(data) {
+      setTimeout(() => { this.$refs.pCode.focus() }, 200)
+
       this.order = data
       //清空付款流水
       this.payFlows = []
@@ -373,16 +376,14 @@ export default {
     },
     //移动支付失去焦点事件
     payCodeBlur() {
-      //setTimeout(()=>{},500)
       if (this.curIndex == 0 && this.$refs.pCode != undefined) {
-        this.$refs.pCode.focus()
+        setTimeout(() => { this.$refs.pCode.focus() }, 100)
       }
     },
     //电子钱包失去焦点事件
     eWalletBlur() {
       if (this.curIndex == 1 && this.$refs.eWallet != undefined) {
-        this.$refs.eWallet.focus()
-        this.eWalletFocus = true
+        setTimeout(() => { this.$refs.eWallet.focus() }, 100)
       }
     },
     //选择支付方式
@@ -390,13 +391,11 @@ export default {
       this.curIndex = index
       let item = this.payList[index]
       //移动支付
-      if (item.payMethod == 0) {
-        this.eWalletFocus = false
-        this.payCodeFocus = true
+      if (item.text == '移动支付') {
+        setTimeout(() => { this.$refs.pCode.focus() }, 100)
         //电子钱包
-      } else if (item.payMethod == 31) {
-        this.payCodeFocus = false
-        this.eWalletFocus = true
+      } else if (item.text == '电子钱包') {
+        setTimeout(() => { this.$refs.eWallet.focus() }, 100)
       }
     },
     //提交现金支付
@@ -694,10 +693,17 @@ export default {
     .text-wrap {
       position: absolute;
       left: 0;
-      top: 50%;
+      top: 20%;
       width: 100%;
       transform: translateY(-50%);
       line-height: 1.5;
+    }
+    .text-code {
+      border-left-width: 0px;
+      border-top-width: 0px;
+      border-right-width: 0px;
+      border-bottom-width: 1px;
+      border-bottom-color: black;
     }
   }
   .right-part {
