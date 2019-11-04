@@ -57,7 +57,7 @@
                   </li>
                 </ul>
                 <div class="status-bar abs bg-main text-white tar">
-                  <button class="button round bg-white text-main button-size-middle2">选取商品</button>
+                  <!-- <button class="button round bg-white text-main button-size-middle2">选取商品</button> -->
                   <button class="button round bg-white text-main button-size-middle2">制作完成</button>
                   <button class="button round bg-white text-main button-size-middle2">取单</button>
                 </div>
@@ -81,7 +81,11 @@ export default {
       pageSize: 5,
       pageIndex: 0,
       totalPage: 0,
-      orderList: []
+      orderList: [
+        {
+          details: []
+        }
+      ]
     }
   },
   props: {
@@ -98,6 +102,7 @@ export default {
     //加载未制作订单
     api_206() {
       let that = this
+
       //是否加载中，是否加载完成
       if (!that.loading && !that.loadComplete) {
         that.loading = false
@@ -113,6 +118,8 @@ export default {
           //POS机编号
           PosNo: app_g.getPos().no
         }), function (vue, res) {
+          if (that.orderList[0].id == undefined) that.orderList = []
+
           that.pageIndex = that.pageIndex + 1
           //总行数
           let totalRow = res.data.Result.totalRow
