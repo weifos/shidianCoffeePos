@@ -2,9 +2,7 @@
   <div class="order-normal rel section-2" v-if="show">
     <div class="con-wrap rel">
       <div class="tab-tit abs cloumn-3">
-        <div class="tab-t f-item" :class="[curIndex == 0?'cur':'']" @click="onClickItem(0)">已支付</div>
-        <div class="tab-t f-item" :class="[curIndex == 1?'cur':'']" @click="onClickItem(1)">待支付</div>
-        <div class="tab-t f-item" :class="[curIndex == 2?'cur':'']" @click="onClickItem(2)">全部</div>
+        <div class="tab-t f-item" :class="[curIndex == index?'cur':'']" v-for="(item,index) in statusList" @click="onClickItem(index)">{{item.name}}</div>
       </div>
       <div class="tab-con h100">
         <div class="form-1 bg-white rel">
@@ -147,56 +145,16 @@ export default {
   data() {
     return {
       curIndex: 0,
-      orderList: [
+      statusList: [
+        { name: '已支付', isPay: 1 },
+        { name: '待支付', isPay: 0 },
+        { name: '已支付', isPay: -1 }
+      ],
+      result: [
         {
           id: 1,
           no: "00012345",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
-        },
-        {
-          id: 222,
-          no: "000123452",
-          time: "2019-09-12 12:12:12",
-          list: [
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            },
-            {
-              name: "柚子奶茶",
-              param: ["中杯", "去冰"],
-              num: 1,
-              price: "20.00",
-            }
-          ]
+          time: "2019-09-12 12:12:12"
         }
       ]
     }
@@ -210,10 +168,37 @@ export default {
   methods: {
     onClickItem(index) {
       this.curIndex = index
-      let item = this.result[this.curIndex]
-      if (!item.isLoad) {
-        this.api_201()
-      }
+    },
+    //加载订单
+    api_206() {
+      let that = this
+      let item = that.statusList[that.curIndex]
+      //加载数据
+      api.post(api.api_206, api.getSign({
+        //已付款
+        Status: item,
+        //门店
+        StoreID: app_g.getPos().store_id,
+        //每页大小
+        Size: that.pageSize,
+        //当前页
+        Index: that.pageIndex,
+        //POS机编号
+        PosNo: app_g.getPos().no
+      }), function (vue, res) {
+        //当前页
+        that.pageIndex = that.pageIndex + 1
+        //总行数
+        let totalRow = res.data.Result.totalRow
+        //总页数
+        that.totalPage = parseInt(totalRow / that.pageSize) + (totalRow % that.pageSize == 0 ? 0 : 1)
+        //订单信息
+        res.data.Result.orders.forEach((ele, index) => {
+          that.orderList.push(ele)
+        })
+        //设置加载状态
+        that.loading = false
+      })
     }
   }
 }
