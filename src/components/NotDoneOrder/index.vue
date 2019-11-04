@@ -264,6 +264,9 @@ export default {
         &:last-child {
           border-bottom: 0;
         }
+        &:first-child {
+          border-bottom: 1px solid #acacac;
+        }
       }
       .row-item.cur {
         position: relative;

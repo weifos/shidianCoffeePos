@@ -6,7 +6,7 @@
         <div class="fr text-gray font-size-small">收银台：0101</div>
         <div class="text-gray font-size-small">2019-09-12 12:23:00</div>
         <div class="text-gray font-size-small mt5">联网状态：</div>
-        <div class="user-info hidden mt15">
+        <div class="user-info hidden mt10">
           <div class="user-img fl">
             <img alt :src="userInfo.head_img" width="100%" height="100%" />
           </div>
@@ -120,7 +120,7 @@ export default {
     width: 100%;
     left: 0;
     top: 0;
-    height: 167px;
+    height: 126px;
     border-bottom: 1px solid #acacac;
     box-sizing: border-box;
     padding: 10px 10px 0px 10px;
@@ -134,7 +134,7 @@ export default {
   .content-bar {
     height: 100%;
     box-sizing: border-box;
-    margin-top: 130px;
+    padding-top: 126px;
   }
   .user-txt {
     padding-top: 5px;

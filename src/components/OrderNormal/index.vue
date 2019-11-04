@@ -4,45 +4,152 @@
             订单列表
         </div>
         <div class="section-con">
-            <div class="con-wrap">
-                <div class="form-1 bg-white rel">
+            <div class="con-wrap rel">
+                <div class="tab-tit abs cloumn-3">
+                    <div class="tab-t f-item cur">已支付</div>
+                    <div class="tab-t f-item">待支付</div>
+                    <div class="tab-t f-item">全部</div>
+                </div>
+                <div class="tab-con h100">
+                    <div class="form-1 bg-white rel">
                     <div class="form-head list-inlineblock tac abs">
                         <div class="head-item f-item w3 bg-gray text-white">序号</div>
-                        <div class="head-item f-item w2 bg-gray text-white">订单信息</div>
-                        <div class="head-item f-item w9 bg-gray text-white">品名</div>
-                        <div class="head-item f-item w1 bg-gray text-white">规格</div>
-                        <div class="head-item f-item w1 bg-gray text-white">数量</div>
-                        <div class="head-item f-item w1 bg-gray text-white">单价</div>
+                        <div class="head-item f-item w4 bg-gray text-white">订单编号</div>
+                        <div class="head-item f-item w2 bg-gray text-white">下单时间</div>
+                        <div class="head-item f-item w1 bg-gray text-white">用户账号</div>
+                        <div class="head-item f-item w1 bg-gray text-white">订单金额</div>
+                        <div class="head-item f-item w1 bg-gray text-white">商品数</div>
+                        <div class="head-item f-item w1 bg-gray text-white">订单状态</div>
+                        <div class="head-item f-item w2 bg-gray text-white">操作</div>
                     </div>
-                    <div class="form-body tac text-gray"><div class="form-body-wrap list-inlineblock">
-                        <div class="left-part f-item">
-                            <ul>
-                                <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`"  v-for="(item,index) in orderList" :key="item.no">
-                                    <div class="body-item f-item w4"><div class="align">{{item.id}}</div></div>
-                                    <div class="body-item f-item w5"><div class="align">
-                                        <p>{{item.no}}</p>
-                                        <p>{{item.time}}</p>
-                                    </div></div>
-                                </li>
-                            </ul>
+                    <!-- tab-c s -->
+                    <div class="tab-c h100">
+                            <div class="form-body tac text-gray">
+                                <div class="form-body-wrap list-inlineblock">
+                                    <ul>
+                                        <li :class="`row-item list-inlineblock`">
+                                            <div class="body-item f-item w3">
+                                                <div class="align">1</div>
+                                            </div>
+                                            <div class="body-item f-item w4">
+                                                <div class="align">00012345</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">2019-09-12 12:12:12</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">
+                                                如果有就显示
+                                                </div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">200.00</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">2</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">已完成</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">
+                                                    <span class="item-link mr20">查看</span>
+                                                    <span class="item-link">全部退款</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                            </div>
                         </div>
-                        <div class="right-part f-item rel">
-                            <ul>
-                                <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].list" :key="item.no">
-                                    <div class="body-item f-item w6"><div class="align">{{item.name}}</div></div>
-                                    <div class="body-item f-item w7"><div class="align">
-                                       <span class="db" v-for="(sItem,sIndex) in item.param" :key="sIndex">{{sItem}}</span>
-                                    </div></div>
-                                    <div class="body-item f-item w7 body-item__num">
-                                        <div class="align">{{item.num}} </div>
-                                    </div>
-                                    <div class="body-item f-item w7"><div class="align">{{item.price}}</div></div>
-                                </li>
-                            </ul>
+                    </div>
+                    <!-- tab-c e -->
+                    <!-- tab-c s -->
+                    <div class="tab-c h100 cur">
+                            <div class="form-body tac text-gray">
+                                <div class="form-body-wrap list-inlineblock">
+                                    <ul>
+                                        <li :class="`row-item list-inlineblock`">
+                                            <div class="body-item f-item w3">
+                                                <div class="align">1</div>
+                                            </div>
+                                            <div class="body-item f-item w4">
+                                                <div class="align">00012345</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">2019-09-12 12:12:12</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">
+                                                如果有就显示
+                                                </div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">200.00</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">2</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">已完成</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">
+                                                    <span class="item-link mr10">查看</span>
+                                                    <span class="item-link mr10">结算</span>
+                                                    <span class="item-link">关闭</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                            </div>
                         </div>
+                    </div>
+                    <!-- tab-c e -->
+                     <!-- tab-c s -->
+                    <div class="tab-c h100">
+                            <div class="form-body tac text-gray">
+                                <div class="form-body-wrap list-inlineblock">
+                                    <ul>
+                                        <li :class="`row-item list-inlineblock`">
+                                            <div class="body-item f-item w3">
+                                                <div class="align">1</div>
+                                            </div>
+                                            <div class="body-item f-item w4">
+                                                <div class="align">00012345</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">2019-09-12 12:12:12</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">
+                                                如果有就显示
+                                                </div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">200.00</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">2</div>
+                                            </div>
+                                            <div class="body-item f-item w1">
+                                                <div class="align">已完成</div>
+                                            </div>
+                                            <div class="body-item f-item w2">
+                                                <div class="align">
+                                                    <span class="item-link mr10">查看</span>
+                                                    <span class="item-link mr10">结算</span>
+                                                    <span class="item-link">关闭</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- tab-c e -->
+                    </div>
+                </div>
 
-                    </div>
-                </div></div>
             </div>
         </div>
     </div>
@@ -110,6 +217,35 @@ export default {
 </script>
 <style lang="scss">
 .order-normal {
+    .tab-tit{
+        height: 30px;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        left: 0;
+        top: 0;
+        padding:10px 43px;
+        .tab-t{
+            background-color: #fff;
+            height: 50px;
+            line-height: 50px;
+
+            &.cur{background-color: #7F9EB6;color: #fff;}
+        }
+    }
+    .tab-con{
+        padding: 50px 30px 20px 30px;
+        box-sizing: border-box;
+    }
+    .cloumn-3{
+        font-size: 0;
+        .f-item{width: 33.33%;display: inline-block;vertical-align: top;font-size: 15px;}
+    }
+    .tab-c{
+        display: none;
+
+        &.cur{display: block;}
+    }
 .form-1{
     height: 100%;
 
@@ -132,14 +268,21 @@ export default {
         height: 100%;
         padding-top: 35px;
 
-        .body-item{position: relative;height: 67px;}
+        .body-item{
+            position: relative;
+            height: 40px;
+            line-height: 40px;
+            border-bottom: 1px solid #ACACAC;
+            border-right: 1px solid #ACACAC;
+            box-sizing: border-box;
+        }
 
         .align{
-           position: absolute;
-           width: 100%;
-           top:50%;
-           left: 50%;
-           transform:translate(-50%,-50%)
+        //    position: absolute;
+        //    width: 100%;
+        //    top:50%;
+        //    left: 50%;
+        //    transform:translate(-50%,-50%)
         }
     }
     .form-body-wrap{
@@ -148,94 +291,10 @@ export default {
         overflow: auto;
     }
     .w1{width: 10%}
-    .w2{width: 30%}
+    .w2{width: 20%}
     .w3{width: 5%}
-    .w9{width: 35%}
+    .w4{width: 15%}
 
-    .w4{width: 100/35*5%}
-    .w5{width: 100/35*30%}
-    .w6{width: 53.84%}
-    .w7{width: 15.38%}
-    .w8{width: 17.14%}
-
-
-
-    .left-part{
-        height: 100%;
-        width: 35%;
-        box-sizing: border-box;
-        // border-right: 1px solid #ACACAC;
-        position: relative;
-        &:after{
-            content: "";
-            position: absolute;
-            right: 0px;
-            top: 0;
-            height: 100%;
-            width: 1px;
-            background-color: #ACACAC;
-        }
-
-        ul{
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .row-item{
-            border-bottom: 1px solid #ACACAC;
-
-            &:last-child{
-                border-bottom:0;
-            }
-            &:first-child {
-                border-bottom: 1px solid #acacac;
-            }
-        }
-        .row-item.cur{
-            position: relative;
-
-            &:after{
-                content: "";
-                position: absolute;
-                right: -2px;
-                top: 0;
-                height: 67px;
-                width: 4px;
-                background-color: #fff;
-                z-index: 2;
-            }
-        }
-    }
-    .right-part{
-        height: 100%;
-        width: 65%;
-        box-sizing: border-box;
-
-        ul{
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
-        .body-item{
-            overflow: hidden;
-        }
-        .body-item__num{
-            position: relative;
-        }
-        .btn-subtract,.btn-plus{
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%)
-        }
-        .btn-subtract{
-            left: 5px;
-        }
-        .btn-plus{
-            right: 5px;
-        }
-    }
     .status-bar{
         width: 100%;
         height: 54px;

@@ -10,7 +10,7 @@
       </div>
       <div class="content-wrap h100" slot="right">
         <!-- 选择商品列表 -->
-        <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
+        <!-- <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList> -->
 
         <!-- 选择商品SKU-->
         <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></OrderParameter>
@@ -28,10 +28,13 @@
         <NotGetOrder ref="notGetOrder" :show="showNotGetOrder"></NotGetOrder>
 
         <!-- 订单列表 -->
-        <!-- <OrderNormal></OrderNormal> -->
+        <!-- <OrderNormal :show="true"></OrderNormal> -->
 
         <!-- 挂单/恢复 -->
         <OrderEntry :show="showOrderEntry"></OrderEntry>
+
+        <!-- 查看订单 -->
+        <OrderDetails :show="true"></OrderDetails>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -44,8 +47,12 @@
       <div v-if="!isLogin" class="pop-content" slot="content">
         <PopWork v-on:loginSuccess="lgSuccess"></PopWork>
       </div>
+
+      <!-- 退款弹层 -->
+      <PopTuiKuan></PopTuiKuan>
     </PopWrap>
     <!-- 上下班弹层 e -->
+
   </div>
 </template>
 
@@ -71,6 +78,8 @@ import OrderPay from '@/components/OrderPay'
 import OrderNormal from '@/components/OrderNormal'
 import OrderEntry from '@/components/OrderEntry'
 import OrderSure from '@/components/OrderSure'
+import OrderDetails from '@/components/OrderDetails'
+import PopTuiKuan from '@/components/PopTuiKuan'
 
 export default {
   components: {
@@ -87,7 +96,9 @@ export default {
     OrderPay,
     OrderNormal,
     OrderEntry,
-    OrderSure
+    OrderSure,
+    OrderDetails,
+    PopTuiKuan
   },
   data() {
     return {
@@ -239,7 +250,7 @@ export default {
     document.getElementById('pageTitle').innerHTML = localStorage.getItem('pageTitle')
   }
 }
-</script> 
+</script>
 
 <style lang="scss">
 // .content-wrap{
