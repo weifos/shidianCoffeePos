@@ -17,7 +17,7 @@
             <div class="head-item f-item w2 bg-gray text-white">操作</div>
           </div>
           <!-- tab-c s -->
-          <div class="tab-c h100">
+          <div class="tab-c h100 cur">
             <div class="form-body tac text-gray">
               <div class="form-body-wrap list-inlineblock">
                 <ul>
@@ -52,11 +52,19 @@
                   </li>
                 </ul>
               </div>
+              <!-- pages s -->
+                <div class="pages abs tar">
+                  <button class="item-page cur">1</button>
+                  <button class="item-page">2</button>
+                  <button class="item-page">3</button>
+                  <button class="item-page">4</button>
+                </div>
+                <!-- pages e -->
             </div>
           </div>
           <!-- tab-c e -->
           <!-- tab-c s -->
-          <div class="tab-c h100 cur">
+          <div class="tab-c h100">
             <div class="form-body tac text-gray">
               <div class="form-body-wrap list-inlineblock">
                 <ul>
@@ -204,6 +212,27 @@ export default {
 }
 </script>
 <style lang="scss">
+.pages{
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  font-size: 0;
+  padding: 20px 20px;
+  box-sizing: border-box;
+  .item-page{
+    text-align: center;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border:1px solid #ACACAC;
+    background-color: #fff;
+    margin:0 5px;
+    font-size: 15px;
+    line-height: 38px;
+    &:active,&.cur{background-color: #7F9EB6;color:#fff;}
+  }
+}
 .order-normal {
   .tab-tit {
     height: 30px;
@@ -267,6 +296,8 @@ export default {
       box-sizing: border-box;
       height: 100%;
       padding-top: 35px;
+      padding-bottom: 80px;
+      position: relative;
 
       .body-item {
         position: relative;
