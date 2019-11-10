@@ -4,7 +4,7 @@
     <Frame :result="user" v-on:nav="nav">
       <div class="content-wrap h100" slot="left">
         <!-- 本地购物车——收银员 -->
-        <ShoppingCart ref="confirmOrder" v-on:submitOrder="confirmOrder"></ShoppingCart>
+        <ShoppingCart ref="shoppingCart" v-on:submitOrder="confirmOrder" v-on:submitEntryOrder="submitEntryOrder"></ShoppingCart>
         <!-- 本地购物车——客显 -->
         <!-- <CustomerOrder></CustomerOrder> -->
       </div>
@@ -13,7 +13,7 @@
         <ProductList ref="pList" :show="showProductList" v-on:getSKU="loadSKU"></ProductList>
 
         <!-- 选择商品SKU-->
-        <OrderParameter ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></OrderParameter>
+        <ProductDetails ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></ProductDetails>
 
         <!-- 确认订单 -->
         <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:goPay="goPay"></OrderSure>
@@ -27,11 +27,11 @@
         <!-- 未取订单 -->
         <NotGetOrder ref="notGetOrder" :show="showNotGetOrder"></NotGetOrder>
 
-        <!-- 订单列表 -->
-        <OrderList ref="orderList" :show="showOrderList"></OrderList>
-
         <!-- 挂单/恢复 -->
-        <OrderEntry ref="orderEntry" :show="showOrderEntry"></OrderEntry>
+        <OrderEntry ref="orderEntry" :show="showOrderEntry" v-on:setShoppingCart="updateShoppingCart"></OrderEntry>
+
+        <!-- 订单列表 -->
+        <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPopRefund="goPopRefund"></OrderList>
 
         <!-- 订单详情 -->
         <OrderDetails ref="orderDetails" :show="showOrderDetails"></OrderDetails>
@@ -40,18 +40,22 @@
     <!-- 框架 e -->
 
     <!-- 上下班弹层 s -->
-    <PopWrap>
-      <!-- <div class="pop-content" slot="content">
-        <PopMember></PopMember>
-      </div>-->
-      <div v-if="!isLogin" class="pop-content" slot="content">
-        <PopWork v-on:loginSuccess="lgSuccess"></PopWork>
-      </div>
+    <PopWrap></PopWrap>
 
-      <!-- 退款弹层 -->
-      <PopTuiKuan></PopTuiKuan>
-    </PopWrap>
-    <!-- 上下班弹层 e -->
+    <!-- 会员弹出框 -->
+    <!-- <div class="pop-content" slot="content">
+        <PopMember></PopMember>
+    </div>-->
+
+    <!-- 登录弹出框 -->
+    <div v-if="!isLogin" class="pop-content" slot="content">
+      <PopWork v-on:loginSuccess="lgSuccess"></PopWork>
+    </div>
+
+    <!-- 退款弹出框 -->
+    <div v-show="showPopRefund" class="pop-content" slot="content">
+      <PopRefund ref="popRefund"></PopRefund>
+    </div>
   </div>
 </template>
 
@@ -70,7 +74,8 @@ import CustomerOrder from '@/components/CustomerOrder'
 import PopWrap from '@/components/PopWrap'
 import PopMember from '@/components/PopMember'
 import PopWork from '@/components/PopWork'
-import OrderParameter from '@/components/OrderParameter'
+import PopRefund from '@/components/PopRefund'
+import ProductDetails from '@/components/ProductDetails'
 import NotDoneOrder from '@/components/NotDoneOrder'
 import NotGetOrder from '@/components/NotGetOrder'
 import OrderPay from '@/components/OrderPay'
@@ -78,7 +83,6 @@ import OrderList from '@/components/OrderList'
 import OrderEntry from '@/components/OrderEntry'
 import OrderSure from '@/components/OrderSure'
 import OrderDetails from '@/components/OrderDetails'
-import PopTuiKuan from '@/components/PopTuiKuan'
 
 export default {
   components: {
@@ -89,23 +93,28 @@ export default {
     PopWrap,
     PopMember,
     PopWork,
-    OrderParameter,
+    PopRefund,
+    ProductDetails,
     NotDoneOrder,
     NotGetOrder,
     OrderPay,
     OrderList,
     OrderEntry,
     OrderSure,
-    OrderDetails,
-    PopTuiKuan
+    OrderDetails
   },
   data() {
     return {
       pageTitle: '十点读书·咖啡POS',
+      //显示登录弹框
       isLogin: false,
+      //显示商品列表
       showProductList: true,
+      //显示sku信息
       showProductSku: false,
+      //显示确认订单
       showConfirmOrder: false,
+      //显示订单付款
       showOrderPay: false,
       //是否绑定门店
       isBindStore: false,
@@ -119,6 +128,8 @@ export default {
       showOrderDetails: false,
       //订单列表
       showOrderList: false,
+      //退款框
+      showPopRefund: false,
       user: {},
       products: {}
     }
@@ -131,6 +142,7 @@ export default {
   methods: {
     //子组件通知父组件，处理组件登录成功
     lgSuccess(data) {
+      this.isLogin = true
       this.user = data
       this.loadProducts()
     },
@@ -148,7 +160,7 @@ export default {
     },
     //更新购物车信息
     updateShoppingCart() {
-      this.$refs.confirmOrder.upShoppingCart()
+      this.$refs.shoppingCart.upShoppingCart()
     },
     //确认订单
     confirmOrder(data) {
@@ -162,11 +174,31 @@ export default {
       this.showOrderPay = true
       this.$refs.payOrder.init(data)
     },
+    //订单详情
+    goOrderDetails(data) {
+      this.clearScreen()
+      this.showOrderDetails = true
+      this.$refs.orderDetails.init(data)
+    },
+    //显示退款框
+    goPopRefund(data, refundAll) {
+      if (!refundAll) {
+        store.commit('setShowDialog', { showDialog: true })
+        this.showPopRefund = true
+      }
+      this.$refs.popRefund.init(data)
+    },
     //支付成功
     paySuccess() {
       this.clearScreen()
       this.showNotDoneOrder = true
       this.$refs.notDoneOrder.init()
+    },
+    //挂单
+    submitEntryOrder() {
+      this.clearScreen()
+      this.showOrderEntry = true
+      this.$refs.orderEntry.init()
     },
     //取消订单
     cancelOrder() { },
@@ -201,7 +233,7 @@ export default {
       } else if (type == 'orderEntry') {
         this.$store.commit('setTitle', { title: '挂单/恢复' })
         this.showOrderEntry = true
-        //this.$refs.notDoneOrder.init()
+        this.$refs.orderEntry.init()
 
         //未作订单
       } else if (type == 'notDoneOrder') {
@@ -219,8 +251,7 @@ export default {
       } else if (type == 'orderList') {
         this.$store.commit('setTitle', { title: '订单列表' })
         this.showOrderList = true
-        //this.$refs.notGetOrder.init()
-
+        this.$refs.orderList.init()
       }
     },
     //检查设备

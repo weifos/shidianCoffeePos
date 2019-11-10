@@ -40,6 +40,22 @@ export default {
     api_206: domain + "206",
     //咖啡POS订单完成
     api_207: domain + "207",
+    //根据用户码获取会员信息
+    api_208: domain + "208",
+    //使用储值卡刷卡
+    api_209: domain + "209",
+    //加载订单明细
+    api_210: domain + "210",
+    //退款
+    api_211: domain + "211",
+    //退款
+    api_211: domain + "211",
+    //立即挂单
+    api_212: domain + "212",
+    //挂单列表
+    api_213: domain + "213",
+    //删除挂单
+    api_214: domain + "214",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

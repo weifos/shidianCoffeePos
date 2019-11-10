@@ -7,164 +7,86 @@
       <div class="tab-con h100">
         <div class="form-1 bg-white rel">
           <div class="form-head list-inlineblock tac abs">
-            <div class="head-item f-item w3 bg-gray text-white">序号</div>
+            <div class="head-item f-item w3 bg-gray text-white">小票号</div>
             <div class="head-item f-item w4 bg-gray text-white">订单编号</div>
             <div class="head-item f-item w2 bg-gray text-white">下单时间</div>
             <div class="head-item f-item w1 bg-gray text-white">用户账号</div>
             <div class="head-item f-item w1 bg-gray text-white">订单金额</div>
-            <div class="head-item f-item w1 bg-gray text-white">商品数</div>
+            <div class="head-item f-item w1 bg-gray text-white">商品数/已退数</div>
             <div class="head-item f-item w1 bg-gray text-white">订单状态</div>
             <div class="head-item f-item w2 bg-gray text-white">操作</div>
           </div>
-          <!-- tab-c s -->
           <div class="tab-c h100 cur">
             <div class="form-body tac text-gray">
               <div class="form-body-wrap list-inlineblock">
                 <ul>
-                  <li :class="`row-item list-inlineblock`">
+                  <li class="row-item list-inlineblock" v-for="(item,index) in result" :key="index">
                     <div class="body-item f-item w3">
-                      <div class="align">1</div>
+                      <div class="align" style="color:#7F9EB6;">{{item.serial_num | GetSerialNum}}</div>
                     </div>
                     <div class="body-item f-item w4">
-                      <div class="align">00012345</div>
+                      <div class="align">{{item.serial_no}}</div>
                     </div>
                     <div class="body-item f-item w2">
-                      <div class="align">2019-09-12 12:12:12</div>
+                      <div class="align">{{item.created_date}}</div>
                     </div>
                     <div class="body-item f-item w1">
-                      <div class="align">如果有就显示</div>
+                      <div class="align">{{item.login_name == undefined ?'--':item.login_name}}</div>
                     </div>
                     <div class="body-item f-item w1">
-                      <div class="align">200.00</div>
+                      <div class="align" style="color:red;">{{item.actual_amount | MoneyToF}}</div>
                     </div>
                     <div class="body-item f-item w1">
-                      <div class="align">2</div>
+                      <div class="align">{{item.count}}/{{item.refund_count}}</div>
                     </div>
                     <div class="body-item f-item w1">
                       <div class="align">已完成</div>
                     </div>
                     <div class="body-item f-item w2">
                       <div class="align">
-                        <span class="item-link mr20">查看</span>
-                        <span class="item-link">全部退款</span>
+                        <span class="item-link mr20" style="color:#0033FF;" @click="goDetails(item)">查看</span>
+                        <span class="item-link" style="color:#0033FF;" @click="refund(item)" v-if="item.count > item.refund_count">全部退款</span>
+                        <span class="item-link" v-else>全部退完</span>
                       </div>
                     </div>
                   </li>
                 </ul>
               </div>
-              <!-- pages s -->
-                <div class="pages abs tar">
-                  <button class="item-page cur">1</button>
-                  <button class="item-page">2</button>
-                  <button class="item-page">3</button>
-                  <button class="item-page">4</button>
-                </div>
-                <!-- pages e -->
+              <Pager ref="page" v-on:pagerUpdate="pagerUpdate" :url="pagerUrl"></Pager>
             </div>
           </div>
-          <!-- tab-c e -->
-          <!-- tab-c s -->
-          <div class="tab-c h100">
-            <div class="form-body tac text-gray">
-              <div class="form-body-wrap list-inlineblock">
-                <ul>
-                  <li :class="`row-item list-inlineblock`">
-                    <div class="body-item f-item w3">
-                      <div class="align">1</div>
-                    </div>
-                    <div class="body-item f-item w4">
-                      <div class="align">00012345</div>
-                    </div>
-                    <div class="body-item f-item w2">
-                      <div class="align">2019-09-12 12:12:12</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">如果有就显示</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">200.00</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">2</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">已完成</div>
-                    </div>
-                    <div class="body-item f-item w2">
-                      <div class="align">
-                        <span class="item-link mr10">查看</span>
-                        <span class="item-link mr10">结算</span>
-                        <span class="item-link">关闭</span>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- tab-c e -->
-          <!-- tab-c s -->
-          <div class="tab-c h100">
-            <div class="form-body tac text-gray">
-              <div class="form-body-wrap list-inlineblock">
-                <ul>
-                  <li :class="`row-item list-inlineblock`">
-                    <div class="body-item f-item w3">
-                      <div class="align">1</div>
-                    </div>
-                    <div class="body-item f-item w4">
-                      <div class="align">00012345</div>
-                    </div>
-                    <div class="body-item f-item w2">
-                      <div class="align">2019-09-12 12:12:12</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">如果有就显示</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">200.00</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">2</div>
-                    </div>
-                    <div class="body-item f-item w1">
-                      <div class="align">已完成</div>
-                    </div>
-                    <div class="body-item f-item w2">
-                      <div class="align">
-                        <span class="item-link mr10">查看</span>
-                        <span class="item-link mr10">结算</span>
-                        <span class="item-link">关闭</span>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <!-- tab-c e -->
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
+import store from '@/store'
+import api from '@/modules/api'
+import app_g from '@/modules/appGlobal'
+import Pager from '@/components/Pager'
+import PopWrap from '@/components/PopWrap'
+
 export default {
+  components: {
+    Pager,
+    PopWrap
+  },
   data() {
     return {
       curIndex: 0,
+      //显示退款
+      showPopRefund: false,
+      //翻页地址
+      pagerUrl: api.api_206,
+      //订单状态
       statusList: [
         { name: '已支付', isPay: 1 },
         { name: '待支付', isPay: 0 },
-        { name: '已支付', isPay: -1 }
+        { name: '全部', isPay: -1 }
       ],
-      result: [
-        {
-          id: 1,
-          no: "00012345",
-          time: "2019-09-12 12:12:12"
-        }
-      ]
+      result: []
     }
   },
   props: {
@@ -174,45 +96,91 @@ export default {
     }
   },
   methods: {
-    onClickItem(index) {
-      this.curIndex = index
+    init() {
+      let params = this.getSearchData()
+      //
+      this.result = []
+      //组件加载延迟100毫秒
+      setTimeout(() => { this.$refs.page.init(params) }, 10)
     },
-    //加载订单
-    api_206() {
+    //获取查询数据
+    getSearchData() {
       let that = this
       let item = that.statusList[that.curIndex]
-      //加载数据
-      api.post(api.api_206, api.getSign({
+      let status = -1
+      //已付款
+      if (item.isPay == 1) {
+        status = 3
+        //未付款
+      } else if (item.isPay == 0) {
+        status = 1
+      }
+
+      return {
         //已付款
-        Status: item,
+        IsPay: item.isPay,
+        //订单状态
+        Status: status,
         //门店
         StoreID: app_g.getPos().store_id,
-        //每页大小
-        Size: that.pageSize,
-        //当前页
-        Index: that.pageIndex,
         //POS机编号
         PosNo: app_g.getPos().no
+      }
+    },
+    //页码点击事件
+    onClickItem(index) {
+      this.curIndex = index
+      this.result = []
+      let params = this.getSearchData()
+      this.$refs.page.execute(params)
+    },
+    //加载订单
+    pagerUpdate(data) {
+      data.orders.forEach((ele, index) => {
+        this.result.push(ele)
+      })
+    },
+    //查看订单详情
+    goDetails(item) {
+      this.$emit('goOrderDetails', item)
+    },
+    //全部退款
+    refund(item) {
+      let that = this
+      this.$vux.confirm.show({
+        title: '确认全部退款吗',
+        onCancel() { },
+        onConfirm() {
+          that.api_211(item)
+        }
+      })
+    },
+    //退货退款
+    api_211(order) {
+      let that = this
+      order.order_no = order.serial_no
+      api.post(api.api_211, api.getSign({
+        OrderReturns: order
       }), function (vue, res) {
-        //当前页
-        that.pageIndex = that.pageIndex + 1
-        //总行数
-        let totalRow = res.data.Result.totalRow
-        //总页数
-        that.totalPage = parseInt(totalRow / that.pageSize) + (totalRow % that.pageSize == 0 ? 0 : 1)
-        //订单信息
-        res.data.Result.orders.forEach((ele, index) => {
-          that.orderList.push(ele)
-        })
-        //设置加载状态
-        that.loading = false
+        if (res.data.Basis.State == api.state.state_200) {
+          that.result.forEach((ele) => {
+            if (ele.serial_no == order.serial_no) {
+              ele.refund_count = ele.count
+            }
+          })
+        } else {
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+        }
       })
     }
   }
 }
 </script>
 <style lang="scss">
-.pages{
+.weui-dialog__btn_primary {
+  color: #7f9eb6;
+}
+.pages {
   bottom: 0;
   left: 0;
   width: 100%;
@@ -220,17 +188,21 @@ export default {
   font-size: 0;
   padding: 20px 20px;
   box-sizing: border-box;
-  .item-page{
+  .item-page {
     text-align: center;
     display: inline-block;
     width: 40px;
     height: 40px;
-    border:1px solid #ACACAC;
+    border: 1px solid #acacac;
     background-color: #fff;
-    margin:0 5px;
+    margin: 0 5px;
     font-size: 15px;
     line-height: 38px;
-    &:active,&.cur{background-color: #7F9EB6;color:#fff;}
+    &:active,
+    &.cur {
+      background-color: #7f9eb6;
+      color: #fff;
+    }
   }
 }
 .order-normal {

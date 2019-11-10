@@ -29,6 +29,33 @@ var vm = new Vue({ el: "#appBox", router, store, render: h => h(App) })
 //用户数据
 Vue.prototype.UserInfo = new Vue(user);
 
+//全局注册过滤器 获取支付方式名称
+Vue.filter('GetPayMethodName', function (payMethod) {
+
+    switch (payMethod) {
+        case 11:
+            return '微信支付'
+
+        case 21:
+            return '支付宝支付'
+
+        case 31:
+            return '电子钱包支付'
+
+        case 41:
+            return '储值卡支付'
+
+        case 51:
+            return '现金支付'
+
+        case 100:
+            return '混合支付'
+
+        default:
+            return ''
+    }
+})
+
 //全局注册过滤器 获取小票流水号
 Vue.filter('GetSerialNum', function (value) {
     if (value == undefined || value.toString().length == 0) return

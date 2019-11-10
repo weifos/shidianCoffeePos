@@ -733,10 +733,9 @@ export default {
         let that = this
         let exist = false
         let shopping_cart = that.getShoppingCart()
-
         shopping_cart.forEach((ele, index) => {
             //是否存在对应的商品
-            if (that.util.compareSku(result.specset, ele.specset)) {
+            if (that.util.compareSku(result.specset, ele.specset) && ele.sto_product_id == result.sto_product_id) {
                 if (result.count > 0) {
                     ele.count = ele.count + result.count
                 } else {
@@ -752,7 +751,7 @@ export default {
                 specset: result.specset,
                 spec_msg: result.sku_name,
                 //product_id: result.product_id,
-                sto_product_id: result.product_id,
+                sto_product_id: result.sto_product_id,
                 product_no: result.product_no,
                 product_name: result.product_name,
                 count: result.count,
@@ -773,17 +772,12 @@ export default {
     },
     //删除本地购物车
     delShoppingCart: function (index) {
-        // let index = 0
-        // let shopping_cart = that.getShoppingCart()
-        // shopping_cart.forEach((ele, i) => {
-        //     //是否存在对应的商品
-        //     if (that.util.compareSku(item.specset, ele.specset)) {
-        //         index = i
-        //         return
-        //     }
-        // })
         let shopping_cart = this.getShoppingCart()
         shopping_cart.splice(index, 1)
         window.localStorage.setItem("shopping_cart", JSON.stringify(shopping_cart))
+    },
+    //清空本地购物车
+    clearShoppingCart: function () {
+        localStorage.removeItem('shopping_cart')
     }
 }

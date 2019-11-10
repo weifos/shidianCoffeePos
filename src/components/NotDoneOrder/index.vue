@@ -9,7 +9,7 @@
           <div class="head-item f-item w1 bg-gray text-white">规格</div>
           <div class="head-item f-item w3 bg-gray text-white">数量</div>
           <div class="head-item f-item w1 bg-gray text-white">单价</div>
-          <div class="head-item f-item w3 bg-gray text-white">操作</div>
+          <div class="head-item f-item w3 bg-gray text-white">小计</div>
         </div>
         <div class="form-body tac text-gray">
           <div class="form-body-wrap list-inlineblock">
@@ -40,17 +40,15 @@
                     </div>
                   </div>
                   <div class="body-item f-item w8 body-item__num">
-                    <button class="btn btn-subtract"></button>
-                    <button class="btn btn-plus"></button>
+                    <!-- <button class="btn btn-subtract"></button> -->
+                    <!-- <button class="btn btn-plus"></button> -->
                     <div class="align">{{item.count}}</div>
                   </div>
                   <div class="body-item f-item w7">
-                    <div class="align">{{item.avg_unit_amount | MoneyToF}}</div>
+                    <div class="align" style="color:red;">{{item.unit_price | MoneyToF}}</div>
                   </div>
                   <div class="body-item f-item w8">
-                    <div class="align">
-                      <button class="button round bg-main text-white button-size-small">删除</button>
-                    </div>
+                    <div class="align" style="color:red;">{{item.avg_unit_amount | MoneyToF}}</div>
                   </div>
                 </li>
               </ul>
@@ -98,7 +96,7 @@ export default {
       this.orderList = []
       this.api_206()
     },
-    //选择支付方式
+    //选择
     selectCur(index) {
       this.curIndex = index
     },

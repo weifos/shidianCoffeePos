@@ -29,7 +29,7 @@
         <div class="mt5">总计：{{total|MoneyToF}}</div>
       </div>
       <div class="btns-bar abs">
-        <button class="button bg-white text-main button-size-small round">挂单</button>
+        <button class="button bg-white text-main button-size-small round" @click="api_212">挂单</button>
         <button class="button bg-white text-main button-size-small round ml5 btn-account" @click="api_203">结算</button>
         <button class="button bg-white text-main button-size-small round ml5" @click="del">删除</button>
       </div>
@@ -56,6 +56,11 @@ export default {
       this.list = app_g.getShoppingCart()
       this.updateStats()
     },
+    //清空本地购物车
+    clearShoppingCart() {
+      this.list = []
+      app_g.clearShoppingCart()
+    },
     //加
     add(item) {
       if (item.count + 1 >= 99) {
@@ -63,17 +68,18 @@ export default {
         return
       }
       let tmp = {
+        sto_product_id: item.sto_product_id,
         specset: item.specset,
         count: 1
       }
       app_g.setShoppingCart(tmp)
       this.upShoppingCart()
-
     },
     //减
     sub(item) {
       if (item.count - 1 < 1) return
       let tmp = {
+        sto_product_id: item.sto_product_id,
         specset: item.specset,
         count: -1
       }
@@ -117,8 +123,35 @@ export default {
           Order: data,
         }), function (vue, res) {
           if (res.data.Basis.State == api.state.state_200) {
+            that.clearShoppingCart()
             //更新父级组件
             that.$emit('submitOrder', res.data.Result)
+          } else {
+            that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+          }
+        })
+      }
+    },
+    //挂单
+    api_212() {
+      let that = this
+      let tmps = app_g.getShoppingCart()
+      if (tmps.length > 0) {
+        let data = {
+          store_id: app_g.getPos().store_id,
+          pos_no: app_g.getPos().no,
+          //收银员
+          created_user_id: that.UserInfo.user.id,
+          details: tmps
+        }
+
+        api.post(api.api_212, api.getSign({
+          OrderEntry: data,
+        }), function (vue, res) {
+          if (res.data.Basis.State == api.state.state_200) {
+            that.clearShoppingCart()
+            //更新父级组件
+            that.$emit('submitEntryOrder', res.data.Result)
           } else {
             that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
           }

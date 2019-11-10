@@ -49,7 +49,7 @@
       <div class="icon-text">退出登录</div>
     </template>
 
-    <div class="icon-num" v-if="num > 0">{{num}}</div>
+    <!-- <div class="icon-num" v-if="num > 0">{{num}}</div> -->
   </div>
 </template>
 <script>
