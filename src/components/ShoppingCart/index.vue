@@ -123,6 +123,8 @@ export default {
           Order: data,
         }), function (vue, res) {
           if (res.data.Basis.State == api.state.state_200) {
+            that.count = 0
+            that.total = 0
             that.clearShoppingCart()
             //更新父级组件
             that.$emit('submitOrder', res.data.Result)
@@ -144,7 +146,7 @@ export default {
           created_user_id: that.UserInfo.user.id,
           details: tmps
         }
-
+        console.log(data)
         api.post(api.api_212, api.getSign({
           OrderEntry: data,
         }), function (vue, res) {

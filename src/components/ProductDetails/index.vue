@@ -1,75 +1,69 @@
 <template>
   <div class="order-parameter rel section" v-if="isShow">
-    <div class="section-tit abs bg-white list-inlineblock tac text-gray">
-      <div class="f-item text-no border-box">NO.123124141</div>
-      <div class="f-item text-name">{{product.name}}</div>
-    </div>
-    <div class="section-con">
-      <div class="con-wrap">
-        <div class="product-info hidden">
-          <div class="img-bar fl">
-            <img :src="product.img_url" alt />
-          </div>
-          <div class="text-bar text-gray">
-            <div class="text-name mt10">{{product.name}}</div>
-            <div class="text-no mt10">这里是商品编号</div>
-            <div class="text-num">库存：{{selectSku.stock}}件</div>
-          </div>
+    <div class="con-wrap">
+      <div class="product-info hidden">
+        <div class="img-bar fl">
+          <img :src="product.img_url" alt />
         </div>
-        <ul class="list-para">
-          <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
-            <div class="para-label text-gray fl">{{item.name}}：</div>
-            <div class="para-value list-inlineblock">
-              <button
-                class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20"
-                v-for="(citem,index) in pResult.specValues"
-                v-if="citem.specname_id == item.id"
-                @click="check(citem)"
-                :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']"
-              >{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
-            </div>
-          </li>
-          <li class="list-item">
-            <div class="row">
-              <div class="dib vam text-gray para-label">数量：</div>
-              <div class="dib vam">
-                <button class="btn btn-subtract operate-btn-size-middle mr10" @click="sub"></button>
-                <input type="text" class="dib vam font-size-middle round bg-white text-gray tac input-size-middle no-border" v-model="buyCount" />
-                <button class="btn btn-plus operate-btn-size-middle ml10" @click="add"></button>
-              </div>
-            </div>
-            <div class="row mt20">
-              <div class="dib vam text-gray para-label">单价：</div>
-              <div class="dib vam font-size-middle text-gray">
-                ￥{{unitPrice|MoneyToF}}
-                <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" /> -->
-              </div>
-            </div>
-            <div class="row mt10">
-              <div class="dib vam text-gray para-label">小计：</div>
-              <div class="dib vam text-total">
-                ￥{{totalPrice|MoneyToF}}
-                <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" /> -->
-              </div>
-            </div>
-          </li>
-        </ul>
-        <div class="operate-bar tac">
+        <div class="text-bar text-gray">
+          <div class="text-name mt10">{{product.name}}</div>
+          <div class="text-no mt10">{{product.no}}</div>
+          <div class="text-num">库存：{{selectSku.stock}}件</div>
+        </div>
+      </div>
+      <ul class="list-para">
+        <li class="list-item" v-for="(item,index) in pResult.specNames" :key="index">
+          <div class="para-label text-gray fl">{{item.name}}：</div>
+          <div class="para-value list-inlineblock">
+            <button
+              class="f-item button square bg-white text-gray button-size-middle dib mr20 mb20"
+              v-for="(citem,index) in pResult.specValues"
+              v-if="citem.specname_id == item.id"
+              @click="check(citem)"
+              :class="[citem.is_enable?'':'disable',citem.checked?'clicked':'']"
+            >{{pResult.specCustoms,item.id,citem.id,citem.val | getCustomName}}</button>
+          </div>
+        </li>
+        <li class="list-item">
           <div class="row">
-            <button class="button round bg-main text-white button-size-normal" @click="submit">确认</button>
-            <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
+            <div class="dib vam text-gray para-label">数量：</div>
+            <div class="dib vam">
+              <button class="btn btn-subtract operate-btn-size-middle mr10" @click="sub"></button>
+              <input type="text" class="dib vam font-size-middle round bg-white text-gray tac input-size-middle no-border" v-model="buyCount" />
+              <button class="btn btn-plus operate-btn-size-middle ml10" @click="add"></button>
+            </div>
           </div>
+          <div class="row mt20">
+            <div class="dib vam text-gray para-label">单价：</div>
+            <div class="dib vam font-size-middle text-gray">
+              ￥{{unitPrice|MoneyToF}}
+              <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price" /> -->
+            </div>
+          </div>
+          <div class="row mt10">
+            <div class="dib vam text-gray para-label">小计：</div>
+            <div class="dib vam text-total">
+              ￥{{totalPrice|MoneyToF}}
+              <!-- <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" value="1" /> -->
+            </div>
+          </div>
+        </li>
+      </ul>
+      <div class="operate-bar tac">
+        <div class="row">
+          <button class="button round bg-main text-white button-size-normal" @click="submit">确认</button>
+          <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
         </div>
       </div>
-      <div class="dib vam text-gray para-label">小计：</div>
+    </div>
+    <div class="dib vam text-gray para-label">小计：</div>
+    <div class="dib vam">
+      <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price * buyCount" />
+    </div>
+    <div class="row mt20">
+      <div class="dib vam text-gray para-label">库存：</div>
       <div class="dib vam">
-        <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.sale_price * buyCount" />
-      </div>
-      <div class="row mt20">
-        <div class="dib vam text-gray para-label">库存：</div>
-        <div class="dib vam">
-          <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.stock" />
-        </div>
+        <input type="text" class="font-size-middle round bg-white text-gray tac input-size-normal no-border" v-model="selectSku.stock" />
       </div>
     </div>
   </div>
@@ -138,6 +132,9 @@ export default {
     //初始化
     init: function () {
       if (this.pResult.specNames.length == 0) return
+      this.totalPrice = 0
+      //获购买数量
+      this.buyCount = 1
       //获取首行规格名称id
       let one_name_id = this.pResult.specNames[0].id
       //绑定首行状态
@@ -417,7 +414,7 @@ export default {
     height: 100%;
     overflow: auto;
     box-sizing: border-box;
-    padding: 30px 45px;
+    padding: 20px 30px;
   }
 
   .section-tit {
@@ -450,7 +447,7 @@ export default {
     }
   }
   .operate-bar {
-    margin-top: 50px;
+    margin-top: 0px;
     .button {
       margin: 0 50px;
     }
@@ -461,7 +458,7 @@ export default {
 }
 .list-para {
   .list-item {
-    margin-bottom: 15px;
+    margin-bottom: 1px;
     overflow: hidden;
   }
   .para-label {

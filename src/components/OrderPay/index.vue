@@ -1,11 +1,11 @@
 <template>
   <div class="order-pay rel section-2" v-if="show">
-    <div class="con-wrap rel">
+    <div class="con-wrap rel" style="overflow: hidden;">
       <div class="form-pay abs border-box">
         <div class="form-wrap bg-white rel">
           <div class="form-tit abs w100 bg-main-dark text-white rel font-size-middle tac">
             订单结算
-            <div class="form-close abs bg-main text-white">X</div>
+            <div class="form-close abs bg-main text-white" @click="close">X</div>
           </div>
           <div class="form-con list-inlineblock text-gray h100 border-box">
             <div class="left-part f-item h100 border-box pd10">
@@ -45,7 +45,7 @@
                         </p>
                         <p v-if="member.balance - unpaidAmount >= 0">
                           付清余额：
-                          <span style="color:red">{{member.balance - unpaidAmount | MoneyToF}}</span>
+                          <span style="color:red">{{eWalletPayOffBalance | MoneyToF}}</span>
                         </p>
                       </div>
                     </div>
@@ -224,6 +224,8 @@ export default {
       payCodeText: '',
       //电子钱包文本
       eWalletText: '',
+      //电子钱包付清余额
+      eWalletPayOffBalance: 0,
       //储值卡文本
       svCardText: '',
       //现金支付输入的金额
@@ -238,6 +240,10 @@ export default {
       member: {},
       //储值卡信息
       svCard: {},
+      //是否支付完成
+      isPay: false,
+      //扫码状态
+      isEnterLoading: false,
       //支付方式
       payMethod: {
         //微信支付
@@ -336,6 +342,8 @@ export default {
   methods: {
     init(data) {
       setTimeout(() => { this.$refs.pCode.focus() }, 100)
+      this.isEnterLoading = false
+      this.isPay = false
       this.clearMember()
       this.clearSVDetails()
       this.curIndex = 0
@@ -522,18 +530,27 @@ export default {
     },
     //提交电子钱包支付
     enterEWalle() {
-      //微信支付
-      if (this.eWalletText.indexOf("#") != -1 && this.eWalletText.length > 15) {
-        this.eWalletCode = this.eWalletText
-        //用户ID
-        let user_id = this.eWalletText.split('#')[0]
-        if (user_id == undefined || user_id == 0) return
-        //清空文本
+      let that = this
+      //扫码中
+      if (!this.isEnterLoading) {
+        //是否在扫描中
+        this.isEnterLoading = true
+        //电子钱包支付
+        if (this.eWalletText.length > 40) {
+          this.eWalletCode = this.eWalletText
+          //清空文本
+          this.eWalletText = ''
+          //如果未付款的金额大于零
+          if (this.unpaidAmount <= 0) return
+          let user_id = parseInt(this.eWalletCode.substring(0, 15))
+          let coupon_id = parseInt(this.eWalletCode.substring(16, 30))
+          //用户ID 
+          if (user_id == undefined || user_id == 0) return
+          //扫描会员码
+          this.api_208(this.eWalletCode, user_id, coupon_id)
+        }
+      } else {
         this.eWalletText = ''
-        //如果未付款的金额大于零
-        if (this.unpaidAmount <= 0) return
-        //扫描会员码
-        this.api_208(this.eWalletCode, user_id)
       }
     },
     //提交储值卡支付
@@ -569,7 +586,6 @@ export default {
       this.payFlows.forEach((ele) => {
         tmpAmount += parseFloat(parseFloat(ele.amount).toFixed(2))
       })
-
       let amountResult = tmpAmount - this.order.actual_amount
       //有找零
       if (amountResult >= 0) {
@@ -587,8 +603,10 @@ export default {
         that.$vux.toast.text('当前订单未支付，不能提交', 'default', 3000)
         return
       }
+
       //更新支付金额
       that.updateAmount()
+
       //支付金额是否达到支付条件
       if (this.unpaidAmount > 0) {
         that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
@@ -612,19 +630,23 @@ export default {
         PayCode: that.payCode,
         Order: that.order
       }
-
-      //console.log(params)
-      api.post(api.api_205, api.getSign(params), function (vue, res) {
-        if (res.data.Basis.State == api.state.state_200) {
-          //调起打印
-          app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, that.order.serial_no, that.print)
-          //支付成功
-          that.$emit('paySuccess')
-          //打印
-        } else {
-          that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
-        }
-      })
+      //return
+      if (!that.isPay) {
+        api.post(api.api_205, api.getSign(params), function (vue, res) {
+          if (res.data.Basis.State == api.state.state_200) {
+            that.isPay = true
+            //调起打印
+            app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, that.order.serial_no, 0, () => {
+              console.log('打印回调')
+            })
+            //支付成功
+            that.$emit('paySuccess')
+            //打印
+          } else {
+            that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+          }
+        })
+      }
 
     },
     //根据用户码获取会员信息
@@ -646,7 +668,9 @@ export default {
             curFlow.amount = that.unpaidAmount
             //加入支付流水
             that.payFlows.push(curFlow)
-
+            //显示电子钱包付清余额
+            that.eWalletPayOffBalance = that.member.balance - that.unpaidAmount
+            //
             setTimeout(() => {
               that.api_205()
             }, 1000)
@@ -654,6 +678,9 @@ export default {
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }
+        setTimeout(() => {
+          that.isEnterLoading = false
+        }, 2000)
       })
     },
     //刷储值卡
@@ -705,7 +732,10 @@ export default {
         }
       })
     },
-    print() { }
+    //关闭
+    close() {
+      this.$emit('closeOrderPay')
+    }
   }
 }
 </script>
@@ -713,7 +743,7 @@ export default {
 <style lang="scss">
 .form-pay {
   width: 607px;
-  top: 50%;
+  top: 55%;
   left: 50%;
   height: 662px;
   // height:100%;
@@ -721,7 +751,7 @@ export default {
   padding: 13px;
 
   .form-wrap {
-    height: 100%;
+    height: 90%;
   }
   .form-tit {
     height: 57px;

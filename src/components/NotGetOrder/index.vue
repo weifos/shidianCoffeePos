@@ -14,7 +14,7 @@
           <div class="form-body-wrap list-inlineblock">
             <div class="left-part f-item">
               <ul>
-                <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" v-for="(item,index) in orderList" :key="item.no">
+                <li :class="`row-item list-inlineblock ${curIndex == index ? 'cur' : ''}`" @click="selectCur(index)" v-for="(item,index) in orderList" :key="item.no">
                   <div class="body-item f-item w4">
                     <div class="align">{{index + 1}}</div>
                   </div>
@@ -88,7 +88,7 @@ export default {
       this.orderList = []
       this.api_206()
     },
-    //选择支付方式
+    //选择
     selectCur(index) {
       this.curIndex = index
     },

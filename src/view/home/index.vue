@@ -16,10 +16,10 @@
         <ProductDetails ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></ProductDetails>
 
         <!-- 确认订单 -->
-        <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:goPay="goPay"></OrderSure>
+        <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:goPay="goPay" v-on:cancelOrder="cancelOrder"></OrderSure>
 
         <!-- 订单付款 -->
-        <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess"></OrderPay>
+        <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess" v-on:closeOrderPay="closeOrderPay"></OrderPay>
 
         <!-- 未制作订单 -->
         <NotDoneOrder ref="notDoneOrder" :show="showNotDoneOrder"></NotDoneOrder>
@@ -31,10 +31,10 @@
         <OrderEntry ref="orderEntry" :show="showOrderEntry" v-on:setShoppingCart="updateShoppingCart"></OrderEntry>
 
         <!-- 订单列表 -->
-        <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPopRefund="goPopRefund"></OrderList>
+        <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPay="goPay"></OrderList>
 
         <!-- 订单详情 -->
-        <OrderDetails ref="orderDetails" :show="showOrderDetails"></OrderDetails>
+        <OrderDetails ref="orderDetails" :show="showOrderDetails" v-on:goPopRefund="goPopRefund"></OrderDetails>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -54,7 +54,7 @@
 
     <!-- 退款弹出框 -->
     <div v-show="showPopRefund" class="pop-content" slot="content">
-      <PopRefund ref="popRefund"></PopRefund>
+      <PopRefund ref="popRefund" v-on:cancelRefund="cancelRefund" v-on:nav="nav"></PopRefund>
     </div>
   </div>
 </template>
@@ -140,6 +140,11 @@ export default {
     })
   },
   methods: {
+    //子组件通知父组件，处理关闭
+    closeOrderPay() {
+      this.clearScreen()
+      this.showProductList = true
+    },
     //子组件通知父组件，处理组件登录成功
     lgSuccess(data) {
       this.isLogin = true
@@ -155,6 +160,7 @@ export default {
     loadSKU(data) {
       this.clearScreen()
       this.showProductSku = true
+      this.$store.commit('setTitle', { title: data.name })
       //同时父组件通知商品列表子组件
       this.$refs.pSKU.api_202(data)
     },
@@ -181,12 +187,16 @@ export default {
       this.$refs.orderDetails.init(data)
     },
     //显示退款框
-    goPopRefund(data, refundAll) {
-      if (!refundAll) {
-        store.commit('setShowDialog', { showDialog: true })
-        this.showPopRefund = true
-      }
-      this.$refs.popRefund.init(data)
+    goPopRefund(data, item) {
+      store.commit('setShowDialog', { showDialog: true })
+      this.showPopRefund = true
+      this.$refs.popRefund.init(data, item)
+    },
+    //取消订单
+    cancelOrder() {
+      this.clearScreen()
+      this.$refs.orderList.init()
+      this.showOrderList = true
     },
     //支付成功
     paySuccess() {
@@ -200,8 +210,11 @@ export default {
       this.showOrderEntry = true
       this.$refs.orderEntry.init()
     },
-    //取消订单
-    cancelOrder() { },
+    //取消退款
+    cancelRefund() {
+      this.showPopRefund = false
+      store.commit('setShowDialog', { showDialog: false })
+    },
     //子组件通知父组件，关闭商品SKU信息
     closeSKU() {
       this.clearScreen()

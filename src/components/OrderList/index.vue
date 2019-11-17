@@ -45,14 +45,17 @@
                     <div class="body-item f-item w2">
                       <div class="align">
                         <span class="item-link mr20" style="color:#0033FF;" @click="goDetails(item)">查看</span>
-                        <span class="item-link" style="color:#0033FF;" @click="refund(item)" v-if="item.count > item.refund_count">全部退款</span>
-                        <span class="item-link" v-else>全部退完</span>
+                        <span class="item-link" style="color:#0033FF;" v-if="item.status == 1" @click="goPay(item)">继续付款</span>
+                        <template v-else>
+                          <span class="item-link" style="color:#0033FF;" @click="refund(item)" v-if="item.count > item.refund_count">全部退款</span>
+                          <span class="item-link" v-else>全部退完</span>
+                        </template>
                       </div>
                     </div>
                   </li>
                 </ul>
               </div>
-              <Pager ref="page" v-on:pagerUpdate="pagerUpdate" :url="pagerUrl"></Pager>
+              <Pager ref="page" v-on:pagerUpdate="pagerUpdate" :url="pagerUrl" :pageSize="8"></Pager>
             </div>
           </div>
         </div>
@@ -65,6 +68,7 @@
 import store from '@/store'
 import api from '@/modules/api'
 import app_g from '@/modules/appGlobal'
+import app_m from "@/modules/appMiddleware"
 import Pager from '@/components/Pager'
 import PopWrap from '@/components/PopWrap'
 
@@ -136,13 +140,42 @@ export default {
     },
     //加载订单
     pagerUpdate(data) {
-      data.orders.forEach((ele, index) => {
-        this.result.push(ele)
-      })
+      this.result = []
+      if (data.orders.length) {
+        data.orders.forEach((ele, index) => {
+          this.result.push(ele)
+        })
+      }
     },
     //查看订单详情
     goDetails(item) {
       this.$emit('goOrderDetails', item)
+    },
+    //继续付款
+    goPay(item) {
+      this.$emit('goPay', item)
+    },
+    //获取支付流水
+    getFlow(order) {
+      return {
+        store_id: app_g.getPos().store_id,
+        serial_no: app_g.util.getSerialNum('T'),
+        order_id: order.id,
+        order_no: order.serial_no,
+        user_id: order.user_id,
+        pos_no: app_g.getPos().no,
+        amount: 0,
+        coin_type: 0,
+        coin_rate: 1,
+        convert_amt: 0,
+        pay_method: -1,
+        pay_name: "",
+        trade_type: 21,
+        flow_type: -1,
+        is_enable: true,
+        created_date: app_g.util.date.getDateTimeNow(),
+        created_user_id: this.UserInfo.user.id
+      }
     },
     //全部退款
     refund(item) {
@@ -151,23 +184,162 @@ export default {
         title: '确认全部退款吗',
         onCancel() { },
         onConfirm() {
-          that.api_211(item)
+          that.api_215(item)
+          return
         }
       })
     },
     //退货退款
-    api_211(order) {
+    api_211(order, returnOrder) {
       let that = this
-      order.order_no = order.serial_no
+      //临时订单
+      let tmpOrder = { ...{}, ...order }
+      //设置退款单对象
+      tmpOrder.order_no = order.serial_no
+      //流水号
+      tmpOrder.serial_no = ''
+      //退详情
+      let tmpDetails = []
+      order.details.forEach((ele, i) => {
+        if (ele.count > ele.refund_count) {
+          let tmp = { ...{}, ...ele }
+          tmp.count -= tmp.refund_count
+          tmpDetails.push(tmp)
+        }
+      })
+
+      //当前流水
+      let flows = []
+      //当前可以退的余额
+      let amount = returnOrder.balance
+      //退的商品详情
+      tmpOrder.details = tmpDetails
+      //原订单流水
+      tmpOrder.flow = returnOrder.pay_flows
+      //单一支付
+      if (tmpOrder.pay_method != 100) {
+        let flow = that.getFlow(tmpOrder)
+        //退款金额
+        flow.amount = amount
+        //支付方式
+        flow.pay_method = tmpOrder.pay_method
+        //加入到流水
+        flows.push(flow)
+        //混合支付情况
+      } else {
+        let flow = that.getFlow(tmpOrder)
+        //是否有电子钱包支付
+        var hasEWallet = tmpOrder.flow.filter(item => item.pay_method === 31 && item.flow_type === 1)
+        //是否有储值卡支付
+        var hasSVCard = tmpOrder.flow.filter(item => item.pay_method === 41 && item.flow_type === 1)
+        //是否有微信支付
+        var hasWeChat = tmpOrder.flow.filter(item => item.pay_method === 11 && item.flow_type === 1)
+        //是否有支付宝支付
+        var hasALi = tmpOrder.flow.filter(item => item.pay_method === 21 && item.flow_type === 1)
+        if (hasEWallet != null) {
+          //支付方式
+          flow.pay_method = 31
+          //退款金额
+          flow.amount = amount
+        } else if (hasSVCard != null && flow.pay_method == -1) {
+          //支付方式
+          flow.pay_method = 41
+          //退款金额
+          flow.amount = amount
+          //此处一定是微信支付加现金支付
+        } else if (hasWeChat != null && flow.pay_method == -1) {
+          let tmpAmount = 0
+          //已经退过的移动支付流水
+          order.flows.forEach((ele) => {
+            if (item.pay_method === 11 && item.flow_type === -1) {
+              tmpAmount += ele.amount
+            }
+          })
+
+          //支付方式
+          flow.pay_method = 11
+          //如果退款金额大于已退的移动支付金额
+          if (amount > hasWeChat.amount - tmpAmount) {
+            //剩余移动支付可退金额
+            flow.amount = hasWeChat.amount - tmpAmount
+            //新的流水
+            let flow1 = that.getFlow(tmpOrder)
+            //其余的退现金
+            flow1.amount = amount - flow.amount
+            //51现金支付
+            flow1.pay_method = 51
+            //加入到流水
+            flows.push(flow1)
+          } else {
+            //退款金额
+            flow.amount = amount
+          }
+
+          //此处一定是阿里支付加现金支付
+        } else if (hasALi != null && flow.pay_method == -1) {
+          let tmpAmount = 0
+          //已经退过的移动支付流水
+          order.flows.forEach((ele) => {
+            if (item.pay_method === 21 && item.flow_type === -1) {
+              tmpAmount += ele.amount
+            }
+          })
+
+          //支付方式
+          flow.pay_method = 21
+          //如果退款金额大于已退的移动支付金额
+          if (amount > hasALi.amount - tmpAmount) {
+            //剩余移动支付可退金额
+            flow.amount = hasALi.amount - tmpAmount
+            //新的流水
+            let flow1 = that.getFlow(tmpOrder)
+            //其余的退现金
+            flow1.amount = amount - flow.amount
+            //51现金支付
+            flow1.pay_method = 51
+            //加入到流水
+            flows.push(flow1)
+          } else {
+            //退款金额
+            flow.amount = amount
+          }
+        }
+
+        flows.push(flow)
+      }
+
+      //设置退款流水
+      tmpOrder.flow = flows
+
       api.post(api.api_211, api.getSign({
-        OrderReturns: order
+        OrderReturns: tmpOrder
       }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
+          //修改状态
           that.result.forEach((ele) => {
-            if (ele.serial_no == order.serial_no) {
+            if (ele.serial_no == tmpOrder.serial_no) {
               ele.refund_count = ele.count
             }
           })
+
+          //调起打印
+          app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, res.data.Result, 1, () => {
+            console.log('打印回调')
+          })
+        } else {
+          that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+        }
+      })
+    },
+    //可退订单（流水和金额）
+    api_215(order) {
+      let that = this
+      api.post(api.api_215, api.getSign({
+        StoreID: order.store_id,
+        SerialNo: order.serial_no
+      }), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          that.api_211(order, res.data.Result)
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }

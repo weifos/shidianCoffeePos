@@ -112,7 +112,6 @@ export default {
     //取消订单
     cancel() {
       this.$emit('cancelOrder', this.result.serial_no)
-
     }
   }
 }

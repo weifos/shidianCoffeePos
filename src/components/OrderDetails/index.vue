@@ -33,7 +33,7 @@
                   </div>
                   <div class="body-item f-item w2">
                     <div class="align">
-                      <p v-for="(item1,index1) in order.flow">{{item1.pay_method | GetPayMethodName}}: {{item1.amount | MoneyToF}}元</p>
+                      <p v-for="(item1,index1) in flow">{{item1.pay_method | GetPayMethodName}}: {{item1.amount | MoneyToF}}元</p>
                     </div>
                   </div>
                   <div class="body-item f-item w2">
@@ -93,7 +93,7 @@
                     <div class="align">{{item.count}}/{{item.refund_count}}</div>
                   </div>
                   <div class="body-item f-item w1">
-                    <div class="align" style="color:#0033FF;" v-if="item.count > item.refund_count">
+                    <div class="align" style="color:#0033FF;" v-if="item.count > item.refund_count" @click="refund(item)">
                       <span class="item-link">退款</span>
                     </div>
                     <div class="align" v-else>
@@ -118,7 +118,8 @@ export default {
   data() {
     return {
       curIndex: 0,
-      order: {}
+      order: {},
+      flow: []
     }
   },
   props: {
@@ -142,11 +143,19 @@ export default {
         if (res.data.Basis.State == api.state.state_200) {
           //订单信息
           that.order = res.data.Result
+          that.flow = res.data.Result.flow.filter(ele => ele.flow_type === 1)
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)
         }
       })
-
+    },
+    //退款
+    refund(item) {
+      //设置退款单原订单号
+      this.order.order_no = this.order.serial_no
+      this.order.serial_no = ''
+      //更新父级组件
+      this.$emit('goPopRefund', this.order, item)
     }
   }
 }

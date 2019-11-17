@@ -56,6 +56,8 @@ export default {
     api_213: domain + "213",
     //删除挂单
     api_214: domain + "214",
+    //可退订单（流水和金额）
+    api_215: domain + "215",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

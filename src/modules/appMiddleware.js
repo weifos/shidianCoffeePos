@@ -18,10 +18,10 @@ export default {
         }
     },
     //调用打印
-    print(store_id, user_id, order_no, callback) {
+    print(store_id, sys_user_id, order_no, type, callback) {
         try {
             if (app_middleware != undefined) {
-                app_middleware.print(store_id, user_id, order_no, callback)
+                app_middleware.print(store_id, sys_user_id, order_no, type, callback)
             }
         } catch (ex) {
             callback(this.devInfo)
