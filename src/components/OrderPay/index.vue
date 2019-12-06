@@ -189,7 +189,16 @@
             </div>
             <div class="right-part f-item h100 tac">
               <ul class="h100">
-                <li class="pay-item height1 rel" v-for="(item,index) in payList" :key="index">
+                <template v-for="(item,index) in payList" >
+                   <li class="pay-item height1 rel" :key="index" v-if="index < 4 && !otherPayClick">
+                    <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
+                  </li>
+                   <li class="pay-item height1 rel" :key="index" v-else-if="index == 4">
+                    <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
+                    <div class="arrow" v-if="otherPayClick"></div>
+                  </li>
+                </template>
+                <li class="pay-item2 height1 rel" v-for="(item,index) in payList[4].list" :key="index" v-if="otherPayClick">
                   <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
                 </li>
                 <li class="pay-item height2 rel">
@@ -257,6 +266,8 @@ export default {
         //现金支付
         cash: 51
       },
+      //其它支付类型点击
+      otherPayClick:false,
       //支付类型
       payList: [
         {
@@ -270,6 +281,19 @@ export default {
         },
         {
           text: "现金"
+        },{
+          text:"其他支付",
+          list:[
+            {
+              text:"美团"
+            },
+            {
+              text:"商场提货卡"
+            },
+            {
+              text:"华润代金券"
+            }
+          ]
         }
       ],
       //支付流水
@@ -446,13 +470,19 @@ export default {
     //选择支付方式
     selectPay(index) {
       this.curIndex = index
-      let item = this.payList[index]
+      let item = this.payList[index];
       if (item.text == '移动支付') {
         setTimeout(() => { this.$refs.pCode.focus() }, 100)
       } else if (item.text == '电子钱包') {
         setTimeout(() => { this.$refs.eWallet.focus() }, 100)
       } else if (item.text == '储值卡') {
         setTimeout(() => { this.$refs.svCard.focus() }, 100)
+      }else if(item.text == '其他支付'){
+        if(this.otherPayClick){
+          this.otherPayClick=false;
+        }else{
+          this.otherPayClick=true;
+        }
       }
     },
     //提交现金支付
@@ -903,7 +933,37 @@ export default {
   .right-part {
     width: 30%;
 
-    .pay-item {
+    ul{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .pay-item{
+      box-sizing: border-box;
+      &:nth-child(3),&:nth-child(4){
+        width: 50%;
+      }
+      &:nth-child(3){
+        border-right:1px solid #EFEFEF
+      }
+      &:nth-child(4){
+        border-left:1px solid #EFEFEF
+      }
+    }
+    .pay-item ,.pay-item2{
+      width: 100%;
+      position: relative;
+      .arrow{
+        background: url("../../../static/img/arrow.png") no-repeat 0 0/100% auto;
+        display: block;
+        width: 10px;
+        height: 7px;
+        position: absolute;
+        right: 40px;
+        top: 50%;
+        transform: translate(0,-50%);
+        z-index: 1;
+      }
       .btn {
         left: 50%;
         top: 50%;
