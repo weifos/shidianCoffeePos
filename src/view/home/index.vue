@@ -34,7 +34,7 @@
         <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPay="goPay"></OrderList>
 
         <!-- 订单详情 -->
-        <OrderDetails ref="orderDetails" :show="showOrderDetails" v-on:goPopRefund="goPopRefund"></OrderDetails>
+        <OrderDetails ref="orderDetails" v-on:nav="nav" :show="showOrderDetails" v-on:goPopRefund="goPopRefund"></OrderDetails>
       </div>
     </Frame>
     <!-- 框架 e -->
@@ -44,7 +44,7 @@
 
     <!-- 会员弹出框 -->
     <!-- <div class="pop-content" slot="content">
-        <PopMember></PopMember>
+      <PopMember></PopMember>
     </div>-->
 
     <!-- 登录弹出框 -->
@@ -170,6 +170,7 @@ export default {
     },
     //确认订单
     confirmOrder(data) {
+      this.$store.commit('setTitle', { title: '单号：' + data })
       this.clearScreen()
       this.showConfirmOrder = true
       this.$refs.orderSure.api_204(data)
@@ -177,6 +178,7 @@ export default {
     //订单付款
     goPay(data) {
       this.clearScreen()
+      this.$store.commit('setTitle', { title: '订单结算：' + data.serial_no })
       this.showOrderPay = true
       this.$refs.payOrder.init(data)
     },
@@ -201,6 +203,7 @@ export default {
     //支付成功
     paySuccess() {
       this.clearScreen()
+      this.$store.commit('setTitle', { title: '订单列表' })
       this.showNotDoneOrder = true
       this.$refs.notDoneOrder.init()
     },

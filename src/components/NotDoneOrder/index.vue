@@ -48,7 +48,7 @@
                     <div class="align" style="color:red;">{{item.unit_price | MoneyToF}}</div>
                   </div>
                   <div class="body-item f-item w8">
-                    <div class="align" style="color:red;">{{item.avg_unit_amount | MoneyToF}}</div>
+                    <div class="align" style="color:red;">{{item.avg_unit_amount * item.count | MoneyToF}}</div>
                   </div>
                 </li>
               </ul>
@@ -99,6 +99,8 @@ export default {
     //选择
     selectCur(index) {
       this.curIndex = index
+
+      console.log(this.orderList[index])
     },
     //制作完成
     completeOrder() {

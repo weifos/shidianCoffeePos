@@ -37,10 +37,10 @@
       <div class="icon-text">会员信息</div>
     </template>
     <template v-if="type == 'transformDuty'">
-      <div class="icon-img">
+      <!-- <div class="icon-img">
         <img src="./img/i3.png" />
       </div>
-      <div class="icon-text">交接班</div>
+      <div class="icon-text">交接班</div>-->
     </template>
     <template v-if="type == 'loginOut'">
       <div class="icon-img">
@@ -67,6 +67,18 @@ export default {
     //检查设备
     nav(type) {
       this.$emit('nav', type)
+    },
+    //退出登录
+    loginOut(item) {
+      let that = this
+      this.$vux.confirm.show({
+        title: '确认退出登录吗',
+        onCancel() { },
+        onConfirm() {
+          that.api_215(item)
+          return
+        }
+      })
     }
   }
 }

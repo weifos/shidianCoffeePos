@@ -186,6 +186,10 @@ export default {
       this.pResult.specValues.filter(val => val.specname_id == spec_name_id).map((obj, index) => {
         //在sku集合里面获取首行可点的规格
         skus.forEach(function (item, index) {
+          if (item.stock <= 0) {
+            obj.is_enable = false
+            return
+          }
           let exist = 0
           let pass = false
           let arr = checkedVal.split(',')

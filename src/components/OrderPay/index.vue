@@ -352,6 +352,8 @@ export default {
       this.payFlows = []
       //未支付的金额
       this.changeAmount = 0
+      this.member = { balance: 0 }
+
       this.unpaidAmount = this.order.actual_amount
     },
     //获取支付流水
@@ -392,8 +394,11 @@ export default {
       this.inputAmount = 0
       this.inputAmountText = ''
       this.changeAmount = 0
+      //this.unpaidAmount = 0
       //删除
       this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
+      this.updateAmount()
+
     },
     //获取号码
     getNum(n) {
@@ -530,6 +535,7 @@ export default {
     },
     //提交电子钱包支付
     enterEWalle() {
+
       let that = this
       //扫码中
       if (!this.isEnterLoading) {
@@ -670,6 +676,7 @@ export default {
             that.payFlows.push(curFlow)
             //显示电子钱包付清余额
             that.eWalletPayOffBalance = that.member.balance - that.unpaidAmount
+
             //
             setTimeout(() => {
               that.api_205()
@@ -819,7 +826,7 @@ export default {
           position: absolute;
           right: -10px;
           bottom: 0;
-          height: 50%;
+          height: 47%;
         }
       }
       .item-right {

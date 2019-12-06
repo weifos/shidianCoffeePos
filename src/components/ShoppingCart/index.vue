@@ -24,14 +24,14 @@
       </div>
     </div>
     <div class="tool-bar abs bg-main text-white">
-      <div class="accounts-info">
+      <div class="accounts-info" style="padding: 12px 0 0 10px;">
         <div>数量：{{count}}</div>
         <div class="mt5">总计：{{total|MoneyToF}}</div>
       </div>
       <div class="btns-bar abs">
         <button class="button bg-white text-main button-size-small round" @click="api_212">挂单</button>
-        <button class="button bg-white text-main button-size-small round ml5 btn-account" @click="api_203">结算</button>
-        <button class="button bg-white text-main button-size-small round ml5" @click="del">删除</button>
+        <button class="button bg-white text-main button-size-small round btn-account" @click="api_203">结算</button>
+        <button class="button bg-white text-main button-size-small round" @click="del">删除</button>
       </div>
     </div>
   </div>
@@ -171,7 +171,7 @@ export default {
 .order-list {
   .btn-account {
     transform: scale(1.3);
-    margin: 0 10px 0 15px;
+    margin: 0 10px 0 10px;
   }
   .selected {
     background-color: rgb(164, 202, 231) !important;

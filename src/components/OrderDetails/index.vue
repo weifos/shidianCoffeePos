@@ -105,8 +105,11 @@
             </div>
           </div>
         </div>
+
+        <div class="bottom_nav">
+          <button style="margin-top:8px;margin-right: 20px;" class="button round bg-white text-main button-size-middle2" @click="back">返回</button>
+        </div>
       </div>
-      <!-- form-1 e -->
     </div>
   </div>
 </template>
@@ -156,6 +159,10 @@ export default {
       this.order.serial_no = ''
       //更新父级组件
       this.$emit('goPopRefund', this.order, item)
+    },
+    //返回
+    back() {
+      this.$emit('nav', 'orderList')
     }
   }
 }
@@ -166,6 +173,16 @@ export default {
     padding-top: 0;
   }
 
+  .bottom_nav {
+    margin-bottom: 0px;
+    bottom: 80px;
+    position: fixed;
+    text-align: center;
+    width: 80%;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: text-center;
+  }
   .item-img {
     padding-top: 5px;
     img {

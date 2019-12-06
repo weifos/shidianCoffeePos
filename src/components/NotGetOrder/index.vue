@@ -42,7 +42,7 @@
                     <div class="align">{{item.count}}</div>
                   </div>
                   <div class="body-item f-item w7">
-                    <div class="align">{{item.avg_unit_amount | MoneyToF}}</div>
+                    <div class="align">{{item.avg_unit_amount * item.count | MoneyToF}}</div>
                   </div>
                 </li>
               </ul>

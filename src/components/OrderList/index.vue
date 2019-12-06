@@ -317,7 +317,8 @@ export default {
         if (res.data.Basis.State == api.state.state_200) {
           //修改状态
           that.result.forEach((ele) => {
-            if (ele.serial_no == tmpOrder.serial_no) {
+            //if (ele.serial_no == tmpOrder.serial_no) {
+            if (ele.serial_no == tmpOrder.order_no) {
               ele.refund_count = ele.count
             }
           })

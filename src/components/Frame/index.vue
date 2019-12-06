@@ -4,7 +4,7 @@
     <div class="frame-left rel">
       <div class="info-bar abs">
         <div class="fr text-gray font-size-small">收银台：0101</div>
-        <div class="text-gray font-size-small">2019-09-12 12:23:00</div>
+        <div class="text-gray font-size-small">2019-11-26 12:23:00</div>
         <div class="text-gray font-size-small mt5">联网状态：</div>
         <div class="user-info hidden mt10">
           <div class="user-img fl">
@@ -14,7 +14,8 @@
             <div class="user-name bold">收银员：{{userInfo.login_name}}</div>
             <div class="user-identity mt5">
               <span class="icon icon-arrow dib vam"></span>
-              <span class="dib vam ml10">{{userInfo.user_name}}</span>
+              <!-- <span class="dib vam ml10">会员手机：13678909876，折扣：9.9</span> -->
+              <!-- <span class="dib vam ml10">{{userInfo.user_name}}</span> -->
             </div>
           </div>
         </div>
@@ -52,7 +53,7 @@
           <Icon type="notDoneOrder" v-on:nav="nav" :num="3"></Icon>
           <Icon type="notGetOrder" v-on:nav="nav"></Icon>
           <Icon type="orderList" v-on:nav="nav"></Icon>
-          <Icon type="memberInfo" v-on:nav="nav" style="display:none;"></Icon>
+          <Icon type="memberInfo" v-on:nav="nav"></Icon>
         </div>
       </div>
       <!-- tool-bar e -->
