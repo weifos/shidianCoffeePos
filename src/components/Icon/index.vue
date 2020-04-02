@@ -24,6 +24,12 @@
       </div>
       <div class="icon-text">订单列表</div>
     </template>
+    <template v-if="type == 'onLineOrderList'">
+      <div class="icon-img" @click="nav('onLineOrderList')">
+        <img src="./img/i8.png" />
+      </div>
+      <div class="icon-text">线上订单</div>
+    </template>
     <template v-if="type == 'dataDownLoad'">
       <div class="icon-img" @click="nav('orderEntry')">
         <img src="./img/i1.png" />
@@ -31,19 +37,27 @@
       <div class="icon-text">挂单/恢复</div>
     </template>
     <template v-if="type == 'memberInfo'">
-      <div class="icon-img">
+      <div class="icon-img" @click="loginMember">
         <img src="./img/i4.png" />
       </div>
       <div class="icon-text">会员信息</div>
     </template>
+
+    <!-- 打印日结 -->
+    <template v-if="type == 'daily'">
+      <div class="icon-img" @click="printDaily">
+        <img src="./img/i2.png" />
+      </div>
+      <div class="icon-text">打印日结</div>
+    </template>
     <template v-if="type == 'transformDuty'">
-      <!-- <div class="icon-img">
+      <div class="icon-img">
         <img src="./img/i3.png" />
       </div>
-      <div class="icon-text">交接班</div>-->
+      <div class="icon-text">交接班</div>
     </template>
     <template v-if="type == 'loginOut'">
-      <div class="icon-img">
+      <div class="icon-img" @click="loginOut">
         <img src="./img/i6.png" />
       </div>
       <div class="icon-text">退出登录</div>
@@ -52,7 +66,11 @@
     <!-- <div class="icon-num" v-if="num > 0">{{num}}</div> -->
   </div>
 </template>
+
 <script>
+import app_g from '@/modules/appGlobal'
+import app_m from '@/modules/appMiddleware'
+
 export default {
   props: {
     'type': {
@@ -68,6 +86,10 @@ export default {
     nav(type) {
       this.$emit('nav', type)
     },
+    //登录会员
+    loginMember() {
+      this.$emit('memberLogin')
+    },
     //退出登录
     loginOut(item) {
       let that = this
@@ -75,11 +97,21 @@ export default {
         title: '确认退出登录吗',
         onCancel() { },
         onConfirm() {
-          that.api_215(item)
+          that.UserInfo.loginOut()
+          window.location.reload()
           return
         }
       })
+    },
+    //打印小票日结
+    printDaily() {
+      let that = this
+      //调起打印
+      app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, "", 3, () => {
+        console.log('打印回调')
+      })
     }
+
   }
 }
 </script>

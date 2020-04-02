@@ -51,7 +51,7 @@
       </ul>
       <div class="operate-bar tac">
         <div class="row">
-          <button class="button round bg-main text-white button-size-normal" @click="submit">确认</button>
+          <button class="button round bg-main text-white button-size-normal" :class="[(isCanSubmit?'':'bg-gray')]" @click="submit">确认</button>
           <button class="button round bg-gray text-white button-size-normal" @click="close">取消</button>
         </div>
       </div>
@@ -79,6 +79,8 @@ export default {
     return {
       imgUrl: '',
       isShow: false,
+      //是否能够购买
+      isCanSubmit: true,
       store_id: 0,
       product: { name: '' },
       //是否加入购物车
@@ -131,14 +133,21 @@ export default {
   methods: {
     //初始化
     init: function () {
-      if (this.pResult.specNames.length == 0) return
-      this.totalPrice = 0
-      //获购买数量
-      this.buyCount = 1
-      //获取首行规格名称id
-      let one_name_id = this.pResult.specNames[0].id
-      //绑定首行状态
-      this.bindSKU(one_name_id)
+      if (this.product.is_open_spec) {
+        if (this.pResult.specNames.length == 0) return
+        this.totalPrice = 0
+        //获购买数量
+        this.buyCount = 1
+        //获取首行规格名称id
+        let one_name_id = this.pResult.specNames[0].id
+        //绑定首行状态
+        this.bindSKU(one_name_id)
+      } else {
+        this.selectSku = this.pResult.skus[0]
+        this.totalPrice = this.selectSku.sale_price
+        this.checkUpdate()
+      }
+      this.isCanSubmit = this.pResult.skus.filter(sku => sku.is_enable).length > 0
     },
     //规格选中事件
     check(item) {
@@ -232,15 +241,19 @@ export default {
       }
 
       let data = null
-      //获取选中数据
-      let sku_id = items.map(item => item.specname_id + "_" + item.id).join(',')
-      //在当前sku集合中获取
-      this.pResult.skus.forEach(function (item, index) {
-        if (app_g.util.compareSku(sku_id, item.specset)) {
-          data = item
-          return
-        }
-      })
+      if (this.product.is_open_spec) {
+        //获取选中数据
+        let sku_id = items.map(item => item.specname_id + "_" + item.id).join(',')
+        //在当前sku集合中获取
+        this.pResult.skus.forEach(function (item, index) {
+          if (app_g.util.compareSku(sku_id, item.specset)) {
+            data = item
+            return
+          }
+        })
+      } else {
+        data = this.selectSku
+      }
 
       this.selectSku = data
       this.checkUpdate()
@@ -248,11 +261,15 @@ export default {
     },
     //提交
     submit() {
+      if (!this.isCanSubmit) return
       //选中的商品SKU
       let tmp = this.getSelectSkuVal()
+
       if (tmp != null) {
         //门店商品ID
         tmp.sto_product_id = this.product.id
+        //平台商品ID
+        tmp.product_id = this.product.product_id
         //加入购物车的数量
         tmp.count = this.buyCount
         //加入本地购物车
@@ -260,6 +277,8 @@ export default {
       }
       //加入本地购物车
       this.$emit('setShoppingCart')
+
+      this.$emit('cancelSKU')
     },
     //关闭当前页
     close() {
@@ -286,19 +305,18 @@ export default {
       //设置总计
       this.totalPrice = this.selectSku.sale_price * this.buyCount
     },
-
     //处理输入方式
     handleInput() {
       let value = this.validateNumber(e.detail.value)
       val.replace(/\D/g, '')
     },
-
     //获取商品详情
     api_202(item) {
       let that = this
       this.product = item
+
       api.post(api.api_202, api.getSign({
-        StoreID: that.UserInfo.user.store_id,
+        StoreID: app_g.getPos().store_id,
         ID: item.id,
         TID: item.product_type_id
       }), function (vue, res) {
@@ -316,7 +334,6 @@ export default {
         store.commit("loadingStatus", { isLoading: false })
       })
     },
-
     /**
      * 加载商品详情
      */
@@ -367,7 +384,6 @@ export default {
         )
       }
     },
-
     /**
      * 提交订单
      */

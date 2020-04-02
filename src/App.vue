@@ -8,6 +8,7 @@
 </template>
 <script>
 
+import { Howl, Howler } from 'howler'
 import store from '@/store'
 import { Loading, cookie, querystring } from "vux"
 import { mapState } from "vuex"
@@ -43,11 +44,10 @@ export default {
   methods: {},
   mounted() { },
   created() {
-    //app_m.print(1, '1001100119102400012', this.bb)
     localStorage.setItem("pageTitle", "十点读书·咖啡POS")
     document.getElementById("pageTitle").innerHTML = localStorage.getItem(
       "pageTitle"
-    );
+    )
   }
 };
 </script>

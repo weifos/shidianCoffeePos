@@ -1,10 +1,10 @@
 <template>
   <div id="main">
     <!-- 框架 s -->
-    <Frame :result="user" v-on:nav="nav">
+    <Frame :result="user" v-on:nav="nav" v-on:memberLogin="memberLogin" ref="frame">
       <div class="content-wrap h100" slot="left">
         <!-- 本地购物车——收银员 -->
-        <ShoppingCart ref="shoppingCart" v-on:submitOrder="confirmOrder" v-on:submitEntryOrder="submitEntryOrder"></ShoppingCart>
+        <ShoppingCart ref="shoppingCart" v-on:clearMember="loginOutMember" v-on:submitOrder="confirmOrder" v-on:submitEntryOrder="submitEntryOrder"></ShoppingCart>
         <!-- 本地购物车——客显 -->
         <!-- <CustomerOrder></CustomerOrder> -->
       </div>
@@ -16,7 +16,7 @@
         <ProductDetails ref="pSKU" :show="showProductSku" v-on:cancelSKU="closeSKU" v-on:setShoppingCart="updateShoppingCart"></ProductDetails>
 
         <!-- 确认订单 -->
-        <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:goPay="goPay" v-on:cancelOrder="cancelOrder"></OrderSure>
+        <OrderSure ref="orderSure" :show="showConfirmOrder" v-on:paySuccess="paySuccess" v-on:goPay="goPay" v-on:cancelOrder="cancelOrder"></OrderSure>
 
         <!-- 订单付款 -->
         <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess" v-on:closeOrderPay="closeOrderPay"></OrderPay>
@@ -31,7 +31,10 @@
         <OrderEntry ref="orderEntry" :show="showOrderEntry" v-on:setShoppingCart="updateShoppingCart"></OrderEntry>
 
         <!-- 订单列表 -->
-        <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPay="goPay"></OrderList>
+        <OrderList ref="orderList" :show="showOrderList" v-on:goOrderDetails="goOrderDetails" v-on:confirmOrder="confirmOrder" v-on:goPay="goPay"></OrderList>
+
+        <!-- 线上订单列表 -->
+        <OnLineOrderList ref="onLineOrderList" :show="showOnLineOrderList" v-on:goOrderDetails="goOrderDetails" v-on:goPay="goPay"></OnLineOrderList>
 
         <!-- 订单详情 -->
         <OrderDetails ref="orderDetails" v-on:nav="nav" :show="showOrderDetails" v-on:goPopRefund="goPopRefund"></OrderDetails>
@@ -43,9 +46,8 @@
     <PopWrap></PopWrap>
 
     <!-- 会员弹出框 -->
-    <!-- <div class="pop-content" slot="content">
-      <PopMember></PopMember>
-    </div>-->
+    <!-- <div v-if="isMemberLogin" class="pop-content" slot="content"></div> -->
+    <PopMember v-show="isMemberLogin" ref="popMember" v-on:loginMember="loginMember" v-on:cancelMember="cancelMember"></PopMember>
 
     <!-- 登录弹出框 -->
     <div v-if="!isLogin" class="pop-content" slot="content">
@@ -80,6 +82,7 @@ import NotDoneOrder from '@/components/NotDoneOrder'
 import NotGetOrder from '@/components/NotGetOrder'
 import OrderPay from '@/components/OrderPay'
 import OrderList from '@/components/OrderList'
+import OnLineOrderList from '@/components/OnLineOrderList'
 import OrderEntry from '@/components/OrderEntry'
 import OrderSure from '@/components/OrderSure'
 import OrderDetails from '@/components/OrderDetails'
@@ -99,15 +102,18 @@ export default {
     NotGetOrder,
     OrderPay,
     OrderList,
+    OnLineOrderList,
     OrderEntry,
     OrderSure,
     OrderDetails
   },
   data() {
     return {
-      pageTitle: '十点读书·咖啡POS',
+      pageTitle: '十点书店·咖啡POS',
       //显示登录弹框
       isLogin: false,
+      //显示会员登录弹框
+      isMemberLogin: false,
       //显示商品列表
       showProductList: true,
       //显示sku信息
@@ -128,6 +134,8 @@ export default {
       showOrderDetails: false,
       //订单列表
       showOrderList: false,
+      //线上订单列表
+      showOnLineOrderList: false,
       //退款框
       showPopRefund: false,
       user: {},
@@ -144,6 +152,22 @@ export default {
     closeOrderPay() {
       this.clearScreen()
       this.showProductList = true
+    },
+    //子组件通知父组件，会员登录弹框
+    memberLogin() {
+      store.commit('setShowDialog', { showDialog: true })
+      this.isMemberLogin = true
+      this.$refs.popMember.init()
+    },
+    //子组件通知父组件，会员登录
+    loginMember(result) {
+      store.commit('setShowDialog', { showDialog: false })
+      this.isMemberLogin = false
+      this.$refs.frame.updateMember(result)
+    },
+    //子组件通知父组件，会员登录
+    loginOutMember() {
+      this.$refs.frame.loginOutMember()
     },
     //子组件通知父组件，处理组件登录成功
     lgSuccess(data) {
@@ -200,6 +224,11 @@ export default {
       this.$refs.orderList.init()
       this.showOrderList = true
     },
+    //取消会员登录
+    cancelMember() {
+      store.commit('setShowDialog', { showDialog: false })
+      this.isMemberLogin = false
+    },
     //支付成功
     paySuccess() {
       this.clearScreen()
@@ -234,6 +263,7 @@ export default {
       this.showNotGetOrder = false
       this.showOrderDetails = false
       this.showOrderList = false
+      this.showOnLineOrderList = false
     },
     //底部菜单导航
     nav(type) {
@@ -268,7 +298,14 @@ export default {
         this.$store.commit('setTitle', { title: '订单列表' })
         this.showOrderList = true
         this.$refs.orderList.init()
+
+        //线上订单列表
+      } else if (type == 'onLineOrderList') {
+        this.$store.commit('setTitle', { title: '线上订单' })
+        this.showOnLineOrderList = true
+        this.$refs.onLineOrderList.init()
       }
+
     },
     //检查设备
     api_100(pos) {
@@ -287,7 +324,6 @@ export default {
   },
   created() {
     this.$store.commit('setTitle', { title: '选择商品' })
-
     let that = this
     //当前POS设备是否绑定
     let pos = app_g.getPos()

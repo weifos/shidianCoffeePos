@@ -44,6 +44,7 @@ export default {
       this.buyCount = 1
       this.order = data
       this.detail = item
+      this.detail.unit_price = item.avg_unit_amount
     },
     //减
     sub() {
@@ -67,14 +68,18 @@ export default {
       this.$emit('cancelRefund')
     },
     //退款
-    submit(item) {
+    submit() {
       let that = this
       that.detail.count = that.buyCount
       that.order.details = []
-      that.order.serial_no = ''
+      //that.order.serial_no = ''
       that.order.details.push(that.detail)
-      //退款金额
+      //流水退款金额
       let amount = that.detail.avg_unit_amount * that.detail.count
+      //退款总额
+      that.order.total_amount = amount
+      //退款总额
+      that.order.details[0].total_amount = amount
       //支付流水
       let flows = []
       //单一支付
@@ -97,74 +102,106 @@ export default {
         var hasWeChat = that.order.flow.filter(item => item.pay_method === 11 && item.flow_type === 1)
         //是否有支付宝支付
         var hasALi = that.order.flow.filter(item => item.pay_method === 21 && item.flow_type === 1)
-        if (hasEWallet != null) {
+
+        if (hasEWallet != null && hasEWallet.length > 0) {
           //支付方式
           flow.pay_method = 31
           //退款金额
           flow.amount = amount
-        } else if (hasSVCard != null && flow.pay_method == -1) {
+        } else if (hasSVCard != null && hasSVCard.length > 0 && flow.pay_method == -1) {
           //支付方式
           flow.pay_method = 41
           //退款金额
           flow.amount = amount
           //此处一定是微信支付加现金支付
-        } else if (hasWeChat != null && flow.pay_method == -1) {
-          let tmpAmount = 0
-          //已经退过的移动支付流水
-          that.order.flows.forEach((ele) => {
-            if (item.pay_method === 11 && item.flow_type === -1) {
+        } else if (hasWeChat != null && hasWeChat.length > 0 && flow.pay_method == -1) {
+          let tmpAmount = 0, retAmount = 0, canRetAmount = 0
+          //原订单微信支付流水
+          that.order.flow.forEach((ele) => {
+            if (ele.pay_method === 11 && ele.flow_type === 1) {
               tmpAmount += ele.amount
+            }
+          })
+
+          //已经退过的移动支付流水
+          that.order.flow.forEach((ele) => {
+            if (ele.pay_method === 11 && ele.flow_type === -1) {
+              retAmount += ele.amount
             }
           })
 
           //支付方式
           flow.pay_method = 11
-          //如果退款金额大于已退的移动支付金额
-          if (amount > hasWeChat.amount - tmpAmount) {
-            //剩余移动支付可退金额
-            flow.amount = hasWeChat.amount - tmpAmount
-            //新的流水
-            let flow1 = that.getFlow()
-            //其余的退现金
-            flow1.amount = amount - flow.amount
-            //51现金支付
-            flow1.pay_method = 51
-            //加入到流水
-            flows.push(flow1)
+          //计算可退的微信支付金额
+          canRetAmount = tmpAmount - retAmount
+          if (canRetAmount > 0) {
+            //当前退款金额大于剩余移动可退金额，则生成两条退款流水
+            if (amount - canRetAmount > 0) {
+              //剩余移动支付可退金额
+              flow.amount = canRetAmount
+              //新的流水
+              let flow1 = that.getFlow()
+              //其余的退现金
+              flow1.amount = amount - flow.amount
+              //51现金支付
+              flow1.pay_method = 51
+              //加入到流水
+              flows.push(flow1)
+            } else {
+              flow.amount = amount
+            }
           } else {
-            //退款金额
+            //全部退现金
+            flow.pay_method = 51
+            //剩余移动支付可退金额
             flow.amount = amount
           }
 
           //此处一定是阿里支付加现金支付
-        } else if (hasALi != null && flow.pay_method == -1) {
-          let tmpAmount = 0
-          //已经退过的移动支付流水
-          that.order.flows.forEach((ele) => {
-            if (item.pay_method === 21 && item.flow_type === -1) {
+        } else if (hasALi != null && hasALi.length > 0 && flow.pay_method == -1) {
+          let tmpAmount = 0, retAmount = 0, canRetAmount = 0
+          //原订单支付宝支付流水
+          that.order.flow.forEach((ele) => {
+            if (ele.pay_method === 21 && ele.flow_type === 1) {
               tmpAmount += ele.amount
+            }
+          })
+
+          //已经退过的移动支付流水
+          that.order.flow.forEach((ele) => {
+            if (ele.pay_method === 21 && ele.flow_type === -1) {
+              retAmount += ele.amount
             }
           })
 
           //支付方式
           flow.pay_method = 21
-          //如果退款金额大于已退的移动支付金额
-          if (amount > hasALi.amount - tmpAmount) {
-            //剩余移动支付可退金额
-            flow.amount = hasALi.amount - tmpAmount
-            //新的流水
-            let flow1 = that.getFlow()
-            //其余的退现金
-            flow1.amount = amount - flow.amount
-            //51现金支付
-            flow1.pay_method = 51
-            //加入到流水
-            flows.push(flow1)
+          //计算可退的微信支付金额
+          canRetAmount = tmpAmount - retAmount
+          if (canRetAmount > 0) {
+            //当前退款金额大于剩余移动可退金额，则生成两条退款流水
+            if (amount - canRetAmount > 0) {
+              //剩余移动支付可退金额
+              flow.amount = canRetAmount
+              //新的流水
+              let flow1 = that.getFlow()
+              //其余的退现金
+              flow1.amount = amount - flow.amount
+              //51现金支付
+              flow1.pay_method = 51
+              //加入到流水
+              flows.push(flow1)
+            } else {
+              flow.amount = amount
+            }
           } else {
-            //退款金额
+            //全部退现金
+            flow.pay_method = 51
+            //剩余移动支付可退金额
             flow.amount = amount
           }
         }
+
 
         flows.push(flow)
       }
@@ -177,17 +214,24 @@ export default {
     //退货退款
     api_211() {
       let that = this
+
       api.post(api.api_211, api.getSign({
         OrderReturns: that.order
       }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
           //调起打印
-          app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, that.order.serial_no, 1, () => {
+          app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, res.data.Result, 1, () => {
             console.log('打印回调')
           })
           that.$emit('cancelRefund')
-          that.$emit('nav', 'orderList')
+          //不是线上订单
+          if (that.order.pay_method != 13) {
+            that.$emit('nav', 'orderList')
+          } else {
+            that.$emit('nav', 'onLineOrderList')
+          }
+
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }

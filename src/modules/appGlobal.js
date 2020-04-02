@@ -490,7 +490,7 @@ export default {
             }
         },
         //生成流水号
-        getSerialNum: function (prefix) {
+        getSerialNum: function (prefix, len) {
             let now = new Date()
             let year = now.getFullYear().toString().substr(2, 2)
             let month = now.getMonth() + 1
@@ -498,12 +498,28 @@ export default {
             let hour = now.getHours()
             let minutes = now.getMinutes()
             let seconds = now.getSeconds()
-            String(month).length < 2 ? (month = Number("0" + month)) : month
-            String(day).length < 2 ? (day = Number("0" + day)) : day
-            String(hour).length < 2 ? (hour = Number("0" + hour)) : hour
-            String(minutes).length < 2 ? (minutes = Number("0" + minutes)) : minutes
-            String(seconds).length < 2 ? (seconds = Number("0" + seconds)) : seconds
-            let str = `${year}${month}${day}${hour}${minutes}${seconds}` + this.getRandom(0, 10000)
+            let milliSeconds = now.getMilliseconds()
+            month = String(month).length < 2 ? ("0" + month.toString()) : month
+            day = String(day).length < 2 ? ("0" + day.toString()) : day
+            hour = String(hour).length < 2 ? ("0" + hour.toString()) : hour
+            minutes = String(minutes).length < 2 ? ("0" + minutes.toString()) : minutes
+            seconds = String(seconds).length < 2 ? ("0" + seconds.toString()) : seconds
+            if (String(milliSeconds).length == 1) {
+                milliSeconds = "00" + milliSeconds.toString()
+            } else if (String(milliSeconds).length == 2) {
+                milliSeconds = "0" + milliSeconds.toString()
+            }
+
+            let str_random = ''
+            if (len > 15) {
+                let chars = '0123456789'
+                let maxPos = chars.length
+                for (let i = 0; i < len - 15; i++) {
+                    str_random += chars.charAt(Math.floor(Math.random() * maxPos))
+                }
+            }
+
+            let str = `${year}${month}${day}${hour}${minutes}${seconds}${milliSeconds}` + str_random
             if (prefix != undefined && prefix != null) {
                 return prefix + str
             }
@@ -748,9 +764,10 @@ export default {
 
         if (!exist) {
             let tmp = {
+                sto_sku_id: result.id,
                 specset: result.specset,
                 spec_msg: result.sku_name,
-                //product_id: result.product_id,
+                product_id: result.product_id,
                 sto_product_id: result.sto_product_id,
                 product_no: result.product_no,
                 product_name: result.product_name,

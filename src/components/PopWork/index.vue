@@ -16,7 +16,7 @@
         <button class="btn-number f-item" @click="getNum(4)">4</button>
         <button class="btn-number f-item" @click="getNum(5)">5</button>
         <button class="btn-number f-item" @click="getNum(6)">6</button>
-        <button class="btn-number f-item" @click="getNum">清除</button>
+        <button class="btn-number f-item" @click="clearInputText">清除</button>
         <button class="btn-number f-item" @click="getNum(1)">1</button>
         <button class="btn-number f-item" @click="getNum(2)">2</button>
         <button class="btn-number f-item" @click="getNum(3)">3</button>
@@ -58,6 +58,10 @@ export default {
     },
     focuspw() {
       this.fln = false
+    },
+    clearInputText() {
+      this.login_name = ''
+      this.pass_word = ''
     },
     //删除
     del(n) {

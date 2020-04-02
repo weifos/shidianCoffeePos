@@ -65,7 +65,7 @@
           <div class="form-body tac text-gray form-body2">
             <div class="form-body-wrap list-inlineblock">
               <ul>
-                <li class="row-item list-inlineblock" v-for="(item,index) in order.details">
+                <li class="row-item list-inlineblock" v-for="(item,index) in order.store_details">
                   <div class="body-item f-item w3">
                     <div class="align">{{index + 1}}</div>
                   </div>
@@ -93,10 +93,14 @@
                     <div class="align">{{item.count}}/{{item.refund_count}}</div>
                   </div>
                   <div class="body-item f-item w1">
-                    <div class="align" style="color:#0033FF;" v-if="item.count > item.refund_count" @click="refund(item)">
+                    <div class="align" style="color:#0033FF;" v-if="!order.is_pay">
+                      <span class="item-link">--</span>
+                    </div>
+
+                    <div class="align" style="color:#0033FF;" v-else-if="item.count > item.refund_count && order.is_pay" @click="refund(item)">
                       <span class="item-link">退款</span>
                     </div>
-                    <div class="align" v-else>
+                    <div class="align" v-else-if="item.count == item.refund_count && order.is_pay">
                       <span class="item-link">退完</span>
                     </div>
                   </div>
@@ -157,12 +161,20 @@ export default {
       //设置退款单原订单号
       this.order.order_no = this.order.serial_no
       this.order.serial_no = ''
+      this.order.pos_no = app_g.getPos().no
+      this.order.type = 2
+
       //更新父级组件
       this.$emit('goPopRefund', this.order, item)
     },
     //返回
     back() {
-      this.$emit('nav', 'orderList')
+      if (this.order.type == 2) {
+        this.$emit('nav', 'orderList')
+        //线上订单
+      } else if (this.order.type == 5) {
+        this.$emit('nav', 'onLineOrderList')
+      }
     }
   }
 }

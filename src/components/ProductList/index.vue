@@ -1,6 +1,6 @@
 <template>
-  <div class="product-list rel" v-if="show">
-    <div class="product-cate abs bg-white">
+  <div class="product-list rel" v-if="show" style="padding: 0px 0px 10px 0px;">
+    <div class="product-cate bg-white">
       <ul class="list-cate-1 list-inlineblock">
         <li class="f-item item-cate" v-for="(item,index) in result" :key="index" @click="onClickItem(index)">
           <div :class="`button round border-gray text-gray ${curIndex == index ? 'button-border-cur' : ''}`">{{item.name}}</div>
@@ -8,7 +8,7 @@
       </ul>
     </div>
     <div class="product-items">
-      <ul class="list-product-1">
+      <ul class="list-product-1" style="margin: 0px 0px 50px 0px;">
         <li class="item-product" v-for="(item1,index) in result[curIndex].list" :key="index" @click="loadDetails(item1)">
           <div class="item-img">
             <img :alt="item1.name" :src="item1.img_url" width="100%" height="100%" />
@@ -112,16 +112,16 @@ export default {
 
 <style lang="scss">
 .list-cate-1 {
-  padding: 16px 50px 0 50px;
+  padding: 8px 30px 8px 30px;
   .item-cate {
-    margin-right: 20px;
-    &:last-child {
-      margin: 0;
-    }
+    margin: 8px 16px 0px 0px;
+    // &:last-child {
+    //   margin: 0;
+    // }
   }
 }
 .product-cate {
-  height: 67px;
+  //height: 67px;
   width: 100%;
   left: 0;
   top: 0;

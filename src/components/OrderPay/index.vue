@@ -112,7 +112,7 @@
                       </div>
                       <div class="f-item">
                         <div class="item-wrap w100 h100 rel">
-                          <button class="btn-number font-size-normal" @click="del">退格</button>
+                          <button class="btn-number font-size-normal" @click="del(0)">退格</button>
                         </div>
                       </div>
                       <div class="f-item">
@@ -157,7 +157,120 @@
                       </div>
                       <div class="f-item item-right">
                         <div class="item-wrap w100 h100 rel">
-                          <button class="btn-number font-size-normal" @click="clearAmountText">清空</button>
+                          <button class="btn-number font-size-normal" @click="clearAmountText(0)">清空</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- type-other 其它支付过渡界面 -->
+                <div class="type-e-wallet type-bar height3 pb10 border-box" v-show="curIndex == 4">
+                  <div class="bg-white w100 h100 rel">
+                    <p class="font-size-middle tac text-tit">【请选择支付方式】</p>
+                  </div>
+                </div>
+
+                <!-- type-other 商场提货卡-->
+                <div class="type-e-wallet type-bar height3 pb10 border-box" v-show="curIndex == 10">
+                  <div class="bg-white w100 h100 rel">
+                    <p class="font-size-middle tac text-tit">【商场提货卡取货】</p>
+                    <div class="text-wrap">
+                      <p class="mt15 tac" style="color:red;">该支付方式不支持组合支付</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- type-other 其他支付，显示金额键盘 -->
+                <div class="type-cash type-bar height3" v-show="curIndex == 11 || curIndex == 12">
+                  <div class="value-bar font-size-normal w100 abs">
+                    <div class="pd10 border-box bg-white">
+                      <ul>
+                        <li class="hidden">
+                          <div class="t-val fr" style="color:red">+{{inputOAmount | MoneyToF}}</div>
+                          <div class="t-name">{{otherPay.inputText }}：</div>
+                        </li>
+                        <li class="hidden mt10">
+                          <div class="t-val fr" style="color:red"></div>
+                          <div v-if="curIndex == 11" class="t-name" style="color:red;">该支付方式不支持组合支付</div>
+                          <!-- <div v-if="curIndex == 12" class="t-name" style="color:red;">该支付方式不支持组合支付</div> -->
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="input-bar w100 abs">
+                    <input type="text" class="input-text-1 input-normal" style="font-size:20px;" v-model="inputOAmountText" placeholder="请输入金额" />
+                  </div>
+                  <div class="btns-bar border-box h100 rel">
+                    <div class="f-item btn-sure">
+                      <div class="item-wrap w100 h100 rel">
+                        <button class="btn-number font-size-normal" @click="confirmOCash">确认</button>
+                      </div>
+                    </div>
+                    <div class="list-inlineblock h100">
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(7)">7</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(8)">8</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(9)">9</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number font-size-normal" @click="del(1)">退格</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(4)">4</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(5)">5</button>
+                        </div>
+                      </div>
+                      <div class="f-item item-right">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(6)">6</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(1)">1</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(2)">2</button>
+                        </div>
+                      </div>
+                      <div class="f-item item-right">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(3)">3</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum(0)">0</button>
+                        </div>
+                      </div>
+                      <div class="f-item">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number" @click="getONum('.')">.</button>
+                        </div>
+                      </div>
+                      <div class="f-item item-right">
+                        <div class="item-wrap w100 h100 rel">
+                          <button class="btn-number font-size-normal" @click="clearAmountText(1)">清空</button>
                         </div>
                       </div>
                     </div>
@@ -181,7 +294,7 @@
                     </ul>
                   </div>
                   <div class="sec-bottom bg-gray text-white abs hidden">
-                    <div class="text-total fr mr20">合计：{{order.actual_amount | MoneyToF}}</div>
+                    <div class="text-total fr mr20">合计：{{payAmount | MoneyToF}}</div>
                     <div class="text-due ml20">尚欠金额：{{unpaidAmount | MoneyToF}}</div>
                   </div>
                 </div>
@@ -189,17 +302,17 @@
             </div>
             <div class="right-part f-item h100 tac">
               <ul class="h100">
-                <template v-for="(item,index) in payList" >
-                   <li class="pay-item height1 rel" :key="index" v-if="index < 4 && !otherPayClick">
+                <template v-for="(item,index) in payList">
+                  <li class="pay-item height1 rel" :key="index" v-if="index < 4 && !otherPayClick">
                     <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
                   </li>
-                   <li class="pay-item height1 rel" :key="index" v-else-if="index == 4">
+                  <li class="pay-item height1 rel" :key="index" v-else-if="index == 4">
                     <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
                     <div class="arrow" v-if="otherPayClick"></div>
                   </li>
                 </template>
                 <li class="pay-item2 height1 rel" v-for="(item,index) in payList[4].list" :key="index" v-if="otherPayClick">
-                  <button class="btn h100 w100 abs text-gray" :class="[curIndex==index?'clicked':'']" @click="selectPay(index)">{{item.text}}</button>
+                  <button class="btn h100 w100 abs text-gray" :class="[curIndex== 10 + index?'clicked':'']" @click="selectOtherPay(10+index)">{{item.text}}</button>
                 </li>
                 <li class="pay-item height2 rel">
                   <button class="btn h100 w100 abs bg-main text-white btn-submit" @click="api_205">确认支付</button>
@@ -239,8 +352,12 @@ export default {
       svCardText: '',
       //现金支付输入的金额
       inputAmount: 0,
-      //显示的输入金额
+      //显示现金输入金额
       inputAmountText: '',
+      //其它支付输入的金额
+      inputOAmount: 0,
+      //显示其它输入金额
+      inputOAmountText: '',
       //未付款的金额
       unpaidAmount: 0,
       //找零的金额
@@ -264,10 +381,21 @@ export default {
         //储值卡支付
         sVCard: 41,
         //现金支付
-        cash: 51
+        cash: 51,
+        //商场提货卡
+        deliveryCard: 103,
+        //美团
+        meiTuan: 104,
+        //华润代金券
+        huarunVouchers: 105
+      },
+      //其它支付类型
+      otherPay: {
+        //实收显示
+        inputText: ''
       },
       //其它支付类型点击
-      otherPayClick:false,
+      otherPayClick: false,
       //支付类型
       payList: [
         {
@@ -281,17 +409,18 @@ export default {
         },
         {
           text: "现金"
-        },{
-          text:"其他支付",
-          list:[
+        },
+        {
+          text: "其他支付",
+          list: [
             {
-              text:"美团"
+              text: "商场提货卡"
             },
             {
-              text:"商场提货卡"
+              text: "美团"
             },
             {
-              text:"华润代金券"
+              text: "华润代金券"
             }
           ]
         }
@@ -313,6 +442,12 @@ export default {
         return '储值卡支付'
       } else if (payMethod == 51) {
         return '现金支付'
+      } else if (payMethod == 104) {
+        return '美团收款'
+      } else if (payMethod == 103) {
+        return '商场提货卡'
+      } else if (payMethod == 105) {
+        return '华润代金券'
       }
     }
   },
@@ -361,6 +496,17 @@ export default {
       }
 
       return tmp
+    },
+    payAmount() {
+      let amount = 0
+      if (this.order.coupon_amount > this.order.mkt_dis_amount && this.order.coupon_amount > this.order.vip_dis_amount) {
+        amount = this.order.total_amount - this.order.coupon_amount
+      } else if (this.order.mkt_dis_amount > this.order.coupon_amount && this.order.mkt_dis_amount > this.order.vip_dis_amount) {
+        amount = this.order.total_amount - this.order.mkt_dis_amount
+      } else if (this.order.vip_dis_amount > this.order.coupon_amount && this.order.vip_dis_amount > this.order.mkt_dis_amount) {
+        amount = this.order.total_amount - this.order.vip_dis_amount - this.order.mkt_dis_amount
+      }
+      return amount < 0 ? 0 : amount
     }
   },
   methods: {
@@ -372,13 +518,15 @@ export default {
       this.clearSVDetails()
       this.curIndex = 0
       this.order = data
+      this.order.user_coupon_id = 0
+      this.payCode = ''
+      this.payCodeText = ''
       //清空付款流水
       this.payFlows = []
       //未支付的金额
       this.changeAmount = 0
       this.member = { balance: 0 }
-
-      this.unpaidAmount = this.order.actual_amount
+      this.updateAmount()
     },
     //获取支付流水
     getFlow() {
@@ -404,27 +552,52 @@ export default {
     },
     //删除
     del(n) {
-      let len = this.inputAmountText.length
-      if (len > 0) {
-        if (len - 1 <= 0) {
-          this.inputAmountText = ''
-        } else {
-          this.inputAmountText = this.inputAmountText.substring(0, len - 1)
+      //现金退格删除
+      if (n == 0) {
+        let len = this.inputAmountText.length
+        if (len > 0) {
+          if (len - 1 <= 0) {
+            this.inputAmount = 0
+            this.inputAmountText = ''
+          } else {
+            this.inputAmountText = this.inputAmountText.substring(0, len - 1)
+            this.inputAmount = this.inputAmountText
+          }
+        }
+      } else {
+        let len = this.inputOAmountText.length
+        if (len > 0) {
+          if (len - 1 <= 0) {
+            this.inputOAmount = 0
+            this.inputOAmountText = ''
+          } else {
+            this.inputOAmountText = this.inputOAmountText.substring(0, len - 1)
+            this.inputOAmount = this.inputOAmountText
+          }
         }
       }
     },
     //显示的金额
-    clearAmountText() {
-      this.inputAmount = 0
-      this.inputAmountText = ''
-      this.changeAmount = 0
-      //this.unpaidAmount = 0
-      //删除
-      this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
-      this.updateAmount()
-
+    clearAmountText(payType) {
+      //现金支付情况
+      if (payType == 0) {
+        this.inputAmount = 0
+        this.inputAmountText = ''
+        this.changeAmount = 0
+        //删除
+        this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
+        this.updateAmount()
+      } else {
+        this.inputOAmount = 0
+        this.inputOAmountText = ''
+        if (this.curIndex == 11) {
+          this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 11), 1)
+        } else if (this.curIndex == 12) {
+          this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 12), 1)
+        }
+      }
     },
-    //获取号码
+    //现金支付点击
     getNum(n) {
       //首个输入为.的情况
       if (this.inputAmountText.length == 0 && n == '.') return
@@ -449,6 +622,32 @@ export default {
         }
       }
     },
+    //其它支付点击
+    getONum(n) {
+
+      //首个输入为.的情况
+      if (this.inputOAmountText.length == 0 && n == '.') return
+      if (this.inputOAmountText.length > 8) return
+      let str1 = this.inputOAmountText.split('.')[1]
+      if (str1 != undefined && str1.length > 1) return
+
+      //匹配小数点次数
+      let mt = this.inputOAmountText.match(/[.]/g)
+      //限制只能输入一个点
+      if (mt == null || mt.length && n != '.') {
+        this.inputOAmountText = this.inputOAmountText + '' + n
+      }
+
+      //金额输入正确情况下
+      if (app_g.verifyStr.isPrice(this.inputOAmountText)) {
+        this.inputOAmount = this.inputOAmountText
+        //计算找零
+        // let tmpAmount = this.inputOAmount - this.order.actual_amount
+        // if (tmpAmount > 0) {
+        //   this.changeAmount = tmpAmount
+        // }
+      }
+    },
     //移动支付失去焦点事件
     payCodeBlur() {
       if (this.curIndex == 0 && this.$refs.pCode != undefined) {
@@ -469,20 +668,59 @@ export default {
     },
     //选择支付方式
     selectPay(index) {
+      let that = this
+
+      //如果是优惠券
+      if (that.order.pay_method == 109 && that.order.coupon_amount >= that.order.actual_amount) {
+        this.$vux.toast.text('该订单为免费优惠券支付，请确认支付', 'default', 3000)
+        return
+      }
+
       this.curIndex = index
-      let item = this.payList[index];
+      let item = this.payList[index]
+
       if (item.text == '移动支付') {
         setTimeout(() => { this.$refs.pCode.focus() }, 100)
       } else if (item.text == '电子钱包') {
         setTimeout(() => { this.$refs.eWallet.focus() }, 100)
       } else if (item.text == '储值卡') {
         setTimeout(() => { this.$refs.svCard.focus() }, 100)
-      }else if(item.text == '其他支付'){
-        if(this.otherPayClick){
-          this.otherPayClick=false;
-        }else{
-          this.otherPayClick=true;
+      } else if (item.text == '其他支付') {
+        //从其它支付方式切换到正常支付
+        if (this.otherPayClick) {
+          //清空提货卡支付
+          let index = this.payFlows.findIndex(ele => ele.pay_method === this.payMethod.deliveryCard)
+          //清空美团支付
+          let index1 = this.payFlows.findIndex(ele => ele.pay_method === this.payMethod.meiTuan)
+          if (index != -1) this.payFlows.splice(index, 1)
+          if (index1 != -1) this.payFlows.splice(index1, 1)
+          this.otherPayClick = false
+        } else {
+          this.otherPayClick = true
         }
+      }
+    },
+    //选择其他支付方式
+    selectOtherPay(index) {
+      if (index != this.curIndex) {
+        //清空其它支付流水
+        this.curIndex = index
+        //清空支付流水
+        this.payFlows = []
+        this.updateAmount()
+
+        if (this.curIndex == 11) {
+          this.otherPay.inputText = '美团收款'
+        } else if (this.curIndex == 12) {
+          this.otherPay.inputText = '华润代金券'
+        } else if (this.curIndex == 10) {
+          let curFlow = this.getFlow()
+          curFlow.pay_method = this.payMethod.deliveryCard
+          this.payFlows.push(curFlow)
+        }
+        //清空其它支付方式
+        this.inputOAmount = 0
+        this.inputOAmountText = ''
       }
     },
     //提交现金支付
@@ -524,53 +762,108 @@ export default {
       this.clearMember()
       this.clearSVDetails()
     },
+    //提交其它支付
+    confirmOCash() {
+      //获取支付流水
+      let curFlow = this.getFlow()
+      //美团收款
+      if (this.curIndex == 11 && this.inputOAmount > 0) {
+        this.otherPay.inputText = '美团收款'
+        curFlow.pay_method = this.payMethod.meiTuan
+        curFlow.amount = this.inputOAmount
+
+        let index = this.payFlows.findIndex(item => item.pay_method === curFlow.pay_method)
+        if (index != -1) this.payFlows.splice(index, 1)
+
+        this.payFlows.push(curFlow)
+        this.updateAmount()
+      } else if (this.curIndex == 12 && this.inputOAmount > 0) {
+        this.otherPay.inputText = '华润代金券'
+        curFlow.pay_method = this.payMethod.huarunVouchers
+
+        let index = this.payFlows.findIndex(item => item.pay_method === curFlow.pay_method)
+        if (index != -1) this.payFlows.splice(index, 1)
+
+        curFlow.amount = this.inputOAmount
+        this.payFlows.push(curFlow)
+        this.updateAmount()
+      }
+    },
     //根据移动支付提交
     enterPayCode() {
-      //微信支付
-      if (this.payCodeText.length == 18 && /^[1]+[0,1,2,3,4,5]+\d{16}/.test(this.payCodeText)) {
-        this.payCode = this.payCodeText
-        this.payCodeText = ''
-        console.log('微信支付:' + this.payCode)
-        let curFlow = this.getFlow()
-        //如果未付款的金额大于零
-        if (this.unpaidAmount <= 0) return
-        //金额
-        curFlow.amount = this.unpaidAmount
-        //设置支付方式
-        curFlow.pay_method = this.payMethod.weChatCode
-        //加入支付流水
-        this.payFlows.push(curFlow)
-        //立即支付
-        this.api_205()
-      }//支付宝支付二维码
-      else if (this.payCodeText.length == 18 && /^[28]+\d{16}/.test(this.payCodeText)) {
-        this.payCode = this.payCodeText
-        this.payCodeText = ''
-        console.log('支付宝支付:' + this.payCode)
-        let curFlow = this.getFlow()
-        //如果未付款的金额大于零
-        if (this.unpaidAmount <= 0) return
-        //金额
-        curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
-        //支付方式
-        curFlow.pay_method = this.payMethod.aliPayCode
-        //加入支付流水
-        this.payFlows.push(curFlow)
-        //立即支付
-        this.api_205()
-      } else {
-        this.payCodeText = ''
-        this.$vux.toast.text('请使用微信或支付宝付款码', 'default', 3000)
+      let that = this
+      if (!this.isEnterLoading) {
+        //设置扫描中
+        this.isEnterLoading = true
+        setTimeout(() => {
+          that.isEnterLoading = false
+        }, 4000)
+        //微信支付
+        if (this.payCodeText.length == 18 && /^[1]+[0,1,2,3,4,5]+\d{16}/.test(this.payCodeText)) {
+          this.payCode = this.payCodeText
+          this.payCodeText = ''
+          //支付失败情况下，删除上次的微信流水
+          let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
+          if (index != -1) this.payFlows.splice(index, 1)
+          let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
+          if (index1 != -1) this.payFlows.splice(index, 1)
+
+          //如果未付款的金额大于零
+          if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
+          let curFlow = this.getFlow()
+          //金额
+          curFlow.amount = this.unpaidAmount
+          //设置支付方式
+          curFlow.pay_method = this.payMethod.weChatCode
+          //加入支付流水
+          this.payFlows.push(curFlow)
+          //立即支付
+          this.api_205(this.unpaidAmount)
+        }//支付宝支付二维码
+        else if (this.payCodeText.length == 18 && /^[28]+\d{16}/.test(this.payCodeText)) {
+          this.payCode = this.payCodeText
+          this.payCodeText = ''
+          //支付失败情况下，删除上次的流水
+          //支付失败情况下，删除上次的微信流水
+          let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
+          if (index != -1) this.payFlows.splice(index, 1)
+          let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
+          if (index1 != -1) this.payFlows.splice(index, 1)
+          //如果未付款的金额大于零
+          if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
+
+          let curFlow = this.getFlow()
+          //金额
+          curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
+          //支付方式
+          curFlow.pay_method = this.payMethod.aliPayCode
+          //删除微信支付记录
+          this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode), 1)
+          //加入支付流水
+          this.payFlows.push(curFlow)
+          //立即支付
+          this.api_205(this.unpaidAmount)
+        } else {
+          this.payCodeText = ''
+          this.$vux.toast.text('请使用微信或支付宝付款码', 'default', 3000)
+        }
       }
+
+      this.payCode = ''
+      this.payCodeText = ''
     },
     //提交电子钱包支付
     enterEWalle() {
-
       let that = this
       //扫码中
       if (!this.isEnterLoading) {
         //是否在扫描中
         this.isEnterLoading = true
+
+        setTimeout(() => {
+          that.isEnterLoading = false
+        }, 4000)
+
         //电子钱包支付
         if (this.eWalletText.length > 40) {
           this.eWalletCode = this.eWalletText
@@ -581,7 +874,21 @@ export default {
           let user_id = parseInt(this.eWalletCode.substring(0, 15))
           let coupon_id = parseInt(this.eWalletCode.substring(16, 30))
           //用户ID 
-          if (user_id == undefined || user_id == 0) return
+          if (user_id == undefined || user_id == 0) {
+            that.isEnterLoading = false
+            return
+          }
+
+          //当前电子钱包和订单所属用户信息是否一致
+          if (this.order.user_id > 0 && this.order.user_id != user_id) {
+            that.isEnterLoading = false
+            that.$vux.toast.text('当前会员信息不匹配', 'default', 3000)
+            return
+          }
+
+          //优惠券ID
+          if (coupon_id > 0) that.order.user_coupon_id = coupon_id
+
           //扫描会员码
           this.api_208(this.eWalletCode, user_id, coupon_id)
         }
@@ -622,7 +929,11 @@ export default {
       this.payFlows.forEach((ele) => {
         tmpAmount += parseFloat(parseFloat(ele.amount).toFixed(2))
       })
-      let amountResult = tmpAmount - this.order.actual_amount
+
+      //支付的余额
+      let balance = this.order.total_amount - this.getMaxDisCount()
+      //订单支付流水-所有优惠力度最大金额
+      let amountResult = tmpAmount - (balance < 0 ? 0 : balance)
       //有找零
       if (amountResult >= 0) {
         //不存在未付清
@@ -632,10 +943,23 @@ export default {
         this.unpaidAmount = -amountResult
       }
     },
+    //获取订单优惠力度最大的优惠
+    getMaxDisCount() {
+      if (this.order.coupon_amount > this.order.mkt_dis_amount && this.order.coupon_amount > this.order.vip_dis_amount) {
+        return this.order.coupon_amount
+      }
+      if (this.order.mkt_dis_amount > this.order.coupon_amount && this.order.mkt_dis_amount > this.order.vip_dis_amount) {
+        return this.order.mkt_dis_amount
+      }
+      if (this.order.vip_dis_amount > this.order.coupon_amount && this.order.vip_dis_amount > this.order.mkt_dis_amount) {
+        return this.order.vip_dis_amount
+      }
+      return 0
+    },
     //立即支付
-    api_205() {
+    api_205(unpaidAmount) {
       let that = this
-      if (that.payFlows.length == 0) {
+      if (this.payAmount != 0 && that.payFlows.length == 0) {
         that.$vux.toast.text('当前订单未支付，不能提交', 'default', 3000)
         return
       }
@@ -643,10 +967,18 @@ export default {
       //更新支付金额
       that.updateAmount()
 
-      //支付金额是否达到支付条件
-      if (this.unpaidAmount > 0) {
-        that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
-        return
+      //优惠券支付
+      if (that.order.pay_method == 109) {
+
+      } else {
+        //美团、提货卡 单一支付
+        if (!(that.payFlows.length == 1 && that.payFlows[0].pay_method == that.payMethod.meiTuan || that.payFlows[0].pay_method == that.payMethod.deliveryCard)) {
+          //支付金额是否达到支付条件
+          if (this.unpaidAmount > 0) {
+            that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
+            return
+          }
+        }
       }
 
       const res = new Map()
@@ -655,7 +987,7 @@ export default {
         that.order.pay_method = that.payFlows[0].pay_method
       } else if (arr.length == 2) {
         that.order.pay_method = 100
-      } else {
+      } else if (arr.length > 2) {
         that.$vux.toast.text('只允许两种支付方式叠加', 'default', 3000)
         return
       }
@@ -666,7 +998,7 @@ export default {
         PayCode: that.payCode,
         Order: that.order
       }
-      //return
+
       if (!that.isPay) {
         api.post(api.api_205, api.getSign(params), function (vue, res) {
           if (res.data.Basis.State == api.state.state_200) {
@@ -679,6 +1011,10 @@ export default {
             that.$emit('paySuccess')
             //打印
           } else {
+            //微信或支付宝支付失败情况下
+            if (unpaidAmount) {
+              that.unpaidAmount = unpaidAmount
+            }
             that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
           }
         })
@@ -715,9 +1051,6 @@ export default {
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }
-        setTimeout(() => {
-          that.isEnterLoading = false
-        }, 2000)
       })
     },
     //刷储值卡
@@ -933,27 +1266,29 @@ export default {
   .right-part {
     width: 30%;
 
-    ul{
+    ul {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
     }
-    .pay-item{
+    .pay-item {
       box-sizing: border-box;
-      &:nth-child(3),&:nth-child(4){
+      &:nth-child(3),
+      &:nth-child(4) {
         width: 50%;
       }
-      &:nth-child(3){
-        border-right:1px solid #EFEFEF
+      &:nth-child(3) {
+        border-right: 1px solid #efefef;
       }
-      &:nth-child(4){
-        border-left:1px solid #EFEFEF
+      &:nth-child(4) {
+        border-left: 1px solid #efefef;
       }
     }
-    .pay-item ,.pay-item2{
+    .pay-item,
+    .pay-item2 {
       width: 100%;
       position: relative;
-      .arrow{
+      .arrow {
         background: url("../../../static/img/arrow.png") no-repeat 0 0/100% auto;
         display: block;
         width: 10px;
@@ -961,7 +1296,7 @@ export default {
         position: absolute;
         right: 40px;
         top: 50%;
-        transform: translate(0,-50%);
+        transform: translate(0, -50%);
         z-index: 1;
       }
       .btn {

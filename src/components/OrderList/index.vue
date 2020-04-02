@@ -45,7 +45,7 @@
                     <div class="body-item f-item w2">
                       <div class="align">
                         <span class="item-link mr20" style="color:#0033FF;" @click="goDetails(item)">查看</span>
-                        <span class="item-link" style="color:#0033FF;" v-if="item.status == 1" @click="goPay(item)">继续付款</span>
+                        <span class="item-link" style="color:#0033FF;" v-if="item.status == 1 && !item.is_pay" @click="goPay(item)">继续付款</span>
                         <template v-else>
                           <span class="item-link" style="color:#0033FF;" @click="refund(item)" v-if="item.count > item.refund_count">全部退款</span>
                           <span class="item-link" v-else>全部退完</span>
@@ -153,7 +153,7 @@ export default {
     },
     //继续付款
     goPay(item) {
-      this.$emit('goPay', item)
+      this.$emit('confirmOrder', item.serial_no)
     },
     //获取支付流水
     getFlow(order) {
@@ -200,10 +200,12 @@ export default {
       tmpOrder.serial_no = ''
       //退详情
       let tmpDetails = []
-      order.details.forEach((ele, i) => {
+      order.store_details.forEach((ele, i) => {
         if (ele.count > ele.refund_count) {
           let tmp = { ...{}, ...ele }
           tmp.count -= tmp.refund_count
+          tmp.unit_price = tmp.avg_unit_amount
+          tmp.total_amount = (tmp.unit_price * tmp.count).toFixed(2)
           tmpDetails.push(tmp)
         }
       })
@@ -212,10 +214,12 @@ export default {
       let flows = []
       //当前可以退的余额
       let amount = returnOrder.balance
+      //可退的商品总金额
+      tmpOrder.total_amount = amount
       //退的商品详情
       tmpOrder.details = tmpDetails
       //原订单流水
-      tmpOrder.flow = returnOrder.pay_flows
+      tmpOrder.flow = returnOrder.flows
       //单一支付
       if (tmpOrder.pay_method != 100) {
         let flow = that.getFlow(tmpOrder)
@@ -236,71 +240,101 @@ export default {
         var hasWeChat = tmpOrder.flow.filter(item => item.pay_method === 11 && item.flow_type === 1)
         //是否有支付宝支付
         var hasALi = tmpOrder.flow.filter(item => item.pay_method === 21 && item.flow_type === 1)
-        if (hasEWallet != null) {
+        if (hasEWallet != null && hasEWallet.length > 0) {
           //支付方式
           flow.pay_method = 31
           //退款金额
           flow.amount = amount
-        } else if (hasSVCard != null && flow.pay_method == -1) {
+        } else if (hasSVCard != null && hasSVCard.length > 0 && flow.pay_method == -1) {
           //支付方式
           flow.pay_method = 41
           //退款金额
           flow.amount = amount
           //此处一定是微信支付加现金支付
-        } else if (hasWeChat != null && flow.pay_method == -1) {
-          let tmpAmount = 0
-          //已经退过的移动支付流水
-          order.flows.forEach((ele) => {
-            if (item.pay_method === 11 && item.flow_type === -1) {
+        } else if (hasWeChat != null && hasWeChat.length > 0 && flow.pay_method == -1) {
+          let tmpAmount = 0, retAmount = 0, canRetAmount = 0
+          //原订单微信支付流水
+          returnOrder.flows.forEach((ele) => {
+            if (ele.pay_method === 11 && ele.flow_type === 1) {
               tmpAmount += ele.amount
+            }
+          })
+
+          //已经退过的移动支付流水
+          returnOrder.flows.forEach((ele) => {
+            if (ele.pay_method === 11 && ele.flow_type === -1) {
+              retAmount += ele.amount
             }
           })
 
           //支付方式
           flow.pay_method = 11
-          //如果退款金额大于已退的移动支付金额
-          if (amount > hasWeChat.amount - tmpAmount) {
-            //剩余移动支付可退金额
-            flow.amount = hasWeChat.amount - tmpAmount
-            //新的流水
-            let flow1 = that.getFlow(tmpOrder)
-            //其余的退现金
-            flow1.amount = amount - flow.amount
-            //51现金支付
-            flow1.pay_method = 51
-            //加入到流水
-            flows.push(flow1)
+          //计算可退的微信支付金额
+          canRetAmount = tmpAmount - retAmount
+          if (canRetAmount > 0) {
+            //当前退款金额大于剩余移动可退金额，则生成两条退款流水
+            if (amount - canRetAmount > 0) {
+              //剩余移动支付可退金额
+              flow.amount = canRetAmount
+              //新的流水
+              let flow1 = that.getFlow(tmpOrder)
+              //其余的退现金
+              flow1.amount = amount - flow.amount
+              //51现金支付
+              flow1.pay_method = 51
+              //加入到流水
+              flows.push(flow1)
+            } else {
+              flow.amount = amount
+            }
           } else {
-            //退款金额
+            //全部退现金
+            flow.pay_method = 51
+            //剩余移动支付可退金额
             flow.amount = amount
           }
 
           //此处一定是阿里支付加现金支付
-        } else if (hasALi != null && flow.pay_method == -1) {
-          let tmpAmount = 0
-          //已经退过的移动支付流水
-          order.flows.forEach((ele) => {
-            if (item.pay_method === 21 && item.flow_type === -1) {
+        } else if (hasALi != null && hasALi.length > 0 && flow.pay_method == -1) {
+          let tmpAmount = 0, retAmount = 0, canRetAmount = 0
+          //原订单阿里支付流水
+          returnOrder.flows.forEach((ele) => {
+            if (ele.pay_method === 21 && ele.flow_type === 1) {
               tmpAmount += ele.amount
+            }
+          })
+
+          //已经退过的移动支付流水
+          returnOrder.flows.forEach((ele) => {
+            if (ele.pay_method === 21 && ele.flow_type === -1) {
+              retAmount += ele.amount
             }
           })
 
           //支付方式
           flow.pay_method = 21
-          //如果退款金额大于已退的移动支付金额
-          if (amount > hasALi.amount - tmpAmount) {
-            //剩余移动支付可退金额
-            flow.amount = hasALi.amount - tmpAmount
-            //新的流水
-            let flow1 = that.getFlow(tmpOrder)
-            //其余的退现金
-            flow1.amount = amount - flow.amount
-            //51现金支付
-            flow1.pay_method = 51
-            //加入到流水
-            flows.push(flow1)
+          //计算可退的阿里支付金额
+          canRetAmount = tmpAmount - retAmount
+          if (canRetAmount > 0) {
+            //当前退款金额大于剩余移动可退金额，则生成两条退款流水
+            if (amount - canRetAmount > 0) {
+              //剩余移动支付可退金额
+              flow.amount = canRetAmount
+              //新的流水
+              let flow1 = that.getFlow(tmpOrder)
+              //其余的退现金
+              flow1.amount = amount - flow.amount
+              //51现金支付
+              flow1.pay_method = 51
+              //加入到流水
+              flows.push(flow1)
+            } else {
+              flow.amount = amount
+            }
           } else {
-            //退款金额
+            //全部退现金
+            flow.pay_method = 51
+            //剩余移动支付可退金额
             flow.amount = amount
           }
         }
@@ -310,7 +344,6 @@ export default {
 
       //设置退款流水
       tmpOrder.flow = flows
-
       api.post(api.api_211, api.getSign({
         OrderReturns: tmpOrder
       }), function (vue, res) {

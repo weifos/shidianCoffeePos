@@ -5,6 +5,7 @@ import app_g from '@/modules/appGlobal'
 export default {
     data: {
         user: {},
+        member: {},
         confirmOrder: {},
         historyKeyWord: [],
         pdtListLayout: 1
@@ -27,6 +28,21 @@ export default {
             this.user = { token: '' }
             cookie.remove('token', { path: '/' })
             window.localStorage.removeItem("user_info")
+        },
+        //登录会员信息
+        loginMember(result) {
+            try {
+                this.member = result
+                window.localStorage.setItem("member_info", JSON.stringify(result))
+            }
+            catch (err) {
+                alert(err)
+            }
+        },
+        //登出会员信息
+        loginOutMember() {
+            this.member = { id: 0 }
+            window.localStorage.removeItem("member_info")
         },
         //刷新登录
         refreshLogin(cb) {
@@ -103,12 +119,20 @@ export default {
         }
     },
     created() {
-        //用户信息
+        //系统用户信息
         let userInfoData = window.localStorage.getItem("user_info")
         if (userInfoData) {
             this.user = JSON.parse(userInfoData)
         } else {
             this.user = { token: '' }
+        }
+
+        //会员用户信息
+        let memberInfo = window.localStorage.getItem("member_info")
+        if (memberInfo) {
+            this.member = JSON.parse(memberInfo)
+        } else {
+            this.member = {}
         }
 
         //提交购物车

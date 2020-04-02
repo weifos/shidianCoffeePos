@@ -30,7 +30,7 @@
             </div>
             <div class="right-part f-item rel">
               <ul v-if="orderList.length > 0">
-                <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].details" :key="item.no">
+                <li class="row-item list-inlineblock" v-for="item in orderList[curIndex].store_details" :key="item.no">
                   <div class="body-item f-item w6">
                     <div class="align">{{item.product_name}}</div>
                   </div>

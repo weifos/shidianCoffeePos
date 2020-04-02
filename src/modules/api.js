@@ -58,6 +58,18 @@ export default {
     api_214: domain + "214",
     //可退订单（流水和金额）
     api_215: domain + "215",
+    //会员登录
+    api_216: domain + "216",
+    //扫码获取优惠券
+    api_217: domain + "217",
+    //更新订单优惠券金额
+    api_218: domain + "218",
+    //接收小程序实时订单
+    api_219: domain + "219",
+    //查询线上订单
+    api_220: domain + "220",
+    //日结接口
+    api_221: domain + "221",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

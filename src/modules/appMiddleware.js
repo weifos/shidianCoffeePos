@@ -21,7 +21,19 @@ export default {
     print(store_id, sys_user_id, order_no, type, callback) {
         try {
             if (app_middleware != undefined) {
-                app_middleware.print(store_id, sys_user_id, order_no, type, callback)
+                //当前设备pos机号
+                let pos_no = app_g.getPos().no
+                app_middleware.print(store_id, sys_user_id, pos_no, order_no, type, callback)
+            }
+        } catch (ex) {
+            callback(this.devInfo)
+        }
+    },
+    //播放声音
+    playNty(callback) {
+        try {
+            if (app_middleware != undefined) {
+                app_middleware.playNty(callback)
             }
         } catch (ex) {
             callback(this.devInfo)

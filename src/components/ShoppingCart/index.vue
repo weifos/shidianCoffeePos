@@ -40,6 +40,7 @@
 import router from '@/router'
 import api from '@/modules/api'
 import app_g from '@/modules/appGlobal'
+import user from '@/modules/userInfo'
 
 export default {
   data() {
@@ -111,13 +112,18 @@ export default {
     api_203() {
       let that = this
       let tmps = app_g.getShoppingCart()
+
       if (tmps.length > 0) {
+        this.member = this.UserInfo.member
+        let user_id = this.member == undefined ? 0 : this.member.id
         let data = {
           store_id: app_g.getPos().store_id,
           pos_no: app_g.getPos().no,
+          //会员信息
+          user_id: user_id,
           //收银员
           created_user_id: that.UserInfo.user.id,
-          details: tmps
+          store_details: tmps
         }
         api.post(api.api_203, api.getSign({
           Order: data,
@@ -126,8 +132,11 @@ export default {
             that.count = 0
             that.total = 0
             that.clearShoppingCart()
+            that.UserInfo.member = { id: 0 }
             //更新父级组件
             that.$emit('submitOrder', res.data.Result)
+            //更新父级组件
+            that.$emit('clearMember', res.data.Result)
           } else {
             that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
           }
@@ -146,7 +155,7 @@ export default {
           created_user_id: that.UserInfo.user.id,
           details: tmps
         }
-        console.log(data)
+
         api.post(api.api_212, api.getSign({
           OrderEntry: data,
         }), function (vue, res) {

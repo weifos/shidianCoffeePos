@@ -97,6 +97,7 @@ export default {
       this.firstLoad = true
       this.result = []
       this.api_213()
+      this.api_221()
     },
     //删除挂单
     delOrderEntry() {
@@ -120,6 +121,20 @@ export default {
           that.api_214(true)
         }
       })
+    },
+    //加载数据
+    api_221() {
+      let that = this
+      //门店
+      api.post(api.api_221, api.getSign({
+        StoreID: app_g.getPos().store_id,
+        PosNo: app_g.getPos().no
+      }), function (vue, res) {
+        if (res.data.Basis.State == api.state.state_200) {
+          console.log(res.data.Result)
+        }
+      })
+
     },
     //加载数据
     api_213() {
