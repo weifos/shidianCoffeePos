@@ -70,6 +70,8 @@ export default {
     api_220: domain + "220",
     //日结接口
     api_221: domain + "221",
+    //轮播banner
+    api_290: domain + "290",
     //获取签名
     getSign(obj = {}) {
         let { token } = user.data.user

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const index = () => import(/*webpackChunkName: "home" */ "@/view/home/index")
+const banner = () => import(/*webpackChunkName: "home" */ "@/view/home/banner")
 const auth = () => import(/*webpackChunkName: "home" */ "@/view/home/auth")
 
 
@@ -17,6 +18,7 @@ const vueRouter = new Router({
         { path: '*', redirect: '/home/index', component: index },
         { path: '/', redirect: '/home/index', component: index },
         { path: '/home/index', name: 'index', component: index },
+        { path: '/home/banner', name: 'banner', component: banner },
         { path: '/home/auth', name: 'auth', component: auth }
     ]
 })

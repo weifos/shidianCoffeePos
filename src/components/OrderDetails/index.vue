@@ -96,11 +96,13 @@
                     <div class="align" style="color:#0033FF;" v-if="!order.is_pay">
                       <span class="item-link">--</span>
                     </div>
-
-                    <div class="align" style="color:#0033FF;" v-else-if="item.count > item.refund_count && order.is_pay" @click="refund(item)">
+                    <div class="align" v-if="!isRefund">
+                      <span class="item-link">只能整单退</span>
+                    </div>
+                    <div class="align" style="color:#0033FF;" v-else-if="isRefund && item.count > item.refund_count && order.is_pay" @click="refund(item)">
                       <span class="item-link">退款</span>
                     </div>
-                    <div class="align" v-else-if="item.count == item.refund_count && order.is_pay">
+                    <div class="align" v-else-if="isRefund && item.count == item.refund_count && order.is_pay">
                       <span class="item-link">退完</span>
                     </div>
                   </div>
@@ -125,6 +127,7 @@ export default {
   data() {
     return {
       curIndex: 0,
+      isRefund: true,
       order: {},
       flow: []
     }
@@ -150,6 +153,14 @@ export default {
         if (res.data.Basis.State == api.state.state_200) {
           //订单信息
           that.order = res.data.Result
+
+          res.data.Result.flow.forEach((item, index) => {
+            //存在华润代金券，不能部分退
+            if (item.pay_method == 105) {
+              that.isRefund = false
+            }
+          })
+
           that.flow = res.data.Result.flow.filter(ele => ele.flow_type === 1)
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 5000)

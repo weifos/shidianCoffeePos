@@ -812,7 +812,7 @@ export default {
           if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
           let curFlow = this.getFlow()
           //金额
-          curFlow.amount = this.unpaidAmount
+          curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
           //设置支付方式
           curFlow.pay_method = this.payMethod.weChatCode
           //加入支付流水
@@ -823,8 +823,7 @@ export default {
         else if (this.payCodeText.length == 18 && /^[28]+\d{16}/.test(this.payCodeText)) {
           this.payCode = this.payCodeText
           this.payCodeText = ''
-          //支付失败情况下，删除上次的流水
-          //支付失败情况下，删除上次的微信流水
+          //支付失败情况下，删除上次的支付宝流水
           let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
           if (index != -1) this.payFlows.splice(index, 1)
           let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
@@ -837,8 +836,6 @@ export default {
           curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
           //支付方式
           curFlow.pay_method = this.payMethod.aliPayCode
-          //删除微信支付记录
-          this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode), 1)
           //加入支付流水
           this.payFlows.push(curFlow)
           //立即支付
@@ -998,7 +995,8 @@ export default {
         PayCode: that.payCode,
         Order: that.order
       }
-
+      //   console.log(params)
+      //   return
       if (!that.isPay) {
         api.post(api.api_205, api.getSign(params), function (vue, res) {
           if (res.data.Basis.State == api.state.state_200) {

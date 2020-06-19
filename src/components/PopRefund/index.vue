@@ -102,7 +102,7 @@ export default {
         var hasWeChat = that.order.flow.filter(item => item.pay_method === 11 && item.flow_type === 1)
         //是否有支付宝支付
         var hasALi = that.order.flow.filter(item => item.pay_method === 21 && item.flow_type === 1)
-
+        debugger
         if (hasEWallet != null && hasEWallet.length > 0) {
           //支付方式
           flow.pay_method = 31
@@ -214,7 +214,6 @@ export default {
     //退货退款
     api_211() {
       let that = this
-
       api.post(api.api_211, api.getSign({
         OrderReturns: that.order
       }), function (vue, res) {

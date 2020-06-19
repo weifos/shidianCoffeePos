@@ -51,6 +51,9 @@ Vue.filter('GetPayMethodName', function (payMethod) {
         case 100:
             return '混合支付'
 
+        case 105:
+            return '华润代金券'
+
         default:
             return ''
     }
