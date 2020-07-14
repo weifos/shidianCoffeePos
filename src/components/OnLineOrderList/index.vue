@@ -1,19 +1,17 @@
 <template>
   <div class="order-normal rel section-2" v-if="show">
     <div class="con-wrap rel">
-      <div class="tab-tit abs cloumn-3">
-        <div class="tab-t f-item" :class="[curIndex == index?'cur':'']" v-for="(item,index) in statusList" @click="onClickItem(index)">{{item.name}}</div>
-      </div>
-      <div class="tab-con h100">
+      <div class="h100">
         <div class="form-1 bg-white rel">
           <div class="form-head list-inlineblock tac abs">
             <div class="head-item f-item w3 bg-gray text-white">小票号</div>
-            <div class="head-item f-item w4 bg-gray text-white">订单编号</div>
-            <div class="head-item f-item w2 bg-gray text-white">下单时间</div>
+            <div class="head-item f-item w3 bg-gray text-white">桌号</div>
+            <div class="head-item f-item w2 bg-gray text-white">订单编号</div>
+            <div class="head-item f-item w4 bg-gray text-white">下单时间</div>
             <div class="head-item f-item w1 bg-gray text-white">用户账号</div>
             <div class="head-item f-item w1 bg-gray text-white">订单金额</div>
             <div class="head-item f-item w1 bg-gray text-white">商品数/已退数</div>
-            <div class="head-item f-item w1 bg-gray text-white">订单状态</div>
+            <div class="head-item f-item w3 bg-gray text-white">状态</div>
             <div class="head-item f-item w2 bg-gray text-white">操作</div>
           </div>
           <div class="tab-c h100 cur">
@@ -24,10 +22,13 @@
                     <div class="body-item f-item w3">
                       <div class="align" style="color:#7F9EB6;">{{item.serial_num | GetSerialNum}}</div>
                     </div>
-                    <div class="body-item f-item w4">
-                      <div class="align">{{item.serial_no}}</div>
+                    <div class="body-item f-item w3">
+                      <div class="align" style="color:#7F9EB6;">{{item.bar_no}}</div>
                     </div>
                     <div class="body-item f-item w2">
+                      <div class="align">{{item.serial_no}}</div>
+                    </div>
+                    <div class="body-item f-item w4">
                       <div class="align">{{item.created_date}}</div>
                     </div>
                     <div class="body-item f-item w1">
@@ -39,12 +40,12 @@
                     <div class="body-item f-item w1">
                       <div class="align">{{item.count}}/{{item.refund_count}}</div>
                     </div>
-                    <div class="body-item f-item w1">
+                    <div class="body-item f-item w3">
                       <div class="align">已完成</div>
                     </div>
                     <div class="body-item f-item w2">
                       <div class="align">
-                        <span class="item-link mr20" style="color:#0033FF;" @click="printReceipt(item)">打印小票</span>
+                        <span class="item-link mr20" style="color:#0033FF;" @click="printReceipt(item)">打小票</span>
                         <span class="item-link mr20" style="color:#0033FF;" @click="goDetails(item)">查看</span>
                         <span class="item-link" style="color:#0033FF;" v-if="item.status == 1 && !item.is_pay" @click="goPay(item)">继续付款</span>
                         <template v-else>
@@ -84,7 +85,7 @@ export default {
       //显示退款
       showPopRefund: false,
       //翻页地址
-      pagerUrl: api.api_206,
+      pagerUrl: api.api_220,
       //订单状态
       statusList: [
         { name: '已支付', isPay: 1 },
@@ -148,13 +149,21 @@ export default {
         })
       }
     },
+    //打印小票
+    printReceipt(item) {
+      let that = this
+      //调起打印
+      app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, item.serial_no, 0, () => {
+        console.log('打印回调')
+      })
+    },
     //查看订单详情
     goDetails(item) {
       this.$emit('goOrderDetails', item)
     },
     //继续付款
     goPay(item) {
-      this.$emit('confirmOrder', item.serial_no)
+      this.$emit('goPay', item)
     },
     //获取支付流水
     getFlow(order) {
@@ -190,14 +199,6 @@ export default {
         }
       })
     },
-    //打印小票
-    printReceipt(item) {
-      let that = this
-      //调起打印
-      app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, item.serial_no, 0, () => {
-        console.log('打印回调')
-      })
-    },
     //退货退款
     api_211(order, returnOrder) {
       let that = this
@@ -213,8 +214,7 @@ export default {
         if (ele.count > ele.refund_count) {
           let tmp = { ...{}, ...ele }
           tmp.count -= tmp.refund_count
-          tmp.unit_price = tmp.avg_unit_amount
-          tmp.total_amount = (tmp.unit_price * tmp.count).toFixed(2)
+          tmp.total_amount = ele.actual_amount
           tmpDetails.push(tmp)
         }
       })
@@ -223,8 +223,6 @@ export default {
       let flows = []
       //当前可以退的余额
       let amount = returnOrder.balance
-      //可退的商品总金额
-      tmpOrder.total_amount = amount
       //退的商品详情
       tmpOrder.details = tmpDetails
       //原订单流水
@@ -353,6 +351,11 @@ export default {
 
       //设置退款流水
       tmpOrder.flow = flows
+      tmpOrder.pos_no = app_g.getPos().no
+      //退款订单里面只有total_amount
+      tmpOrder.total_amount = tmpOrder.actual_amount
+      tmpOrder.type = 2
+
       api.post(api.api_211, api.getSign({
         OrderReturns: tmpOrder
       }), function (vue, res) {
@@ -441,7 +444,6 @@ export default {
     }
   }
   .tab-con {
-    padding: 60px 0px 0px 0px;
     box-sizing: border-box;
   }
   .cloumn-3 {
