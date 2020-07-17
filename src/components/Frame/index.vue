@@ -68,16 +68,16 @@
 </template>
 
 <script>
-import axios from 'axios'
-import api from '@/modules/api'
-import app_m from "@/modules/appMiddleware"
-import app_g from '@/modules/appGlobal'
-import Icon from '@/components/Icon'
-import { mapState } from 'vuex'
+import axios from "axios";
+import api from "@/modules/api";
+import app_m from "@/modules/appMiddleware";
+import app_g from "@/modules/appGlobal";
+import Icon from "@/components/Icon";
+import { mapState } from "vuex";
 
 export default {
   components: {
-    Icon,
+    Icon
   },
   props: {
     result: Object
@@ -85,26 +85,30 @@ export default {
   watch: {
     result: function (newData, oldData) {
       if (newData.id) {
-        if (newData.head_img == undefined || newData.head_img == null || newData.head_img.length == 0) {
-          newData.head_img = '../../static/img/user.png'
+        if (
+          newData.head_img == undefined ||
+          newData.head_img == null ||
+          newData.head_img.length == 0
+        ) {
+          newData.head_img = "../../static/img/user.png";
         }
-        this.userInfo = newData
+        this.userInfo = newData;
       }
     }
   },
   data() {
     return {
       userInfo: {
-        head_img: '../../static/img/user.png',
-        user_name: '未登录',
-        login_name: '--'
+        head_img: "../../static/img/user.png",
+        user_name: "未登录",
+        login_name: "--"
       },
-      nowTime: '',
+      nowTime: "",
       member: {
-        login_name: '--'
+        login_name: "--"
       },
       pos: {
-        no: ''
+        no: ""
       },
       //小程序订单通知对象
       notifier: {
@@ -112,10 +116,12 @@ export default {
         //audio: new Audio('../static/music/remind.mp3'),
         //定时通知对象
         timer: null,
+        //定时是否通知
+        isResponse: false,
         //是否开始播放
         isPlaying: false
       }
-    }
+    };
   },
   computed: {
     ...mapState({
@@ -125,104 +131,150 @@ export default {
   methods: {
     //小程序订单实时处理
     initOrderNty() {
-      let that = this
+      let that = this;
       if (that.notifier.timer == null) {
+        that.notifier.isResponse = true;
         that.notifier.timer = setInterval(() => {
-          that.api_219()
-        }, 6000)
+          setTimeout(that.api_219(), 500);
+        }, 6000);
       }
     },
     //检查设备
     nav(type) {
-      this.$emit('nav', type)
+      this.$emit("nav", type);
     },
     //会员登录
     memberLogin() {
-      this.$emit('memberLogin')
+      this.$emit("memberLogin");
     },
     //登出登录会员信息
     cLoginOutMember() {
-      let that = this
+      let that = this;
       this.$vux.confirm.show({
-        title: '确认退出登录吗',
+        title: "确认退出登录吗",
         onCancel() { },
         onConfirm() {
-          that.loginOutMember()
+          that.loginOutMember();
         }
-      })
+      });
     },
     //更新登录会员信息
     updateMember(result) {
-      this.member = result
+      this.member = result;
     },
     //登出登录会员信息
     loginOutMember() {
       //清空会员信息
-      this.UserInfo.loginOutMember()
-      this.member = { id: 0 }
+      this.UserInfo.loginOutMember();
+      this.member = { id: 0 };
     },
     //显示当前时间（年月日时分秒）
     timeFormate(timeStamp) {
       let year = new Date(timeStamp).getFullYear();
-      let month = new Date(timeStamp).getMonth() + 1 < 10 ? "0" + (new Date(timeStamp).getMonth() + 1) : new Date(timeStamp).getMonth() + 1;
-      let date = new Date(timeStamp).getDate() < 10 ? "0" + new Date(timeStamp).getDate() : new Date(timeStamp).getDate();
-      let hh = new Date(timeStamp).getHours() < 10 ? "0" + new Date(timeStamp).getHours() : new Date(timeStamp).getHours();
-      let mm = new Date(timeStamp).getMinutes() < 10 ? "0" + new Date(timeStamp).getMinutes() : new Date(timeStamp).getMinutes();
-      let ss = new Date(timeStamp).getSeconds() < 10 ? "0" + new Date(timeStamp).getSeconds() : new Date(timeStamp).getSeconds();
-      this.nowTime = year + "年" + month + "月" + date + "日" + " " + hh + ":" + mm + ':' + ss;
+      let month =
+        new Date(timeStamp).getMonth() + 1 < 10
+          ? "0" + (new Date(timeStamp).getMonth() + 1)
+          : new Date(timeStamp).getMonth() + 1;
+      let date =
+        new Date(timeStamp).getDate() < 10
+          ? "0" + new Date(timeStamp).getDate()
+          : new Date(timeStamp).getDate();
+      let hh =
+        new Date(timeStamp).getHours() < 10
+          ? "0" + new Date(timeStamp).getHours()
+          : new Date(timeStamp).getHours();
+      let mm =
+        new Date(timeStamp).getMinutes() < 10
+          ? "0" + new Date(timeStamp).getMinutes()
+          : new Date(timeStamp).getMinutes();
+      let ss =
+        new Date(timeStamp).getSeconds() < 10
+          ? "0" + new Date(timeStamp).getSeconds()
+          : new Date(timeStamp).getSeconds();
+      this.nowTime =
+        year +
+        "年" +
+        month +
+        "月" +
+        date +
+        "日" +
+        " " +
+        hh +
+        ":" +
+        mm +
+        ":" +
+        ss;
     },
     nowTimes() {
       this.timeFormate(new Date());
       setInterval(this.nowTimes, 1000);
-      this.clear()
+      this.clear();
     },
     clear() {
-      clearInterval(this.nowTimes)
+      clearInterval(this.nowTimes);
       this.nowTimes = null;
     },
     //咖啡pos实时查询
     api_219() {
-      let that = this
-      let pos = app_g.getPos()
+      let that = this;
+      let pos = app_g.getPos();
+      //   if (pos != null && that.notifier.isResponse == true) {
       if (pos != null) {
+        //console.log(pos);
+        //that.notifier.isResponse = false;
         axios(api.api_219, {
           method: "post",
-          data: api.getSign({ StoreID: pos.store_id })
+          data: api.getSign({ StoreID: pos.store_id, LastID: (pos.last_online_id == undefined ? 0 : pos.last_online_id) })
         }).then(res => {
+          //that.notifier.isResponse = true;
           if (res.data.Basis != undefined && res.data.Basis.State == 205) {
             that.$vux.toast.text(res.data.Basis.Msg, "default")
           } else {
+
             if (res.data.Basis.State == api.state.state_200) {
-              if (res.data.Result > 0) {
+              if (res.data.Result.length > 0) {
                 //that.notifier.audio.play()
-                app_m.playNty()
+                pos.last_online_id = res.data.Result[res.data.Result.length - 1].id;
+                app_g.setPos(pos);
+                app_m.playNty();
+                //打印线上订单
+                res.data.Result.forEach((ele) => {
+                  app_m.print(app_g.getPos().store_id, ele.user_id, ele.serial_no, 0, () => {
+                    console.log("打印回调");
+                  })
+                })
               }
             } else {
-              that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
+              that.$vux.toast.text(res.data.Basis.Msg, "default", 3000);
             }
           }
-        })
-      }
 
+        });
+      }
     }
   },
   created() {
-    this.nowTimes()
-    this.initOrderNty()
+    this.nowTimes();
+    this.initOrderNty();
     //如果已登录，刷新用户信息
     if (this.UserInfo.islogin()) {
-      this.userInfo = this.UserInfo.user
-      if (this.userInfo.head_img == undefined || this.userInfo.head_img == null || this.userInfo.head_img.length == 0) {
-        this.userInfo.head_img = '../../static/img/user.png'
+      this.userInfo = this.UserInfo.user;
+      if (
+        this.userInfo.head_img == undefined ||
+        this.userInfo.head_img == null ||
+        this.userInfo.head_img.length == 0
+      ) {
+        this.userInfo.head_img = "../../static/img/user.png";
       }
     }
     //消费的会员信息
-    this.member = this.UserInfo.member
-    let pos = app_g.getPos()
-    if (pos) { this.pos = pos }
+    this.member = this.UserInfo.member;
+    let pos = app_g.getPos();
+    if (pos) {
+      this.pos = pos;
+    }
   }
-}
-
+};
 </script>
 
 <style lang="scss">

@@ -120,7 +120,7 @@ export default {
       } else if (item.isPay == 0) {
         status = 1
       }
-
+      console.log(app_g.getPos())
       return {
         //已付款
         IsPay: item.isPay,
