@@ -3,7 +3,7 @@
     <div class="product-cate bg-white">
       <ul class="list-cate-1 list-inlineblock">
         <li class="f-item item-cate" v-for="(item,index) in result" :key="index" @click="onClickItem(index)">
-          <div :class="`button round border-gray text-gray ${curIndex == index ? 'button-border-cur' : ''}`">{{item.name}}</div>
+          <div :class="`button round border-gray text-gray ${curIndex == index ? 'button-cur' : ''}`">{{item.name}}</div>
         </li>
       </ul>
     </div>

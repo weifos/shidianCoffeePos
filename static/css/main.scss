@@ -115,7 +115,12 @@ button.button{
 }
 .button-border-cur{
     border-color:$border-color-main;
-    color:$font-color-main;
+    color:$border-color-main;
+}
+.button-cur{
+    border-color:$border-color-main;
+    color:$font-color-white;
+    background-color: $border-color-main;
 }
 .btn-subtract,.btn-plus{
     border:none;

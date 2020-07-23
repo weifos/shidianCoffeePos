@@ -205,6 +205,7 @@ export default {
       let tmpOrder = { ...{}, ...order }
       //设置退款单对象
       tmpOrder.order_no = order.serial_no
+      tmpOrder.created_user_id = that.UserInfo.user.id
       //流水号
       tmpOrder.serial_no = ''
       //退详情

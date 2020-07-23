@@ -3,7 +3,7 @@
     <!-- frame-left s -->
     <div class="frame-left rel">
       <div class="info-bar abs">
-        <div class="fr text-gray font-size-small button-border-cur">收银台：{{pos.no}}</div>
+        <div class="fr text-gray font-size-small">收银台：{{pos.no}}</div>
         <div class="text-gray font-size-small">{{nowTime}}</div>
         <div class="text-gray font-size-small mt5">联网状态：在线</div>
         <div class="user-info hidden mt10">
@@ -15,7 +15,7 @@
             <div class="user-identity mt5">
               <span class="icon icon-arrow dib vam"></span>
               <span class="dib vam" v-if="member.id > 0" style="font-size:12px;">
-                会员手机：{{member.login_name}}，折扣：{{member.dis_count * 10}}折
+                会员手机：{{member.login_name}}，{{member.level}}折扣：{{member.dis_count * 10}}折
                 <span class="button-border-cur" @click="cLoginOutMember">退出</span>
               </span>
               <!-- <span class="dib vam ml10">{{userInfo.user_name}}</span> -->
@@ -120,7 +120,8 @@ export default {
         isResponse: false,
         //是否开始播放
         isPlaying: false
-      }
+      },
+      printTimer: null
     };
   },
   computed: {
@@ -132,12 +133,15 @@ export default {
     //小程序订单实时处理
     initOrderNty() {
       let that = this;
-      if (that.notifier.timer == null) {
-        that.notifier.isResponse = true;
-        that.notifier.timer = setInterval(() => {
-          setTimeout(that.api_219(), 500);
-        }, 6000);
+      if (process.env.NODE_ENV === 'production') {
+        if (that.notifier.timer == null) {
+          //that.notifier.isResponse = true;
+          that.notifier.timer = setInterval(() => {
+            setTimeout(that.api_219(), 500);
+          }, 6000);
+        }
       }
+
     },
     //检查设备
     nav(type) {
@@ -221,12 +225,12 @@ export default {
       //   if (pos != null && that.notifier.isResponse == true) {
       if (pos != null) {
         //console.log(pos);
-        //that.notifier.isResponse = false;
+        //pos.last_online_id = 0;
         axios(api.api_219, {
           method: "post",
           data: api.getSign({ StoreID: pos.store_id, LastID: (pos.last_online_id == undefined ? 0 : pos.last_online_id) })
         }).then(res => {
-          //that.notifier.isResponse = true;
+
           if (res.data.Basis != undefined && res.data.Basis.State == 205) {
             that.$vux.toast.text(res.data.Basis.Msg, "default")
           } else {
@@ -238,11 +242,21 @@ export default {
                 app_g.setPos(pos);
                 app_m.playNty();
                 //打印线上订单
-                res.data.Result.forEach((ele) => {
-                  app_m.print(app_g.getPos().store_id, ele.user_id, ele.serial_no, 0, () => {
-                    console.log("打印回调");
-                  })
-                })
+                let time_length = 0
+                printTimer = setInterval(() => {
+                  if (time_length < res.data.Result.length) {
+                    let item = res.data.Result[time_length]
+                    app_m.print(app_g.getPos().store_id, item.user_id, item.serial_no, 0, () => {
+                      console.log("打印回调");
+                      time_length++
+                    })
+
+                    if (time_length == res.data.Result.length) {
+                      clearInterval(printTimer)
+                    }
+                  }
+                }, 1000)
+
               }
             } else {
               that.$vux.toast.text(res.data.Basis.Msg, "default", 3000);

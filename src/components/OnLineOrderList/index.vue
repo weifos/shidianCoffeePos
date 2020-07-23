@@ -204,6 +204,7 @@ export default {
       let that = this
       //临时订单
       let tmpOrder = { ...{}, ...order }
+      tmpOrder.created_user_id = that.UserInfo.user.id
       //设置退款单对象
       tmpOrder.order_no = order.serial_no
       //流水号

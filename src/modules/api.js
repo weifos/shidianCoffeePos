@@ -4,10 +4,10 @@ import md5 from 'blueimp-md5'
 import user from './userInfo'
 
 //接口域名
-// let domain = "http://coffeeapi.sdibook.com/"
-// let res_domain = "http://res.sdibook.com/"
-let domain = "http://test.coffeeapi.sdibook.com/"
-let res_domain = "http://test.res.sdibook.com/"
+let domain = "http://coffeeapi.sdibook.com/"
+let res_domain = "http://res.sdibook.com/"
+// let domain = "http://test.coffeeapi.sdibook.com/"
+// let res_domain = "http://test.res.sdibook.com/"
 //测试环境配置
 if (process.env.NODE_ENV !== 'production') {
     domain = "/api/"
@@ -48,8 +48,6 @@ export default {
     api_209: domain + "209",
     //加载订单明细
     api_210: domain + "210",
-    //退款
-    api_211: domain + "211",
     //退款
     api_211: domain + "211",
     //立即挂单

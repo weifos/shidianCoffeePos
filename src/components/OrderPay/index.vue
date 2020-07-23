@@ -798,51 +798,59 @@ export default {
         setTimeout(() => {
           that.isEnterLoading = false
         }, 4000)
-        //微信支付
-        if (this.payCodeText.length == 18 && /^[1]+[0,1,2,3,4,5]+\d{16}/.test(this.payCodeText)) {
-          this.payCode = this.payCodeText
-          this.payCodeText = ''
-          //支付失败情况下，删除上次的微信流水
-          let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
-          if (index != -1) this.payFlows.splice(index, 1)
-          let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
-          if (index1 != -1) this.payFlows.splice(index, 1)
+        if (this.unpaidAmount > 0) {
+          //微信支付
+          if (this.payCodeText.length == 18 && /^[1]+[0,1,2,3,4,5]+\d{16}/.test(this.payCodeText)) {
+            this.payCode = this.payCodeText
+            this.payCodeText = ''
+            //支付失败情况下，删除上次的微信流水
+            let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
+            if (index != -1) this.payFlows.splice(index, 1)
+            let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
+            if (index1 != -1) this.payFlows.splice(index, 1)
 
-          //如果未付款的金额大于零
-          if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
-          let curFlow = this.getFlow()
-          //金额
-          curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
-          //设置支付方式
-          curFlow.pay_method = this.payMethod.weChatCode
-          //加入支付流水
-          this.payFlows.push(curFlow)
-          //立即支付
-          this.api_205(this.unpaidAmount)
-        }//支付宝支付二维码
-        else if (this.payCodeText.length == 18 && /^[28]+\d{16}/.test(this.payCodeText)) {
-          this.payCode = this.payCodeText
-          this.payCodeText = ''
-          //支付失败情况下，删除上次的支付宝流水
-          let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
-          if (index != -1) this.payFlows.splice(index, 1)
-          let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
-          if (index1 != -1) this.payFlows.splice(index, 1)
-          //如果未付款的金额大于零
-          if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
+            //如果未付款的金额大于零
+            if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
+            let curFlow = this.getFlow()
+            //金额
+            curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
+            //设置支付方式
+            curFlow.pay_method = this.payMethod.weChatCode
+            //加入支付流水
+            this.payFlows.push(curFlow)
+            //立即支付
+            this.api_205(this.unpaidAmount)
+          }//支付宝支付二维码
+          else if (this.payCodeText.length == 18 && /^[28]+\d{16}/.test(this.payCodeText)) {
+            this.payCode = this.payCodeText
+            this.payCodeText = ''
+            //支付失败情况下，删除上次的支付宝流水
+            let index = this.payFlows.findIndex(item => item.pay_method === this.payMethod.weChatCode)
+            if (index != -1) this.payFlows.splice(index, 1)
+            let index1 = this.payFlows.findIndex(item => item.pay_method === this.payMethod.aliPayCode)
+            if (index1 != -1) this.payFlows.splice(index, 1)
+            //如果未付款的金额大于零
+            if (this.payFlows.length > 0 && this.unpaidAmount <= 0) return
 
-          let curFlow = this.getFlow()
-          //金额
-          curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
-          //支付方式
-          curFlow.pay_method = this.payMethod.aliPayCode
-          //加入支付流水
-          this.payFlows.push(curFlow)
-          //立即支付
-          this.api_205(this.unpaidAmount)
+            let curFlow = this.getFlow()
+            //金额
+            curFlow.amount = parseFloat(this.unpaidAmount).toFixed(2)
+            //支付方式
+            curFlow.pay_method = this.payMethod.aliPayCode
+            //加入支付流水
+            this.payFlows.push(curFlow)
+            //立即支付
+            this.api_205(this.unpaidAmount)
+          } else {
+            this.payCodeText = ''
+            this.$vux.toast.text('请使用微信或支付宝付款码', 'default', 3000)
+          }
         } else {
-          this.payCodeText = ''
-          this.$vux.toast.text('请使用微信或支付宝付款码', 'default', 3000)
+          //   that.$vux.toast.text('当前订单无需使用其他支付方式，直接提交即可', 'default', 3000)
+          //   return
+
+          //直接提交
+          this.api_205(this.unpaidAmount)
         }
       }
 
@@ -969,7 +977,14 @@ export default {
 
       } else {
         //美团、提货卡 单一支付
-        if (!(that.payFlows.length == 1 && that.payFlows[0].pay_method == that.payMethod.meiTuan || that.payFlows[0].pay_method == that.payMethod.deliveryCard)) {
+        if ((that.payFlows.length == 1 && that.payFlows[0].pay_method == that.payMethod.meiTuan || that.payFlows[0].pay_method == that.payMethod.deliveryCard)) {
+          //美团 单一支付
+          if (that.payFlows[0].pay_method == that.payMethod.meiTuan) {
+            that.order.actual_amount = this.inputOAmount
+            that.order.rece_amount = this.inputOAmount
+            that.order.whole_dis_amount = that.order.total_amount - this.inputOAmount
+          }
+        } else {
           //支付金额是否达到支付条件
           if (this.unpaidAmount > 0) {
             that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
