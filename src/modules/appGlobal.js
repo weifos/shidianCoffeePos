@@ -583,6 +583,17 @@ export default {
             var reg = /^(\d{3})\d{4}(\d{4})$/;
             return tel.replace(reg, "$1****$2");
         },
+        //保留小数，不四舍五入
+        formatDecimal: function (num, n) {
+            num = num.toString()
+            let index = num.indexOf('.')
+            if (index !== -1) {
+                num = num.substring(0, n + index + 1)
+            } else {
+                num = num.substring(0)
+            }
+            return parseFloat(num).toFixed(n)
+        },
         //字符串截取
         cutSubString: function (str, len) {
             if (!str || !len) { return ''; }
