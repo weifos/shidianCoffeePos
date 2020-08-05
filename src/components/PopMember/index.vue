@@ -3,7 +3,7 @@
     <div class="pop-tit bg-main text-white tac">会员号</div>
     <div class="pop-con">
       <div class="pop-input">
-        <input type="text" placeholder="请输入手机号" v-model="inputLoginName" maxlength="11" class="input-phone input-text-1" />
+        <input type="text" placeholder="请输入手机号" ref="inputLoginName" @keyup.enter="enterInputLoginName" @blur="loginNameBlur" v-model="inputLoginName" maxlength="11" class="input-phone input-text-1" />
       </div>
       <div class="pop-btns list-inlineblock">
         <button class="btn-number f-item" @click="getNum(7)">7</button>
@@ -36,6 +36,10 @@ export default {
   data() {
     return {
       curIndex: 0,
+      //是否回车加载中
+      isEnterLoading: false,
+      //会员码
+      userCode: '',
       //显示现金输入金额
       inputLoginName: ''
     }
@@ -105,7 +109,34 @@ export default {
   },
   methods: {
     init() {
+      setTimeout(() => { this.$refs.inputLoginName.focus() }, 100)
       this.inputLoginName = ''
+      this.isEnterLoading = false
+    },
+    //扫会员码
+    enterInputLoginName() {
+
+      if (!this.isEnterLoading) {
+        this.isEnterLoading = true
+        if (this.inputLoginName.length == 11) {
+          this.userCode = this.inputLoginName
+          this.api_216()
+        } else {
+          this.isEnterLoading = false
+        }
+      }
+    },
+    loginNameBlur() {
+      if (this.$refs.inputLoginName != undefined) {
+        setTimeout(() => {
+          try {
+            let length = this.inputLoginName.length
+            this.$refs.inputLoginName.focus()
+            this.$refs.inputLoginName.selectionStart = length
+            this.$refs.inputLoginName.selectionEnd = length
+          } catch (ex) { }
+        }, 100)
+      }
     },
     //删除
     del(n) {
@@ -133,6 +164,7 @@ export default {
       let that = this
       if (this.inputLoginName.length == 0) {
         that.$vux.toast.text('请输入用户名', 'default', 3000)
+        that.isEnterLoading = false
         return
       }
 
@@ -147,6 +179,8 @@ export default {
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }
+        that.inputLoginName = ''
+        that.isEnterLoading = false
       })
     },
     //取消会员弹出框

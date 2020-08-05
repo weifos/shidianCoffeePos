@@ -116,8 +116,6 @@ export default {
         //audio: new Audio('../static/music/remind.mp3'),
         //定时通知对象
         timer: null,
-        //定时是否通知
-        isResponse: false,
         //是否开始播放
         isPlaying: false
       },
@@ -135,7 +133,6 @@ export default {
       let that = this;
       if (process.env.NODE_ENV === 'production') {
         if (that.notifier.timer == null) {
-          //that.notifier.isResponse = true;
           that.notifier.timer = setInterval(() => {
             setTimeout(that.api_219(), 500);
           }, 6000);
@@ -222,10 +219,9 @@ export default {
     api_219() {
       let that = this;
       let pos = app_g.getPos();
-      //   if (pos != null && that.notifier.isResponse == true) {
+
       if (pos != null) {
         //console.log(pos);
-        //pos.last_online_id = 0;
         axios(api.api_219, {
           method: "post",
           data: api.getSign({ StoreID: pos.store_id, LastID: (pos.last_online_id == undefined ? 0 : pos.last_online_id) })
@@ -238,25 +234,38 @@ export default {
             if (res.data.Basis.State == api.state.state_200) {
               if (res.data.Result.length > 0) {
                 //that.notifier.audio.play()
-                pos.last_online_id = res.data.Result[res.data.Result.length - 1].id;
-                app_g.setPos(pos);
-                app_m.playNty();
-                //打印线上订单
-                let time_length = 0
-                printTimer = setInterval(() => {
-                  if (time_length < res.data.Result.length) {
-                    let item = res.data.Result[time_length]
-                    app_m.print(app_g.getPos().store_id, item.user_id, item.serial_no, 0, () => {
-                      console.log("打印回调");
-                      time_length++
-                    })
-
-                    if (time_length == res.data.Result.length) {
-                      clearInterval(printTimer)
-                    }
+                if (pos.last_online_id != res.data.Result[res.data.Result.length - 1].id) {
+                  //上一个订单在返回结果中的索引
+                  var start_index = res.data.Result.findIndex((v) => {
+                    return v.id == pos.last_online_id;
+                  })
+                  //记录上一个订单的id
+                  pos.last_online_id = res.data.Result[res.data.Result.length - 1].id
+                  app_g.setPos(pos)
+                  app_m.playNty()
+                  //打印起始索引
+                  let time_length = start_index + 1
+                  let is_printing = false
+                  if (that.printTimer == null) {
+                    that.printTimer = setInterval(() => {
+                      if (time_length < res.data.Result.length) {
+                        if (is_printing == false) {
+                          is_printing = true
+                          let item = res.data.Result[time_length]
+                          //打印线上订单
+                          app_m.print(app_g.getPos().store_id, item.user_id, item.serial_no, 0, () => {
+                            time_length++
+                            is_printing = false
+                            if (time_length == res.data.Result.length) {
+                              clearInterval(that.printTimer)
+                              that.printTimer = null
+                            }
+                          })
+                        }
+                      }
+                    }, 1000)
                   }
-                }, 1000)
-
+                }
               }
             } else {
               that.$vux.toast.text(res.data.Basis.Msg, "default", 3000);

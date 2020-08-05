@@ -8,6 +8,7 @@ import App from './App'
 import $ from 'jquery'
 import store from './store'
 import Bridge from './modules/bridge.js'
+import Dec from 'decimal.js'
 import app_g from "./modules/appGlobal"
 import user from "./modules/userInfo"
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -68,7 +69,9 @@ Vue.filter('GetSerialNum', function (value) {
 
 //全局注册过滤器 金额格式化
 Vue.filter('MoneyToF', function (value) {
-    return parseFloat(value).toFixed(2)
+    // return parseFloat(value).toFixed(2)
+    if (value == undefined || value.toString().length == 0) return '0'
+    return new Dec(app_g.util.formatDecimal(value, 2)).toNumber()
 })
 
 //比较日期

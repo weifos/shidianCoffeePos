@@ -314,6 +314,8 @@ export default {
         Pos: pos
       }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
+          let pos = app_g.getPos()
+          res.data.Result.last_online_id = ((pos == undefined || pos.last_online_id == undefined) ? 0 : pos.last_online_id)
           app_g.setPos(res.data.Result)
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)

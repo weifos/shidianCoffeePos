@@ -295,7 +295,7 @@
                   </div>
                   <div class="sec-bottom bg-gray text-white abs hidden">
                     <div class="text-total fr mr20">合计：{{payAmount | MoneyToF}}</div>
-                    <div class="text-due ml20">尚欠金额：{{unpaidAmount | MoneyToF}}</div>
+                    <div class="text-due ml20">{{unpaidAmountText}}：{{unpaidAmount | MoneyToF}}</div>
                   </div>
                 </div>
               </div>
@@ -329,6 +329,7 @@
 import api from '@/modules/api'
 import app_g from '@/modules/appGlobal'
 import app_m from "@/modules/appMiddleware"
+import Decimal from 'decimal.js'
 
 export default {
   data() {
@@ -360,6 +361,10 @@ export default {
       inputOAmountText: '',
       //未付款的金额
       unpaidAmount: 0,
+      //尚欠金额/抹零
+      unpaidAmountText: '尚欠金额',
+      //抹零金额
+      dis_odd: 0,
       //找零的金额
       changeAmount: 0,
       //电子钱包会员信息
@@ -579,11 +584,14 @@ export default {
     },
     //显示的金额
     clearAmountText(payType) {
+      this.unpaidAmountText = '尚欠金额'
+      this.unpaidAmount = 0
       //现金支付情况
       if (payType == 0) {
         this.inputAmount = 0
         this.inputAmountText = ''
         this.changeAmount = 0
+        this.dis_odd = 0
         //删除
         this.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
         this.updateAmount()
@@ -683,6 +691,9 @@ export default {
         setTimeout(() => { this.$refs.pCode.focus() }, 100)
       } else if (item.text == '电子钱包') {
         setTimeout(() => { this.$refs.eWallet.focus() }, 100)
+        // let nowtime = new Date().getTime()
+        // let codes = "000000000039438000000000000000" + nowtime
+        // this.api_208(codes, 0)
       } else if (item.text == '储值卡') {
         setTimeout(() => { this.$refs.svCard.focus() }, 100)
       } else if (item.text == '其他支付') {
@@ -739,14 +750,17 @@ export default {
       if (cIndex != -1) this.payFlows.splice(cIndex, 1)
       //更新金额
       this.updateAmount()
+      //抹零金额(= 未缴纳金额 - 抹零后金额)
+      this.dis_odd = new Decimal(this.unpaidAmount).sub(new Decimal(app_g.util.formatDecimal(this.unpaidAmount, 1))).toNumber()
+
       //获取支付流水
       let curFlow = this.getFlow()
       //现金支付方式
       curFlow.pay_method = this.payMethod.cash
       //输入金额大于未缴纳金额
-      if (this.inputAmount > this.unpaidAmount) {
-        curFlow.amount = this.unpaidAmount
-        this.changeAmount = this.inputAmount - this.unpaidAmount
+      if (this.inputAmount > (this.unpaidAmount - this.dis_odd)) {
+        curFlow.amount = this.unpaidAmount - this.dis_odd
+        this.changeAmount = this.inputAmount - curFlow.amount
       } else {
         curFlow.amount = this.inputAmount
         this.changeAmount = 0
@@ -761,9 +775,17 @@ export default {
       this.updateAmount()
       this.clearMember()
       this.clearSVDetails()
+
+      let sub = new Decimal(this.unpaidAmount).sub(new Decimal(this.dis_odd)).toNumber()
+      if (this.dis_odd > 0 && sub == 0) {
+        this.unpaidAmountText = '抹零金额'
+      } else {
+        this.unpaidAmountText = '尚欠金额'
+      }
     },
     //提交其它支付
     confirmOCash() {
+      this.unpaidAmountText = '尚欠金额'
       //获取支付流水
       let curFlow = this.getFlow()
       //美团收款
@@ -791,6 +813,7 @@ export default {
     },
     //根据移动支付提交
     enterPayCode() {
+      this.unpaidAmountText = '尚欠金额'
       let that = this
       if (!this.isEnterLoading) {
         //设置扫描中
@@ -859,6 +882,7 @@ export default {
     },
     //提交电子钱包支付
     enterEWalle() {
+      this.unpaidAmountText = '尚欠金额'
       let that = this
       //扫码中
       if (!this.isEnterLoading) {
@@ -903,6 +927,7 @@ export default {
     },
     //提交储值卡支付
     enterSVCard() {
+      this.unpaidAmountText = '尚欠金额'
       //如果已付清
       if (this.unpaidAmount <= 0) {
         that.$vux.toast.text('当前已付清，请勿再次刷卡', 'default', 3000)
@@ -911,7 +936,7 @@ export default {
 
       //微信支付
       if (this.svCardText.length > 25) {
-        this.svCardCode = this.svCardText
+        this.svCardCode = this.svCardText.replace(';', '').replace('?', '')
         //清空文本
         this.svCardText = ''
         //获取储值卡
@@ -938,7 +963,9 @@ export default {
       //支付的余额
       let balance = this.order.total_amount - this.getMaxDisCount()
       //订单支付流水-所有优惠力度最大金额
-      let amountResult = tmpAmount - (balance < 0 ? 0 : balance)
+      //let amountResult = tmpAmount - (balance < 0 ? 0 : balance)
+      let amountResult = new Decimal(tmpAmount).sub(new Decimal((balance < 0 ? 0 : balance))).toNumber()
+
       //有找零
       if (amountResult >= 0) {
         //不存在未付清
@@ -986,13 +1013,14 @@ export default {
           }
         } else {
           //支付金额是否达到支付条件
-          if (this.unpaidAmount > 0) {
+          if (this.unpaidAmount - this.dis_odd > 0) {
             that.$vux.toast.text('支付金额不足，不能提交', 'default', 3000)
             return
           }
         }
       }
-
+      that.order.dis_odd = this.dis_odd
+      that.order.give_change_amount = this.changeAmount
       const res = new Map()
       let arr = that.payFlows.filter((a) => !res.has(a.pay_method) && res.set(a.pay_method, 1))
       if (arr.length == 1) {
@@ -1010,7 +1038,7 @@ export default {
         PayCode: that.payCode,
         Order: that.order
       }
-      //   console.log(params)
+      console.log(params)
       //   return
       if (!that.isPay) {
         api.post(api.api_205, api.getSign(params), function (vue, res) {
@@ -1056,7 +1084,7 @@ export default {
             //显示电子钱包付清余额
             that.eWalletPayOffBalance = that.member.balance - that.unpaidAmount
 
-            //
+
             setTimeout(() => {
               that.api_205()
             }, 1000)
