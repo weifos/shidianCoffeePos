@@ -22,10 +22,10 @@
         <OrderPay ref="payOrder" :show="showOrderPay" v-on:paySuccess="paySuccess" v-on:closeOrderPay="closeOrderPay"></OrderPay>
 
         <!-- 未制作订单 -->
-        <NotDoneOrder ref="notDoneOrder" :show="showNotDoneOrder"></NotDoneOrder>
+        <NotDoneOrder ref="notDoneOrder" :show="showNotDoneOrder" v-on:num="num"></NotDoneOrder>
 
         <!-- 未取订单 -->
-        <NotGetOrder ref="notGetOrder" :show="showNotGetOrder"></NotGetOrder>
+        <NotGetOrder ref="notGetOrder" :show="showNotGetOrder" v-on:num="num"></NotGetOrder>
 
         <!-- 挂单/恢复 -->
         <OrderEntry ref="orderEntry" :show="showOrderEntry" v-on:setShoppingCart="updateShoppingCart"></OrderEntry>
@@ -164,6 +164,10 @@ export default {
       store.commit('setShowDialog', { showDialog: false })
       this.isMemberLogin = false
       this.$refs.frame.updateMember(result)
+    },
+    //子组件通知父组件，修改角标
+    num(result) {
+      this.$refs.frame.updateIconNum(result)
     },
     //子组件通知父组件，会员登录
     loginOutMember() {

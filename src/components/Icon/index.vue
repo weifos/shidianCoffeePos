@@ -63,11 +63,13 @@
       <div class="icon-text">退出登录</div>
     </template>
 
-    <!-- <div class="icon-num" v-if="num > 0">{{num}}</div> -->
+    <div class="icon-num" v-if="num > 0">{{num>99?"99+":num}}</div>
   </div>
 </template>
 
 <script>
+
+//import api from "@/modules/api"
 import app_g from '@/modules/appGlobal'
 import app_m from '@/modules/appMiddleware'
 
@@ -110,6 +112,19 @@ export default {
       app_m.print(app_g.getPos().store_id, that.UserInfo.user.id, "", 3, () => {
         console.log('打印回调')
       })
+
+      //测试获取数据用
+      //   let that = this
+      //   //门店
+      //   api.post(api.api_221, api.getSign({
+      //     StoreID: app_g.getPos().store_id,
+      //     PosNo: app_g.getPos().no,
+      //     Date: '2020-07-31'
+      //   }), function (vue, res) {
+      //     if (res.data.Basis.State == api.state.state_200) {
+      //       console.log(res.data.Result)
+      //     }
+      //   })
     }
 
   }
@@ -130,9 +145,9 @@ export default {
 .icon-num {
   position: absolute;
   background-color: #ff3d3d;
-  width: 19px;
+  width: 25px;
   height: 19px;
-  line-height: 19px;
+  line-height: 18px;
   color: #fff;
   font-size: 12px;
   border-radius: 100%;

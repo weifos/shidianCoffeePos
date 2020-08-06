@@ -54,8 +54,8 @@
         <div class="left-side">
           <Icon type="dataDownLoad" v-on:nav="nav"></Icon>
           <Icon type="statementInfo" v-on:nav="nav"></Icon>
-          <Icon type="notDoneOrder" v-on:nav="nav" :num="3"></Icon>
-          <Icon type="notGetOrder" v-on:nav="nav"></Icon>
+          <Icon type="notDoneOrder" v-on:nav="nav" :num="iconNum.notDoneOrderNum"></Icon>
+          <Icon type="notGetOrder" v-on:nav="nav" :num="iconNum.notGetOrderNum"></Icon>
           <Icon type="orderList" v-on:nav="nav"></Icon>
           <Icon type="onLineOrderList" v-on:nav="nav"></Icon>
           <Icon type="memberInfo" v-on:memberLogin="memberLogin"></Icon>
@@ -119,7 +119,14 @@ export default {
         //是否开始播放
         isPlaying: false
       },
-      printTimer: null
+      printTimer: null,
+      //角标
+      iconNum: {
+        //未作订单
+        notDoneOrderNum: 0,
+        //未取订单
+        notGetOrderNum: 0
+      }
     };
   },
   computed: {
@@ -162,6 +169,21 @@ export default {
     //更新登录会员信息
     updateMember(result) {
       this.member = result;
+    },
+    //更新角标
+    updateIconNum(result) {
+      console.log(result)
+      if (result.status == 3) this.iconNum.notDoneOrderNum = result.num
+      else if (result.status == 10) {
+        if (result.iconType == 1) {
+          this.iconNum.notDoneOrderNum = result.num
+          this.iconNum.notGetOrderNum += 1
+        } else if (result.iconType == 2) this.iconNum.notGetOrderNum = result.num
+      }
+      else if (result.status == 18) {
+        if (result.iconType == 1) this.iconNum.notDoneOrderNum = result.num
+        else if (result.iconType == 2) this.iconNum.notGetOrderNum = result.num
+      }
     },
     //登出登录会员信息
     loginOutMember() {
@@ -224,7 +246,7 @@ export default {
         //console.log(pos);
         axios(api.api_219, {
           method: "post",
-          data: api.getSign({ StoreID: pos.store_id, LastID: (pos.last_online_id == undefined ? 0 : pos.last_online_id) })
+          data: api.getSign({ StoreID: pos.store_id, PosNo: pos.no, LastID: (pos.last_online_id == undefined ? 0 : pos.last_online_id) })
         }).then(res => {
 
           if (res.data.Basis != undefined && res.data.Basis.State == 205) {
@@ -232,15 +254,20 @@ export default {
           } else {
 
             if (res.data.Basis.State == api.state.state_200) {
-              if (res.data.Result.length > 0) {
+              //未制作角标数
+              that.iconNum.notDoneOrderNum = res.data.Result.not_made
+              //未取角标数
+              that.iconNum.notGetOrderNum = res.data.Result.not_get
+
+              if (res.data.Result.ret_order.length > 0) {
                 //that.notifier.audio.play()
-                if (pos.last_online_id != res.data.Result[res.data.Result.length - 1].id) {
+                if (pos.last_online_id != res.data.Result.ret_order[res.data.Result.ret_order.length - 1].id) {
                   //上一个订单在返回结果中的索引
-                  var start_index = res.data.Result.findIndex((v) => {
+                  var start_index = res.data.Result.ret_order.findIndex((v) => {
                     return v.id == pos.last_online_id;
                   })
                   //记录上一个订单的id
-                  pos.last_online_id = res.data.Result[res.data.Result.length - 1].id
+                  pos.last_online_id = res.data.Result.ret_order[res.data.Result.ret_order.length - 1].id
                   app_g.setPos(pos)
                   app_m.playNty()
                   //打印起始索引
@@ -248,15 +275,15 @@ export default {
                   let is_printing = false
                   if (that.printTimer == null) {
                     that.printTimer = setInterval(() => {
-                      if (time_length < res.data.Result.length) {
+                      if (time_length < res.data.Result.ret_order.length) {
                         if (is_printing == false) {
                           is_printing = true
-                          let item = res.data.Result[time_length]
+                          let item = res.data.Result.ret_order[time_length]
                           //打印线上订单
                           app_m.print(app_g.getPos().store_id, item.user_id, item.serial_no, 0, () => {
                             time_length++
                             is_printing = false
-                            if (time_length == res.data.Result.length) {
+                            if (time_length == res.data.Result.ret_order.length) {
                               clearInterval(that.printTimer)
                               that.printTimer = null
                             }

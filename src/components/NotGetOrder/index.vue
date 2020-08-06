@@ -71,6 +71,7 @@ export default {
       pageSize: 12,
       pageIndex: 0,
       totalPage: 0,
+      totalRow: 0,
       orderList: []
     }
   },
@@ -128,15 +129,16 @@ export default {
           //当前页
           that.pageIndex = that.pageIndex + 1
           //总行数
-          let totalRow = res.data.Result.totalRow
+          that.totalRow = res.data.Result.totalRow
           //总页数
-          that.totalPage = parseInt(totalRow / that.pageSize) + (totalRow % that.pageSize == 0 ? 0 : 1)
+          that.totalPage = parseInt(that.totalRow / that.pageSize) + (that.totalRow % that.pageSize == 0 ? 0 : 1)
           //订单信息
           res.data.Result.orders.forEach((ele, index) => {
             that.orderList.push(ele)
           })
           //设置加载状态
           that.loading = false
+          that.$emit('num', { iconType: 2, status: 10, num: that.totalRow })
         })
       }
     },
@@ -153,6 +155,8 @@ export default {
           that.orderList.splice(that.curIndex, 1)
           that.$vux.toast.text('操作成功', 'default', 3000)
           // that.payFlows.splice(this.payFlows.findIndex(item => item.pay_method === 51), 1)
+          that.totalRow -= 1
+          that.$emit('num', { iconType: 2, status: status, num: that.totalRow })
         } else {
           that.$vux.toast.text(res.data.Basis.Msg, 'default', 3000)
         }
