@@ -8,11 +8,11 @@ let domain = "http://coffeeapi.sdibook.com/"
 let res_domain = "http://res.sdibook.com/"
 // let domain = "http://test.coffeeapi.sdibook.com/"
 // let res_domain = "http://test.res.sdibook.com/"
-//测试环境配置
-if (process.env.NODE_ENV !== 'production') {
-    domain = "/api/"
-    res_domain = "/res/"
-}
+// //测试环境配置
+// if (process.env.NODE_ENV !== 'production') {
+//     domain = "/api/"
+//     res_domain = "/res/"
+// }
 
 /// <summary>
 /// 全局配置类
@@ -73,9 +73,9 @@ export default {
     //轮播banner
     api_290: domain + "290",
     //获取签名
-    getSign(obj = {}) {
+    getSign (obj = {}) {
         let { token } = user.data.user
-        function sort(obj) {
+        function sort (obj) {
             if (obj instanceof Array) {
                 //如果数组里面存放的为对象,通过map更改数组结构，排序
                 obj = obj.map((ele, index) => {
@@ -144,7 +144,7 @@ export default {
         }
     },
     //请求对象
-    post(url, data, cb, ch) {
+    post (url, data, cb, ch) {
         let that = this
         //加载框
         store.commit("loadingStatus", { isLoading: true })

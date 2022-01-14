@@ -332,7 +332,7 @@ import app_m from "@/modules/appMiddleware"
 import Decimal from 'decimal.js'
 
 export default {
-  data() {
+  data () {
     return {
       curIndex: 0,
       //订单详情
@@ -436,7 +436,7 @@ export default {
   },
   filters: {
     //获取支付方式名称
-    getPayMethodName(payMethod) {
+    getPayMethodName (payMethod) {
       if (payMethod == 11) {
         return '微信支付'
       } else if (payMethod == 21) {
@@ -479,7 +479,7 @@ export default {
     }
   },
   computed: {
-    tmpFlows() {
+    tmpFlows () {
       let tmp = []
       let svItem = {}
       let total_amount = 0
@@ -502,7 +502,7 @@ export default {
 
       return tmp
     },
-    payAmount() {
+    payAmount () {
       let amount = 0
       if (this.order.coupon_amount > this.order.mkt_dis_amount && this.order.coupon_amount > this.order.vip_dis_amount) {
         amount = this.order.total_amount - this.order.coupon_amount
@@ -515,7 +515,7 @@ export default {
     }
   },
   methods: {
-    init(data) {
+    init (data) {
       setTimeout(() => { this.$refs.pCode.focus() }, 100)
       this.isEnterLoading = false
       this.isPay = false
@@ -534,7 +534,7 @@ export default {
       this.updateAmount()
     },
     //获取支付流水
-    getFlow() {
+    getFlow () {
       return {
         store_id: app_g.getPos().store_id,
         serial_no: app_g.util.getSerialNum('F'),
@@ -556,7 +556,7 @@ export default {
       }
     },
     //删除
-    del(n) {
+    del (n) {
       //现金退格删除
       if (n == 0) {
         let len = this.inputAmountText.length
@@ -583,7 +583,7 @@ export default {
       }
     },
     //显示的金额
-    clearAmountText(payType) {
+    clearAmountText (payType) {
       this.unpaidAmountText = '尚欠金额'
       this.unpaidAmount = 0
       //现金支付情况
@@ -606,7 +606,7 @@ export default {
       }
     },
     //现金支付点击
-    getNum(n) {
+    getNum (n) {
       //首个输入为.的情况
       if (this.inputAmountText.length == 0 && n == '.') return
       if (this.inputAmountText.length > 8) return
@@ -631,7 +631,7 @@ export default {
       }
     },
     //其它支付点击
-    getONum(n) {
+    getONum (n) {
 
       //首个输入为.的情况
       if (this.inputOAmountText.length == 0 && n == '.') return
@@ -657,29 +657,29 @@ export default {
       }
     },
     //移动支付失去焦点事件
-    payCodeBlur() {
+    payCodeBlur () {
       if (this.curIndex == 0 && this.$refs.pCode != undefined) {
         setTimeout(() => { try { this.$refs.pCode.focus() } catch (ex) { } }, 100)
       }
     },
     //电子钱包失去焦点事件
-    eWalletBlur() {
+    eWalletBlur () {
       if (this.curIndex == 1 && this.$refs.eWallet != undefined) {
         setTimeout(() => { try { this.$refs.eWallet.focus() } catch (ex) { } }, 100)
       }
     },
     //储值卡失去焦点事件
-    svCardBlur() {
+    svCardBlur () {
       if (this.curIndex == 2 && this.$refs.svCard != undefined) {
         setTimeout(() => { try { this.$refs.svCard.focus() } catch (ex) { } }, 100)
       }
     },
     //选择支付方式
-    selectPay(index) {
+    selectPay (index) {
       let that = this
 
       //如果是优惠券
-      if (that.order.pay_method == 109 && that.order.coupon_amount >= that.order.actual_amount) {
+      if (that.order.pay_method == 109 && that.order.coupon_amount >= that.order.total_amount) {
         this.$vux.toast.text('该订单为免费优惠券支付，请确认支付', 'default', 3000)
         return
       }
@@ -712,7 +712,7 @@ export default {
       }
     },
     //选择其他支付方式
-    selectOtherPay(index) {
+    selectOtherPay (index) {
       if (index != this.curIndex) {
         //清空其它支付流水
         this.curIndex = index
@@ -735,7 +735,7 @@ export default {
       }
     },
     //提交现金支付
-    confirmCash() {
+    confirmCash () {
       //输入金额不能为0
       if (this.inputAmount == 0) return
       //检测是否存在现金支付
@@ -784,7 +784,7 @@ export default {
       }
     },
     //提交其它支付
-    confirmOCash() {
+    confirmOCash () {
       this.unpaidAmountText = '尚欠金额'
       //获取支付流水
       let curFlow = this.getFlow()
@@ -812,7 +812,7 @@ export default {
       }
     },
     //根据移动支付提交
-    enterPayCode() {
+    enterPayCode () {
       this.unpaidAmountText = '尚欠金额'
       let that = this
       if (!this.isEnterLoading) {
@@ -881,7 +881,7 @@ export default {
       this.payCodeText = ''
     },
     //提交电子钱包支付
-    enterEWalle() {
+    enterEWalle () {
       this.unpaidAmountText = '尚欠金额'
       let that = this
       //扫码中
@@ -926,7 +926,7 @@ export default {
       }
     },
     //提交储值卡支付
-    enterSVCard() {
+    enterSVCard () {
       this.unpaidAmountText = '尚欠金额'
       //如果已付清
       if (this.unpaidAmount <= 0) {
@@ -946,15 +946,15 @@ export default {
       this.clearMember()
     },
     //清空会员信息
-    clearMember() {
+    clearMember () {
       this.member = { id: 0, mobile: '----', balance: 0, dis_count: 0.99, integral: 0, coupon: { type: 0, amount: 0.0 } }
     },
     //清空储值卡信息
-    clearSVDetails() {
+    clearSVDetails () {
       this.svCard = { id: 0, no: "----", dm: 0, status: 0, balance: 0 }
     },
     //更新页面显示金额
-    updateAmount() {
+    updateAmount () {
       let tmpAmount = 0
       this.payFlows.forEach((ele) => {
         tmpAmount += parseFloat(parseFloat(ele.amount).toFixed(2))
@@ -976,7 +976,7 @@ export default {
       }
     },
     //获取订单优惠力度最大的优惠
-    getMaxDisCount() {
+    getMaxDisCount () {
       if (this.order.coupon_amount > this.order.mkt_dis_amount && this.order.coupon_amount > this.order.vip_dis_amount) {
         return this.order.coupon_amount
       }
@@ -989,7 +989,7 @@ export default {
       return 0
     },
     //立即支付
-    api_205(unpaidAmount) {
+    api_205 (unpaidAmount) {
       let that = this
       if (this.payAmount != 0 && that.payFlows.length == 0) {
         that.$vux.toast.text('当前订单未支付，不能提交', 'default', 3000)
@@ -1063,7 +1063,7 @@ export default {
 
     },
     //根据用户码获取会员信息
-    api_208(code, user_id) {
+    api_208 (code, user_id) {
       let that = this
       api.post(api.api_208, api.getSign({ UserCode: code }), function (vue, res) {
         if (res.data.Basis.State == api.state.state_200) {
@@ -1095,7 +1095,7 @@ export default {
       })
     },
     //刷储值卡
-    api_209(code) {
+    api_209 (code) {
       let that = this
       api.post(api.api_209, api.getSign({
         Type: 1,
@@ -1144,7 +1144,7 @@ export default {
       })
     },
     //关闭
-    close() {
+    close () {
       this.$emit('closeOrderPay')
     }
   }
@@ -1330,7 +1330,7 @@ export default {
       width: 100%;
       position: relative;
       .arrow {
-        background: url("../../../static/img/arrow.png") no-repeat 0 0/100% auto;
+        background: url('../../../static/img/arrow.png') no-repeat 0 0/100% auto;
         display: block;
         width: 10px;
         height: 7px;
